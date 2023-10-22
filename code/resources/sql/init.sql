@@ -1,4 +1,9 @@
-DROP TABLE IF EXISTS wishlist CASCADE;
+drop schema if exists lbaw2366 cascade;
+create schema lbaw2366;
+SET search_path TO lbaw2366;
+
+
+/* DROP TABLE IF EXISTS wishlist CASCADE;
 DROP TABLE IF EXISTS cart_item CASCADE;
 DROP TABLE IF EXISTS review CASCADE;
 DROP TABLE IF EXISTS notification CASCADE;
@@ -14,7 +19,7 @@ DROP TABLE IF EXISTS jeans CASCADE;
 DROP TABLE IF EXISTS cart CASCADE;
 DROP TABLE IF EXISTS item CASCADE;
 DROP TABLE IF EXISTS admin CASCADE;
-DROP TABLE IF EXISTS user CASCADE;
+DROP TABLE IF EXISTS user CASCADE; */
 
 -- drop triggers
 
@@ -200,26 +205,12 @@ INSERT INTO cart (id) VALUES (20);
 
 --- WISHLIST
 
-INSERT INTO wishlist (id) VALUES (1);
-INSERT INTO wishlist (id) VALUES (2);
-INSERT INTO wishlist (id) VALUES (3);
-INSERT INTO wishlist (id) VALUES (4);
-INSERT INTO wishlist (id) VALUES (5);
-INSERT INTO wishlist (id) VALUES (6);
-INSERT INTO wishlist (id) VALUES (7);
-INSERT INTO wishlist (id) VALUES (8);
-INSERT INTO wishlist (id) VALUES (9);
-INSERT INTO wishlist (id) VALUES (10);
-INSERT INTO wishlist (id) VALUES (11);
-INSERT INTO wishlist (id) VALUES (12);
-INSERT INTO wishlist (id) VALUES (13);
-INSERT INTO wishlist (id) VALUES (14);
-INSERT INTO wishlist (id) VALUES (15);
-INSERT INTO wishlist (id) VALUES (16);
-INSERT INTO wishlist (id) VALUES (17);
-INSERT INTO wishlist (id) VALUES (18);
-INSERT INTO wishlist (id) VALUES (19);
-INSERT INTO wishlist (id) VALUES (20);
+INSERT INTO wishlist (id) VALUES (1,1);
+INSERT INTO wishlist (id) VALUES (2,2);
+INSERT INTO wishlist (id) VALUES (3,3);
+INSERT INTO wishlist (id) VALUES (4,4);
+INSERT INTO wishlist (id) VALUES (5,5);
+
 
 --- LOCATION
 

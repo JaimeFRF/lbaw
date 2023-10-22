@@ -29,12 +29,12 @@ DROP TABLE IF EXISTS user CASCADE; */
 
 -- drop types
 
-DROP TYPE IF EXISTS ShirtType;
+/* DROP TYPE IF EXISTS ShirtType;
 DROP TYPE IF EXISTS TshirtType;
 DROP TYPE IF EXISTS JacketType;
 DROP TYPE IF EXISTS PaymentMethod;
 DROP TYPE IF EXISTS PurchaseStatus;
-DROP TYPE IF EXISTS NotificationType;
+DROP TYPE IF EXISTS NotificationType; */
 
 ----------- types
 
@@ -50,34 +50,10 @@ CREATE TYPE PaymentMethod as ENUM ('Transfer', 'Paypal');
 
 CREATE TYPE PurchaseStatus as ENUM ('Processing', 'Packed', 'Sent', 'Delivered');
 
-CREATE TYPE NotificationType as ENUM ('Sale', 'PurchaseStatusChange','RESTOCK','ORDER_UPDATE')
+CREATE TYPE NotificationType as ENUM ('Sale', 'PurchaseStatusChange','RESTOCK','ORDER_UPDATE');
 
 
 ------------ tables
-
-
-CREATE TABLE user(
-    id SERIAL PRIMARY KEY,
-    username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
-    email TEXT NOT NULL CONSTRAINT user_email_uk UNIQUE,
-    password TEXT NOT NULL CONSTRAINT password_length CHECK (length(password) >= 10),
-    phone VARCHAR(20), 
-    is_banned boolean NOT NULL DEFAULT FALSE,
-    remember_token TEXT DF NULL,
-    id_cart INTEGER NOT NULL REFERENCES Cart(id),
-);
-
-CREATE TABLE admin(
-    id SERIAL PRIMARY KEY,
-    username TEXT NOT NULL UNIQUE,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    phone VARCHAR(20),
-);
-
-CREATE TABLE cart(
-    id SERIAL PRIMARY KEY
-);
 
 CREATE TABLE item(
     id SERIAL PRIMARY KEY,
@@ -91,6 +67,29 @@ CREATE TABLE item(
     description TEXT
 );
 
+CREATE TABLE cart(
+    id SERIAL PRIMARY KEY
+);
+
+CREATE TABLE "user"(
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
+    email TEXT NOT NULL CONSTRAINT user_email_uk UNIQUE,
+    password TEXT NOT NULL CONSTRAINT password_length CHECK (length(password) >= 10),
+    phone VARCHAR(20), 
+    is_banned boolean NOT NULL DEFAULT FALSE,
+    remember_token TEXT DEFAULT NULL,
+    id_cart INTEGER NOT NULL REFERENCES cart(id)
+);
+
+CREATE TABLE admin(
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    email TEXT NOT NULL UNIQUE,
+    password TEXT NOT NULL,
+    phone VARCHAR(20)
+);
+
 CREATE TABLE cart_item(
     id_cart INTEGER NOT NULL REFERENCES Cart(id),
     id_item INTEGER NOT NULL REFERENCES Item(id),
@@ -98,7 +97,7 @@ CREATE TABLE cart_item(
 );
 
 CREATE TABLE wishlist(
-    id_user INTEGER NOT NULL REFERENCES user(id) ON DELETE CASCADE,
+    id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
     id_item INTEGER NOT NULL REFERENCES item(id),
     PRIMARY KEY(id_user, id_item)
 );
@@ -119,7 +118,7 @@ CREATE TABLE purchase(
     delivery_date DATE NOT NULL CONSTRAINT delivery_date_check CHECK (delivery_date >= purchase_date),
     purchase_status PurchaseStatus NOT NULL,
     payment_method PaymentMethod NOT NULL,
-    id_user INTEGER NOT NULL REFERENCES user(id) ON DELETE SET NULL,
+    id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE SET NULL,
     id_location INTEGER NOT NULL REFERENCES location(id)
 );
 
@@ -129,7 +128,7 @@ CREATE TABLE review(
     rating FLOAT NOT NULL CONSTRAINT rating_positive CHECK (rating >= 0.0 AND rating <= 5.0),
     up_votes INTEGER DEFAULT 0,
     down_votes INTEGER DEFAULT 0,
-    id_user INTEGER REFERENCES user(id) ON DELETE SET NULL,
+    id_user INTEGER REFERENCES "user"(id) ON DELETE SET NULL,
     id_item INTEGER NOT NULL REFERENCES item(id)
 );
 
@@ -138,7 +137,7 @@ CREATE TABLE notification(
     description TEXT NOT NULL,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
     notification_type NotificationType NOT NULL,
-    id_user INTEGER NOT NULL REFERENCES user(id) ON DELETE SET NULL,
+    id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE SET NULL,
     id_item INTEGER NOT NULL REFERENCES item(id) ON DELETE SET NULL,
     id_purchase INTEGER NOT NULL REFERENCES purchase(id) ON DELETE SET NULL
 );
@@ -146,7 +145,7 @@ CREATE TABLE notification(
 CREATE TABLE image(
     id serial PRIMARY KEY,
     id_item INTEGER REFERENCES item(id) ON DELETE CASCADE,
-    id_user INTEGER REFERENCES user(id) ON DELETE CASCADE,
+    id_user INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
     filepath TEXT
 );
 
@@ -203,13 +202,6 @@ INSERT INTO cart (id) VALUES (18);
 INSERT INTO cart (id) VALUES (19);
 INSERT INTO cart (id) VALUES (20);
 
---- WISHLIST
-
-INSERT INTO wishlist (id) VALUES (1,1);
-INSERT INTO wishlist (id) VALUES (2,2);
-INSERT INTO wishlist (id) VALUES (3,3);
-INSERT INTO wishlist (id) VALUES (4,4);
-INSERT INTO wishlist (id) VALUES (5,5);
 
 
 --- LOCATION
@@ -262,26 +254,27 @@ INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUE
 
 --- USER
 
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (1, 'johndoe', 'johndoe@example.com', '1234', '908-203-0817', false, 'NatoquePenatibusEt.mp3', 1);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (2, 'bjamieson1', 'sbraxton1@epa.gov', 'kD7!qF?n&', '862-798-8952', false, 'Sit.xls', 2);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (3, 'kkennelly2', 'ddallywater2@umn.edu', 'aV8(dRf$', '859-401-2783', false, 'NislAenean.jpeg', 3);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (4, 'tpechell3', 'ffooter3@xrea.com', 'zI1>5#6a6,', '968-762-5907', false, 'ProinEuMi.avi', 4);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (5, 'acastree4', 'jreford4@boston.com', 'sO7~eEoK=`W<', '357-716-0462', false, 'EratVolutpat.txt', 5);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (6, 'smahedy5', 'pboschmann5@buzzfeed.com', 'fR4&!%#vXkvPh8=l', '847-796-2466', false, 'InPorttitorPede.xls', 6);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (7, 'mmcfater6', 'lghelerdini6@ft.com', 'cH7#uiRmS`h`', '710-855-1050', false, 'NuncNisl.mp3', 7);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (8, 'kestable7', 'bswann7@virginia.edu', 'qU1=9mSxgWt', '975-748-6554', false, 'MolestieHendreritAt.txt', 8);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (9, 'msommerled8', 'emothersdale8@vimeo.com', 'fJ1`KU<1&', '827-270-5321', false, 'AcNequeDuis.doc', 9);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (10, 'amarjoribanks9', 'dmantripp9@jugem.jp', 'bP4.=9)pH\p''', '452-783-2593', false, 'InBlandit.avi', 10);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (11, 'nskilletta', 'kbeckleya@sohu.com', 'fP7%9BczXBDQ?b', '383-756-0620', false, 'VestibulumAnteIpsum.txt', 11);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (12, 'gdeignanb', 'mkaszperb@purevolume.com', 'gA3|)?lF#e', '249-431-8395', false, 'PenatibusEtMagnis.jpeg', 12);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (13, 'ndurdlec', 'mbenzac@bluehost.com', 'mK9*kVj#4$I</i', '822-374-3745', false, 'MusEtiamVel.mp3', 13);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (14, 'dwhitcombd', 'emadged@java.com', 'gA8\)aOC&h4', '447-788-9439', false, 'BibendumFelisSed.tiff', 14);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (15, 'evongrollmanne', 'lmccarrolle@ihg.com', 'aR4}r&=5P`0FJ3', '338-541-6962', false, 'ViverraPede.avi', 15);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (16, 'pirwinf', 'gkestonf@mashable.com', 'uU8<G2LXy)R?@mf?', '793-213-0273', false, 'Nec.avi', 16);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (17, 'bliffeyg', 'ldrennang@timesonline.co.uk', 'uN9&S%ccnfmk/N', '123-378-5421', false, 'InFaucibus.xls', 17);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (18, 'freichelth', 'bpochonh@guardian.co.uk', 'wM8=%||FA%QF~@', '789-829-4854', false, 'Odio.doc', 18);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (19, 'ahedgesi', 'jantonuttii@hubpages.com', 'gK3=wACQ', '426-239-7613', false, 'PhasellusSit.xls', 19);
-insert into user (id, username, email, password, phone, is_banned, profile_picture, id_cart) values (20, 'ftrailj', 'cperchj@washingtonpost.com', 'wM4|L+.1.''KiG', '523-875-3936', false, 'SapienCursus.mp3', 20);
+insert into "user" (id, username, email, password, phone, id_cart) values (1, 'johndoe', 'johndoe@example.com', '1234567890', '938203081', 1);
+insert into "user" (id, username, email, password, phone, id_cart) values (2, 'bjamieson1', 'sbraxton1@example.com', 'kD7!qF?n&K', '932798895', 2);
+insert into "user" (id, username, email, password, phone, id_cart) values (3, 'kkennelly2', 'ddallywater2@example.com', 'aV8(dRf$kP', '939401278', 3);
+insert into "user" (id, username, email, password, phone, id_cart) values (4, 'tpechell3', 'ffooter3@example.com', 'zI1>5#6a6,k', '938762590', 4);
+insert into "user" (id, username, email, password, phone, id_cart) values (5, 'acastree4', 'jreford4@example.com', 'sO7~eEoK=`W<', '937716046', 5);
+insert into "user" (id, username, email, password, phone, id_cart) values (6, 'smahedy5', 'pboschmann5@example.com', 'fR4&!%#vXkvP', '937796246', 6);
+insert into "user" (id, username, email, password, phone, id_cart) values (7, 'mmcfater6', 'lghelerdini6@example.com', 'cH7#uiRmS`h`', '930855105', 7);
+insert into "user" (id, username, email, password, phone, id_cart) values (8, 'kestable7', 'bswann7@example.com', 'qU1=9mSxgWt+', '935748655', 8);
+insert into "user" (id, username, email, password, phone, id_cart) values (9, 'msommerled8', 'emothersdale8@example.com', 'fJ1`KU<1&$R', '937270532', 9);
+insert into "user" (id, username, email, password, phone, id_cart) values (10, 'amarjoribanks9', 'dmantripp9@example.com', 'bP4.=9)pH\p`', '932783259', 10);
+insert into "user" (id, username, email, password, phone, id_cart) values (11, 'nskilletta', 'kbeckleya@example.com', 'fP7%9BczXBDQ', '933756062', 11);
+insert into "user" (id, username, email, password, phone, id_cart) values (12, 'gdeignanb', 'mkaszperb@example.com', 'gA3|)?lF#eJ', '939431839', 12);
+insert into "user" (id, username, email, password, phone, id_cart) values (13, 'ndurdlec', 'mbenzac@example.com', 'mK9*kVj#4$I<', '932374374', 13);
+insert into "user" (id, username, email, password, phone, id_cart) values (14, 'dwhitcombd', 'emadged@example.com', 'gA8\)aOC&h4K', '937788943', 14);
+insert into "user" (id, username, email, password, phone, id_cart) values (15, 'evongrollmanne', 'lmccarrolle@example.com', 'aR4}r&=5P`0F', '938541696', 15);
+insert into "user" (id, username, email, password, phone, id_cart) values (16, 'pirwinf', 'gkestonf@example.com', 'uU8<G2LXy)R?', '933213027', 16);
+insert into "user" (id, username, email, password, phone, id_cart) values (17, 'bliffeyg', 'ldrennang@example.com', 'uN9&S%ccnfmk', '933378542', 17);
+insert into "user" (id, username, email, password, phone, id_cart) values (18, 'freichelth', 'bpochonh@example.com', 'wM8=%||FA%QF', '939829485', 18);
+insert into "user" (id, username, email, password, phone, id_cart) values (19, 'ahedgesi', 'jantonuttii@example.com', 'gK3=wACQr5T7', '936239761', 19);
+insert into "user" (id, username, email, password, phone, id_cart) values (20, 'ftrailj', 'cperchj@example.com', 'wM4|L+.1.''Ki', '933875393', 20);
+
 
 --- ADMIN
 
@@ -291,6 +284,13 @@ insert into admin (id, username, email, password, phone) values (23, 'dvaughanhu
 insert into admin (id, username, email, password, phone) values (24, 'amatterface3', 'ndanneil3@hud.gov', 'cW3?)hMX6Gzbs', '700-964-4874');
 insert into admin (id, username, email, password, phone) values (25, 'pthomasen4', 'gslym4@imdb.com', 'cM2}p)NgRpu6by', '700-772-7895');
 
+--- WISHLIST
+
+INSERT INTO wishlist (id_user,id_item) VALUES (1,1);
+INSERT INTO wishlist (id_user,id_item) VALUES (2,2);
+INSERT INTO wishlist (id_user,id_item) VALUES (3,3);
+INSERT INTO wishlist (id_user,id_item) VALUES (4,4);
+INSERT INTO wishlist (id_user,id_item) VALUES (5,5);
 
 --- IMAGE
 
@@ -351,8 +351,8 @@ INSERT INTO cart_item (id_cart, id_item) VALUES (10, 5);
 
 --- REVIEW
 
-insert into review values (id,description,rating,id_user,id_item) values (1,'This is a masterpiece',5,1,1);
-insert into review values (id,description,rating,id_user,id_item) values (2,"i don't like this",1,2,1);
-insert into review values (id,description,rating,id_user,id_item) values (3,'great product, dont like the color tho',4,3,2);
-insert into review values (id,description,rating,id_user,id_item) values (4,'my name is jeff',5,1,5);
-insert into review values (id,description,rating,id_user,id_item) values (5,'wow.',5,4,3);
+INSERT INTO review (id,description,rating,id_user,id_item) values (1,'This is a masterpiece',5,1,1);
+INSERT INTO review (id,description,rating,id_user,id_item) values (2,'i do not like this',1,2,1);
+INSERT INTO review (id,description,rating,id_user,id_item) values (3,'great product, dont like the color tho',4,3,2);
+INSERT INTO review (id,description,rating,id_user,id_item) values (4,'my name is jeff',5,1,5);
+INSERT INTO review (id,description,rating,id_user,id_item) values (5,'wow.',5,4,3);

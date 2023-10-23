@@ -50,7 +50,7 @@ CREATE TYPE PaymentMethod as ENUM ('Transfer', 'Paypal');
 
 CREATE TYPE PurchaseStatus as ENUM ('Processing', 'Packed', 'Sent', 'Delivered');
 
-CREATE TYPE NotificationType as ENUM ('Sale', 'PurchaseStatusChange','RESTOCK','ORDER_UPDATE');
+CREATE TYPE NotificationType as ENUM ('SALE', 'RESTOCK','ORDER_UPDATE');
 
 
 ------------ tables
@@ -64,11 +64,12 @@ CREATE TABLE item(
     color TEXT NOT NULL,
     era TEXT,
     fabric TEXT,
-    description TEXT
+    description TEXT,
+    brand TEXT
 );
 
 CREATE TABLE cart(
-    id SERIAL PRIMARY KEY
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 );
 
 CREATE TABLE "user"(
@@ -93,6 +94,7 @@ CREATE TABLE admin(
 CREATE TABLE cart_item(
     id_cart INTEGER NOT NULL REFERENCES Cart(id),
     id_item INTEGER NOT NULL REFERENCES Item(id),
+    quantity INTEGER NOT NULL DEFAULT 1 CONSTRAINT quantity_positive CHECK (quantity > 0),
     PRIMARY KEY(id_cart, id_item)
 );
 
@@ -119,7 +121,8 @@ CREATE TABLE purchase(
     purchase_status PurchaseStatus NOT NULL,
     payment_method PaymentMethod NOT NULL,
     id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE SET NULL,
-    id_location INTEGER NOT NULL REFERENCES location(id)
+    id_location INTEGER NOT NULL REFERENCES location(id),
+    id_cart INTEGER NOT NULL REFERENCES cart(id)
 );
 
 CREATE TABLE review(
@@ -138,8 +141,8 @@ CREATE TABLE notification(
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
     notification_type NotificationType NOT NULL,
     id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE SET NULL,
-    id_item INTEGER NOT NULL REFERENCES item(id) ON DELETE SET NULL,
-    id_purchase INTEGER NOT NULL REFERENCES purchase(id) ON DELETE SET NULL
+    id_item INTEGER  REFERENCES item(id) ON DELETE SET NULL,
+    id_purchase INTEGER REFERENCES purchase(id) ON DELETE SET NULL
 );
 
 CREATE TABLE image(
@@ -179,30 +182,250 @@ CREATE TABLE jeans(
     rise_size INTEGER NOT NULL CONSTRAINT rise_size_check CHECK (rise_size > 0)
 );
 
+-----------------------------------------
+-- INDEXES
+-----------------------------------------
+
+-- B-tree type functions
+CREATE INDEX price_index ON item USING btree (price);
+
+-- B-tree type function using clustering
+CREATE INDEX review_item_id_index ON review (id_item);
+CLUSTER review USING review_item_id_index;
+
+--Hash type functions
+CREATE INDEX item_brand_index ON item USING HASH (brand);
+
+-----------------------------------------
+-- FTS INDEX
+-----------------------------------------
+
+-- Add column to item to store computed ts_vectors.
+
+ALTER TABLE item
+ADD COLUMN tsvectors TSVECTOR;
+
+-- Create a function to automatically update ts_vectors.
+
+CREATE FUNCTION item_search_update() RETURNS TRIGGER AS $$
+BEGIN
+    NEW.tsvectors = (
+        setweight(to_tsvector('english', NEW.name), 'A') ||
+        setweight(to_tsvector('english', NEW.description), 'B')
+    );
+    RETURN NEW;
+END $$
+LANGUAGE plpgsql;
+
+-- Create trigger before insert or update on item.
+
+CREATE TRIGGER item_search_update
+BEFORE INSERT OR UPDATE ON item
+FOR EACH ROW
+EXECUTE PROCEDURE item_search_update();
+
+-- Finally, create a GIN index for ts_vectors.
+
+CREATE INDEX search_idx ON item USING GIN (tsvectors);
+
+-----------------------------------------
+-- TRIGGERS and UDFs
+-----------------------------------------
+
+-- TRIGGER 1: Updates the stock of an item when a purchase is made.
+
+CREATE OR REPLACE FUNCTION update_item_stock()
+RETURNS TRIGGER AS $BODY$
+DECLARE
+    item_record RECORD; 
+BEGIN
+    FOR item_record IN (
+        SELECT item.id, cart_item.quantity
+        FROM cart_item
+        JOIN item ON cart_item.id_item = item.id
+        WHERE cart_item.id_cart = NEW.id_cart
+    ) LOOP
+        UPDATE item
+        SET stock = stock - item_record.quantity
+        WHERE id = item_record.id;
+    END LOOP;
+
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_item_stock
+AFTER INSERT ON purchase
+FOR EACH ROW
+EXECUTE FUNCTION update_item_stock();
+
+-- TRIGGER 2: Updates the review count and average rating for an item whenever a new review is added or an existing review is modified
+
+CREATE OR REPLACE FUNCTION update_item_reviews()
+RETURNS TRIGGER AS $BODY$
+BEGIN
+    UPDATE item
+    SET rating = (
+        SELECT AVG(rating) FROM review WHERE id_item = NEW.id_item
+    )
+    WHERE id = NEW.id_item;
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER update_item_reviews_on_insert
+    AFTER INSERT ON review
+    FOR EACH ROW
+EXECUTE FUNCTION update_item_reviews();
+CREATE TRIGGER update_item_reviews_on_update
+    AFTER UPDATE ON review
+    FOR EACH ROW
+EXECUTE FUNCTION update_item_reviews();
+
+ -- TRIGGER 3: Notify When a Wishlist Item Enters Sale
+
+CREATE OR REPLACE FUNCTION notify_wishlist_sale()
+RETURNS TRIGGER AS $BODY$
+BEGIN
+    IF NEW.price < OLD.price THEN
+        INSERT INTO notification (description, notification_type, id_user, id_item)
+        SELECT 
+            'Item on your wishlist (' || OLD.name || ') is now on sale.',
+            'SALE',
+            w.id_user,
+            w.id_item
+        FROM wishlist AS w
+        WHERE w.id_item = NEW.id;
+    END IF;
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER wishlist_sale_notification
+    AFTER UPDATE ON item
+    FOR EACH ROW
+    EXECUTE FUNCTION notify_wishlist_sale(); 
+   
+-- TRIGGER 4: Notify When a Wishlist Item Enters in Stock
+
+CREATE OR REPLACE FUNCTION notify_wishlist_stock()
+RETURNS TRIGGER AS $BODY$
+BEGIN
+    -- Check if the 'stock' column was updated and the new stock is greater than 0
+    IF OLD.stock = 0 AND NEW.stock > 0 THEN
+        INSERT INTO notification (description, notification_type, id_user, id_item)
+        SELECT 
+            'Item on your wishlist (' || NEW.name || ') is now back in stock.',
+            'RESTOCK',
+            w.id_user,
+            w.id_item
+        FROM wishlist AS w
+        WHERE w.id_item = NEW.id;
+    END IF;
+
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER wishlist_stock_notification
+    AFTER UPDATE ON item
+    FOR EACH ROW
+    EXECUTE FUNCTION notify_wishlist_stock();
+
+-- TRIGGER 5: Notify When a Purchase Status Changes
+
+CREATE OR REPLACE FUNCTION notify_purchase_status_change()
+RETURNS TRIGGER AS $BODY$
+BEGIN
+    IF NEW.purchase_status = 'Packed' THEN
+        INSERT INTO notification (description, notification_type, id_user, id_purchase)
+        SELECT 
+            'Your order (' || p.id || ') has been packet and is now being processed to be sent!',
+            'ORDER_UPDATE',
+            p.id_user,
+            p.id
+        FROM purchase AS p
+        WHERE p.id = NEW.id AND NEW.purchase_status != OLD.purchase_status;
+    END IF;
+    IF NEW.purchase_status = 'Sent' THEN
+        INSERT INTO notification (description, notification_type, id_user, id_purchase)
+        SELECT 
+            'Your order (' || p.id || ') has been sent!',
+            'ORDER_UPDATE',
+            p.id_user,
+            p.id
+        FROM purchase AS p
+        WHERE p.id = NEW.id AND NEW.purchase_status != OLD.purchase_status;
+    END IF;
+    IF NEW.purchase_status = 'Delivered' THEN
+        INSERT INTO notification (description, notification_type, id_user, id_purchase)
+        SELECT 
+            'Your order (' || p.id || ') has been delivered! Do not forget to leave a review!',
+            'ORDER_UPDATE',
+            p.id_user,
+            p.id
+        FROM purchase AS p
+        WHERE p.id = NEW.id AND NEW.purchase_status != OLD.purchase_status;
+    END IF;
+    RETURN NEW;
+END;
+$BODY$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER purchase_status_change_notification
+    AFTER UPDATE ON purchase
+    FOR EACH ROW
+    EXECUTE FUNCTION notify_purchase_status_change();
+
+-- TRIGGER 6: Change users to a new empty cart whenever they make a purchase
+
+CREATE OR REPLACE FUNCTION create_new_cart_for_user()
+RETURNS TRIGGER AS $$
+DECLARE
+    new_cart_id INTEGER;
+BEGIN
+    -- Create a new empty cart for the user and capture the new ID
+    INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
+
+    -- Update the user's record with the new cart ID
+    UPDATE "user" SET id_cart = new_cart_id WHERE id = NEW.id_user;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER user_made_purchase
+AFTER INSERT ON purchase
+FOR EACH ROW
+WHEN (NEW.id_user IS NOT NULL)
+EXECUTE FUNCTION create_new_cart_for_user();
+
 --- CART
 
-INSERT INTO cart (id) VALUES (1);
-INSERT INTO cart (id) VALUES (2);
-INSERT INTO cart (id) VALUES (3);
-INSERT INTO cart (id) VALUES (4);
-INSERT INTO cart (id) VALUES (5);
-INSERT INTO cart (id) VALUES (6);
-INSERT INTO cart (id) VALUES (7);
-INSERT INTO cart (id) VALUES (8);
-INSERT INTO cart (id) VALUES (9);
-INSERT INTO cart (id) VALUES (10);
-INSERT INTO cart (id) VALUES (11);
-INSERT INTO cart (id) VALUES (12);
-INSERT INTO cart (id) VALUES (13);
-INSERT INTO cart (id) VALUES (14);
-INSERT INTO cart (id) VALUES (15);
-INSERT INTO cart (id) VALUES (16);
-INSERT INTO cart (id) VALUES (17);
-INSERT INTO cart (id) VALUES (18);
-INSERT INTO cart (id) VALUES (19);
-INSERT INTO cart (id) VALUES (20);
-
-
+INSERT INTO cart DEFAULT VALUES; 
+INSERT INTO cart DEFAULT VALUES;
+INSERT INTO cart DEFAULT VALUES;
+INSERT INTO cart DEFAULT VALUES;
+INSERT INTO cart DEFAULT VALUES;
+INSERT INTO cart DEFAULT VALUES;
+INSERT INTO cart DEFAULT VALUES;
+INSERT INTO cart DEFAULT VALUES;
+INSERT INTO cart DEFAULT VALUES;
+INSERT INTO cart DEFAULT VALUES; 
+INSERT INTO cart DEFAULT VALUES; 
+INSERT INTO cart DEFAULT VALUES; 
+INSERT INTO cart DEFAULT VALUES; 
+INSERT INTO cart DEFAULT VALUES; 
+INSERT INTO cart DEFAULT VALUES; 
+INSERT INTO cart DEFAULT VALUES; 
+INSERT INTO cart DEFAULT VALUES; 
+INSERT INTO cart DEFAULT VALUES; 
+INSERT INTO cart DEFAULT VALUES; 
+INSERT INTO cart DEFAULT VALUES; 
 
 --- LOCATION
 
@@ -230,6 +453,9 @@ INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUE
 INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (3, 'Classic Flannel Shirt', 45.00, 15, 'Red', '70s', 'Cotton', 'Red flannel shirt with classic look.');
 INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (4, 'Vintage High-waist Jeans', 65.00, 20, 'Blue', '80s', 'Denim', 'High-waisted jeans with a vintage style.');
 INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (5, 'Retro Sneakers', 50.00, 40, 'Multi', '90s', 'Canvas', 'Colorful sneakers with a retro look.');
+INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (6, 'Vintage leather Jacket', 109.99, 0, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
+
+
 /* INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (6, 'Vintage Rock Band TShirt', 35.00, 30, 'Black', '80s', 'Cotton', 'Black TShirt with vintage rock band print.');
 INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (7, '70s Denim Jacket', 95.00, 5, 'Blue', '70s', 'Denim', 'Blue denim jacket with 70s styling.');
 INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (8, 'Retro Striped Shirt', 40.00, 25, 'Green', '80s', 'Cotton', 'Green striped shirt with a retro feel.');
@@ -266,14 +492,14 @@ insert into "user" (id, username, email, password, phone, id_cart) values (9, 'm
 insert into "user" (id, username, email, password, phone, id_cart) values (10, 'amarjoribanks9', 'dmantripp9@example.com', 'bP4.=9)pH\p`', '932783259', 10);
 insert into "user" (id, username, email, password, phone, id_cart) values (11, 'nskilletta', 'kbeckleya@example.com', 'fP7%9BczXBDQ', '933756062', 11);
 insert into "user" (id, username, email, password, phone, id_cart) values (12, 'gdeignanb', 'mkaszperb@example.com', 'gA3|)?lF#eJ', '939431839', 12);
-insert into "user" (id, username, email, password, phone, id_cart) values (13, 'ndurdlec', 'mbenzac@example.com', 'mK9*kVj#4$I<', '932374374', 13);
-insert into "user" (id, username, email, password, phone, id_cart) values (14, 'dwhitcombd', 'emadged@example.com', 'gA8\)aOC&h4K', '937788943', 14);
-insert into "user" (id, username, email, password, phone, id_cart) values (15, 'evongrollmanne', 'lmccarrolle@example.com', 'aR4}r&=5P`0F', '938541696', 15);
-insert into "user" (id, username, email, password, phone, id_cart) values (16, 'pirwinf', 'gkestonf@example.com', 'uU8<G2LXy)R?', '933213027', 16);
-insert into "user" (id, username, email, password, phone, id_cart) values (17, 'bliffeyg', 'ldrennang@example.com', 'uN9&S%ccnfmk', '933378542', 17);
-insert into "user" (id, username, email, password, phone, id_cart) values (18, 'freichelth', 'bpochonh@example.com', 'wM8=%||FA%QF', '939829485', 18);
-insert into "user" (id, username, email, password, phone, id_cart) values (19, 'ahedgesi', 'jantonuttii@example.com', 'gK3=wACQr5T7', '936239761', 19);
-insert into "user" (id, username, email, password, phone, id_cart) values (20, 'ftrailj', 'cperchj@example.com', 'wM4|L+.1.''Ki', '933875393', 20);
+insert into "user" (id, username, email, password, phone, id_cart) values (13, 'ndurdlec', 'mbenzac@example.com', 'mK9*kVj#4$I<', '932374374',13);
+insert into "user" (id, username, email, password, phone, id_cart) values (14, 'dwhitcombd', 'emadged@example.com', 'gA8\)aOC&h4K', '937788943',14);
+insert into "user" (id, username, email, password, phone, id_cart) values (15, 'evongrollmanne', 'lmccarrolle@example.com', 'aR4}r&=5P`0F', '938541696',15);
+insert into "user" (id, username, email, password, phone, id_cart) values (16, 'pirwinf', 'gkestonf@example.com', 'uU8<G2LXy)R?', '933213027',16);
+insert into "user" (id, username, email, password, phone, id_cart) values (17, 'bliffeyg', 'ldrennang@example.com', 'uN9&S%ccnfmk', '933378542',17);
+insert into "user" (id, username, email, password, phone, id_cart) values (18, 'freichelth', 'bpochonh@example.com', 'wM8=%||FA%QF', '939829485',18);
+insert into "user" (id, username, email, password, phone, id_cart) values (19, 'ahedgesi', 'jantonuttii@example.com', 'gK3=wACQr5T7', '936239761',19);
+insert into "user" (id, username, email, password, phone, id_cart) values (20, 'ftrailj', 'cperchj@example.com', 'wM4|L+.1.''Ki', '933875393',20);
 
 
 --- ADMIN
@@ -287,6 +513,7 @@ insert into admin (id, username, email, password, phone) values (25, 'pthomasen4
 --- WISHLIST
 
 INSERT INTO wishlist (id_user,id_item) VALUES (1,1);
+INSERT INTO wishlist (id_user,id_item) VALUES (1,6);
 INSERT INTO wishlist (id_user,id_item) VALUES (2,2);
 INSERT INTO wishlist (id_user,id_item) VALUES (3,3);
 INSERT INTO wishlist (id_user,id_item) VALUES (4,4);
@@ -356,3 +583,20 @@ INSERT INTO review (id,description,rating,id_user,id_item) values (2,'i do not l
 INSERT INTO review (id,description,rating,id_user,id_item) values (3,'great product, dont like the color tho',4,3,2);
 INSERT INTO review (id,description,rating,id_user,id_item) values (4,'my name is jeff',5,1,5);
 INSERT INTO review (id,description,rating,id_user,id_item) values (5,'wow.',5,4,3);
+INSERT INTO review (id,description,rating,id_user,id_item) values (6,'This is a masterpiece!!',5,1,1);
+
+--- PURCHASE
+
+INSERT INTO purchase (price, purchase_date, delivery_date, purchase_status, payment_method, id_user, id_location, id_cart)
+VALUES ( 109.98, '2023-10-10', '2023-10-15', 'Processing', 'Transfer', 1, 1, 1);
+INSERT INTO purchase (price, purchase_date, delivery_date, purchase_status, payment_method, id_user, id_location, id_cart)
+VALUES (45.00 , '2023-10-08', '2023-10-20', 'Processing', 'Paypal', 2,2, 2);
+
+
+/* testing triggers */
+UPDATE item SET stock = 1 WHERE id = 6;
+UPDATE item SET price = 99.99 WHERE id = 6;
+UPDATE purchase SET purchase_status = 'Packed' WHERE id = 1;
+UPDATE purchase SET purchase_status = 'Delivered' WHERE id = 1;
+UPDATE purchase SET purchase_status = 'Packed' WHERE id = 2;
+UPDATE purchase SET purchase_status = 'Sent' WHERE id = 2;

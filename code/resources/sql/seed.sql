@@ -2,43 +2,7 @@ drop schema if exists lbaw2366 cascade;
 create schema lbaw2366;
 SET search_path TO lbaw2366;
 
-
-/* DROP TABLE IF EXISTS wishlist CASCADE;
-DROP TABLE IF EXISTS cart_item CASCADE;
-DROP TABLE IF EXISTS review CASCADE;
-DROP TABLE IF EXISTS notification CASCADE;
-DROP TABLE IF EXISTS image CASCADE;
-DROP TABLE IF EXISTS purchase CASCADE;
-DROP TABLE IF EXISTS location CASCADE;
-DROP TABLE IF EXISTS wishlist CASCADE;
-DROP TABLE IF EXISTS shirt CASCADE;
-DROP TABLE IF EXISTS tshirt CASCADE;
-DROP TABLE IF EXISTS jacket CASCADE;
-DROP TABLE IF EXISTS sneaker CASCADE;
-DROP TABLE IF EXISTS jeans CASCADE;
-DROP TABLE IF EXISTS cart CASCADE;
-DROP TABLE IF EXISTS item CASCADE;
-DROP TABLE IF EXISTS admin CASCADE;
-DROP TABLE IF EXISTS user CASCADE; */
-
--- drop triggers
-
--- drop functions 
-
--- drop indexes
-
--- drop types
-
-/* DROP TYPE IF EXISTS ShirtType;
-DROP TYPE IF EXISTS TshirtType;
-DROP TYPE IF EXISTS JacketType;
-DROP TYPE IF EXISTS PaymentMethod;
-DROP TYPE IF EXISTS PurchaseStatus;
-DROP TYPE IF EXISTS NotificationType; */
-
 ----------- types
-
-
 
 CREATE TYPE ShirtType as ENUM('Collarless', 'Regular', 'Short sleeve');
 
@@ -51,7 +15,6 @@ CREATE TYPE PaymentMethod as ENUM ('Transfer', 'Paypal');
 CREATE TYPE PurchaseStatus as ENUM ('Processing', 'Packed', 'Sent', 'Delivered');
 
 CREATE TYPE NotificationType as ENUM ('SALE', 'RESTOCK','ORDER_UPDATE');
-
 
 ------------ tables
 
@@ -429,86 +392,86 @@ INSERT INTO cart DEFAULT VALUES;
 
 --- LOCATION
 
-insert into location (id, address, city, country, postal_code) values (1, '9 Sauthoff Circle', 'Goya', 'Argentina', '3450');
-insert into location (id, address, city, country, postal_code) values (2, '38217 Hagan Place', 'At Tibnī', 'Syria', '4490');
-insert into location (id, address, city, country, postal_code) values (3, '75191 Texas Place', 'Qutun', 'China', '4490');
-insert into location (id, address, city, country, postal_code) values (4, '76593 Mockingbird Way', 'Huaylillas', 'Peru', '4490');
-insert into location (id, address, city, country, postal_code) values (5, '2 Springview Center', 'Boden', 'Sweden', '961 86');
-insert into location (id, address, city, country, postal_code) values (6, '30 Steensland Center', 'Ḑawrān ad Daydah', 'Yemen', '4490');
-insert into location (id, address, city, country, postal_code) values (7, '1 Russell Avenue', 'Đắk Glei', 'Vietnam', '4490');
-insert into location (id, address, city, country, postal_code) values (8, '2 Dixon Parkway', 'Budapest', 'Hungary', '1147');
-insert into location (id, address, city, country, postal_code) values (9, '7540 Lake View Street', 'Aigínio', 'Greece', '4490');
-insert into location (id, address, city, country, postal_code) values (10, '33 Mayer Avenue', 'Nagua', 'Dominican Republic', '10118');
-insert into location (id, address, city, country, postal_code) values (11, '9887 Lawn Center', 'Verkhnyachka', 'Ukraine', '4490');
-insert into location (id, address, city, country, postal_code) values (12, '19358 Portage Pass', 'Doña Remedios Trinidad', 'Philippines', '3009');
-insert into location (id, address, city, country, postal_code) values (13, '30257 Nancy Terrace', 'Šentvid pri Stični', 'Slovenia', '1296');
-insert into location (id, address, city, country, postal_code) values (14, '0 Graceland Point', 'Lipsko', 'Poland', '27-300');
-insert into location (id, address, city, country, postal_code) values (15, '05918 Cardinal Terrace', 'Sājir', 'Saudi Arabia', '4490');
+insert into location (address, city, country, postal_code) values ('9 Sauthoff Circle', 'Goya', 'Argentina', '3450');
+insert into location (address, city, country, postal_code) values ('38217 Hagan Place', 'At Tibnī', 'Syria', '4490');
+insert into location (address, city, country, postal_code) values ('75191 Texas Place', 'Qutun', 'China', '4490');
+insert into location (address, city, country, postal_code) values ('76593 Mockingbird Way', 'Huaylillas', 'Peru', '4490');
+insert into location (address, city, country, postal_code) values ('2 Springview Center', 'Boden', 'Sweden', '961 86');
+insert into location (address, city, country, postal_code) values ('30 Steensland Center', 'Ḑawrān ad Daydah', 'Yemen', '4490');
+insert into location (address, city, country, postal_code) values ('1 Russell Avenue', 'Đắk Glei', 'Vietnam', '4490');
+insert into location (address, city, country, postal_code) values ('2 Dixon Parkway', 'Budapest', 'Hungary', '1147');
+insert into location (address, city, country, postal_code) values ('7540 Lake View Street', 'Aigínio', 'Greece', '4490');
+insert into location (address, city, country, postal_code) values ('33 Mayer Avenue', 'Nagua', 'Dominican Republic', '10118');
+insert into location (address, city, country, postal_code) values ('9887 Lawn Center', 'Verkhnyachka', 'Ukraine', '4490');
+insert into location (address, city, country, postal_code) values ('19358 Portage Pass', 'Doña Remedios Trinidad', 'Philippines', '3009');
+insert into location (address, city, country, postal_code) values ('30257 Nancy Terrace', 'Šentvid pri Stični', 'Slovenia', '1296');
+insert into location (address, city, country, postal_code) values ('0 Graceland Point', 'Lipsko', 'Poland', '27-300');
+insert into location (address, city, country, postal_code) values ('05918 Cardinal Terrace', 'Sājir', 'Saudi Arabia', '4490');
 
 
 --- ITEM
 
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (1, 'Retro Graphic TShirt', 29.99, 25, 'White', '90s', 'Cotton', 'White TShirt with retro graphic design.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (2, 'Vintage Denim Jacket', 79.99, 10, 'Blue', '80s', 'Denim', 'A stylish vintage denim jacket.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (3, 'Classic Flannel Shirt', 45.00, 15, 'Red', '70s', 'Cotton', 'Red flannel shirt with classic look.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (4, 'Vintage High-waist Jeans', 65.00, 20, 'Blue', '80s', 'Denim', 'High-waisted jeans with a vintage style.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (5, 'Retro Sneakers', 50.00, 40, 'Multi', '90s', 'Canvas', 'Colorful sneakers with a retro look.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (6, 'Vintage leather Jacket', 109.99, 0, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Retro Graphic TShirt', 29.99, 25, 'White', '90s', 'Cotton', 'White TShirt with retro graphic design.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Denim Jacket', 79.99, 10, 'Blue', '80s', 'Denim', 'A stylish vintage denim jacket.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Classic Flannel Shirt', 45.00, 15, 'Red', '70s', 'Cotton', 'Red flannel shirt with classic look.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage High-waist Jeans', 65.00, 20, 'Blue', '80s', 'Denim', 'High-waisted jeans with a vintage style.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Retro Sneakers', 50.00, 40, 'Multi', '90s', 'Canvas', 'Colorful sneakers with a retro look.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage leather Jacket', 109.99, 0, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
 
 
-/* INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (6, 'Vintage Rock Band TShirt', 35.00, 30, 'Black', '80s', 'Cotton', 'Black TShirt with vintage rock band print.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (7, '70s Denim Jacket', 95.00, 5, 'Blue', '70s', 'Denim', 'Blue denim jacket with 70s styling.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (8, 'Retro Striped Shirt', 40.00, 25, 'Green', '80s', 'Cotton', 'Green striped shirt with a retro feel.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (9, 'Classic Blue Jeans', 60.00, 20, 'Blue', '90s', 'Denim', 'Classic blue jeans with a relaxed fit.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (10, 'Vintage Leather Sneakers', 80.00, 15, 'White', '70s', 'Leather', 'White leather sneakers with vintage design.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (11, 'Vintage Baseball TShirt', 30.00, 35, 'White', '90s', 'Cotton', 'White baseball TShirt with vintage logo.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (12, '80s Style Denim Jacket', 89.99, 8, 'Blue', '80s', 'Denim', 'Denim jacket with 80s style accents.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (13, 'Retro Western Shirt', 55.00, 18, 'Red', '70s', 'Cotton', 'Red western shirt with retro detailing.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (14, 'Vintage Skinny Jeans', 70.00, 12, 'Black', '80s', 'Denim', 'Black skinny jeans with a vintage cut.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (15, 'Classic Canvas Sneakers', 65.00, 30, 'Black', '90s', 'Canvas', 'Black classic canvas sneakers.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (16, 'Vintage Band TShirt', 35.00, 28, 'Grey', '70s', 'Cotton', 'Grey TShirt with vintage band graphic.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (17, 'Retro Leather Jacket', 120.00, 6, 'Black', '80s', 'Leather', 'Black leather jacket with retro styling.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (18, 'Classic Plaid Shirt', 50.00, 22, 'Blue', '90s', 'Cotton', 'Blue plaid shirt with classic fit.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (19, 'Vintage Straight-Leg Jeans', 75.00, 15, 'Blue', '70s', 'Denim', 'Straight-leg jeans with a vintage feel.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (20, 'Retro High-Top Sneakers', 85.00, 10, 'Red', '80s', 'Canvas', 'Red high-top sneakers with retro flair.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (21, 'Vintage Logo TShirt', 30.00, 40, 'Blue', '90s', 'Cotton', 'Blue TShirt with vintage brand logo.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (22, '70s Corduroy Jacket', 110.00, 4, 'Brown', '70s', 'Corduroy', 'Brown corduroy jacket from the 70s.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (23, 'Retro Short Sleeve Shirt', 45.00, 20, 'Yellow', '80s', 'Cotton', 'Yellow short sleeve shirt with retro print.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (24, 'Vintage Bootcut Jeans', 68.00, 13, 'Blue', '70s', 'Denim', 'Blue bootcut jeans with vintage styling.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (25, 'Classic Leather Sneakers', 90.00, 18, 'White', '90s', 'Leather', 'Classic white leather sneakers.');
- */
+/* INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Rock Band TShirt', 35.00, 30, 'Black', '80s', 'Cotton', 'Black TShirt with vintage rock band print.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('70s Denim Jacket', 95.00, 5, 'Blue', '70s', 'Denim', 'Blue denim jacket with 70s styling.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Retro Striped Shirt', 40.00, 25, 'Green', '80s', 'Cotton', 'Green striped shirt with a retro feel.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Classic Blue Jeans', 60.00, 20, 'Blue', '90s', 'Denim', 'Classic blue jeans with a relaxed fit.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Leather Sneakers', 80.00, 15, 'White', '70s', 'Leather', 'White leather sneakers with vintage design.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Baseball TShirt', 30.00, 35, 'White', '90s', 'Cotton', 'White baseball TShirt with vintage logo.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( '80s Style Denim Jacket', 89.99, 8, 'Blue', '80s', 'Denim', 'Denim jacket with 80s style accents.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro Western Shirt', 55.00, 18, 'Red', '70s', 'Cotton', 'Red western shirt with retro detailing.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Skinny Jeans', 70.00, 12, 'Black', '80s', 'Denim', 'Black skinny jeans with a vintage cut.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Classic Canvas Sneakers', 65.00, 30, 'Black', '90s', 'Canvas', 'Black classic canvas sneakers.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Band TShirt', 35.00, 28, 'Grey', '70s', 'Cotton', 'Grey TShirt with vintage band graphic.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro Leather Jacket', 120.00, 6, 'Black', '80s', 'Leather', 'Black leather jacket with retro styling.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Classic Plaid Shirt', 50.00, 22, 'Blue', '90s', 'Cotton', 'Blue plaid shirt with classic fit.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Straight-Leg Jeans', 75.00, 15, 'Blue', '70s', 'Denim', 'Straight-leg jeans with a vintage feel.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro High-Top Sneakers', 85.00, 10, 'Red', '80s', 'Canvas', 'Red high-top sneakers with retro flair.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Logo TShirt', 30.00, 40, 'Blue', '90s', 'Cotton', 'Blue TShirt with vintage brand logo.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( '70s Corduroy Jacket', 110.00, 4, 'Brown', '70s', 'Corduroy', 'Brown corduroy jacket from the 70s.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro Short Sleeve Shirt', 45.00, 20, 'Yellow', '80s', 'Cotton', 'Yellow short sleeve shirt with retro print.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Bootcut Jeans', 68.00, 13, 'Blue', '70s', 'Denim', 'Blue bootcut jeans with vintage styling.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Classic Leather Sneakers', 90.00, 18, 'White', '90s', 'Leather', 'Classic white leather sneakers.');
+*/
 
 --- USER
 
-insert into "user" (id, username, email, password, phone, id_cart) values (1, 'johndoe', 'johndoe@example.com', '1234567890', '938203081', 1);
-insert into "user" (id, username, email, password, phone, id_cart) values (2, 'bjamieson1', 'sbraxton1@example.com', 'kD7!qF?n&K', '932798895', 2);
-insert into "user" (id, username, email, password, phone, id_cart) values (3, 'kkennelly2', 'ddallywater2@example.com', 'aV8(dRf$kP', '939401278', 3);
-insert into "user" (id, username, email, password, phone, id_cart) values (4, 'tpechell3', 'ffooter3@example.com', 'zI1>5#6a6,k', '938762590', 4);
-insert into "user" (id, username, email, password, phone, id_cart) values (5, 'acastree4', 'jreford4@example.com', 'sO7~eEoK=`W<', '937716046', 5);
-insert into "user" (id, username, email, password, phone, id_cart) values (6, 'smahedy5', 'pboschmann5@example.com', 'fR4&!%#vXkvP', '937796246', 6);
-insert into "user" (id, username, email, password, phone, id_cart) values (7, 'mmcfater6', 'lghelerdini6@example.com', 'cH7#uiRmS`h`', '930855105', 7);
-insert into "user" (id, username, email, password, phone, id_cart) values (8, 'kestable7', 'bswann7@example.com', 'qU1=9mSxgWt+', '935748655', 8);
-insert into "user" (id, username, email, password, phone, id_cart) values (9, 'msommerled8', 'emothersdale8@example.com', 'fJ1`KU<1&$R', '937270532', 9);
-insert into "user" (id, username, email, password, phone, id_cart) values (10, 'amarjoribanks9', 'dmantripp9@example.com', 'bP4.=9)pH\p`', '932783259', 10);
-insert into "user" (id, username, email, password, phone, id_cart) values (11, 'nskilletta', 'kbeckleya@example.com', 'fP7%9BczXBDQ', '933756062', 11);
-insert into "user" (id, username, email, password, phone, id_cart) values (12, 'gdeignanb', 'mkaszperb@example.com', 'gA3|)?lF#eJ', '939431839', 12);
-insert into "user" (id, username, email, password, phone, id_cart) values (13, 'ndurdlec', 'mbenzac@example.com', 'mK9*kVj#4$I<', '932374374',13);
-insert into "user" (id, username, email, password, phone, id_cart) values (14, 'dwhitcombd', 'emadged@example.com', 'gA8\)aOC&h4K', '937788943',14);
-insert into "user" (id, username, email, password, phone, id_cart) values (15, 'evongrollmanne', 'lmccarrolle@example.com', 'aR4}r&=5P`0F', '938541696',15);
-insert into "user" (id, username, email, password, phone, id_cart) values (16, 'pirwinf', 'gkestonf@example.com', 'uU8<G2LXy)R?', '933213027',16);
-insert into "user" (id, username, email, password, phone, id_cart) values (17, 'bliffeyg', 'ldrennang@example.com', 'uN9&S%ccnfmk', '933378542',17);
-insert into "user" (id, username, email, password, phone, id_cart) values (18, 'freichelth', 'bpochonh@example.com', 'wM8=%||FA%QF', '939829485',18);
-insert into "user" (id, username, email, password, phone, id_cart) values (19, 'ahedgesi', 'jantonuttii@example.com', 'gK3=wACQr5T7', '936239761',19);
-insert into "user" (id, username, email, password, phone, id_cart) values (20, 'ftrailj', 'cperchj@example.com', 'wM4|L+.1.''Ki', '933875393',20);
+insert into "user" (username, email, password, phone, id_cart) values ('johndoe', 'johndoe@example.com', '1234567890', '938203081', 1);
+insert into "user" (username, email, password, phone, id_cart) values ('bjamieson1', 'sbraxton1@example.com', 'kD7!qF?n&K', '932798895', 2);
+insert into "user" (username, email, password, phone, id_cart) values ('kkennelly2', 'ddallywater2@example.com', 'aV8(dRf$kP', '939401278', 3);
+insert into "user" (username, email, password, phone, id_cart) values ('tpechell3', 'ffooter3@example.com', 'zI1>5#6a6,k', '938762590', 4);
+insert into "user" (username, email, password, phone, id_cart) values ('acastree4', 'jreford4@example.com', 'sO7~eEoK=`W<', '937716046', 5);
+insert into "user" (username, email, password, phone, id_cart) values ('smahedy5', 'pboschmann5@example.com', 'fR4&!%#vXkvP', '937796246', 6);
+insert into "user" (username, email, password, phone, id_cart) values ('mmcfater6', 'lghelerdini6@example.com', 'cH7#uiRmS`h`', '930855105', 7);
+insert into "user" (username, email, password, phone, id_cart) values ('kestable7', 'bswann7@example.com', 'qU1=9mSxgWt+', '935748655', 8);
+insert into "user" (username, email, password, phone, id_cart) values ('msommerled8', 'emothersdale8@example.com', 'fJ1`KU<1&$R', '937270532', 9);
+insert into "user" (username, email, password, phone, id_cart) values ('amarjoribanks9', 'dmantripp9@example.com', 'bP4.=9)pH\p`', '932783259', 10);
+insert into "user" (username, email, password, phone, id_cart) values ('nskilletta', 'kbeckleya@example.com', 'fP7%9BczXBDQ', '933756062', 11);
+insert into "user" (username, email, password, phone, id_cart) values ('gdeignanb', 'mkaszperb@example.com', 'gA3|)?lF#eJ', '939431839', 12);
+insert into "user" (username, email, password, phone, id_cart) values ('ndurdlec', 'mbenzac@example.com', 'mK9*kVj#4$I<', '932374374',13);
+insert into "user" (username, email, password, phone, id_cart) values ('dwhitcombd', 'emadged@example.com', 'gA8\)aOC&h4K', '937788943',14);
+insert into "user" (username, email, password, phone, id_cart) values ('evongrollmanne', 'lmccarrolle@example.com', 'aR4}r&=5P`0F', '938541696',15);
+insert into "user" (username, email, password, phone, id_cart) values ('pirwinf', 'gkestonf@example.com', 'uU8<G2LXy)R?', '933213027',16);
+insert into "user" (username, email, password, phone, id_cart) values ('bliffeyg', 'ldrennang@example.com', 'uN9&S%ccnfmk', '933378542',17);
+insert into "user" (username, email, password, phone, id_cart) values ('freichelth', 'bpochonh@example.com', 'wM8=%||FA%QF', '939829485',18);
+insert into "user" (username, email, password, phone, id_cart) values ('ahedgesi', 'jantonuttii@example.com', 'gK3=wACQr5T7', '936239761',19);
+insert into "user" (username, email, password, phone, id_cart) values ('ftrailj', 'cperchj@example.com', 'wM4|L+.1.''Ki', '933875393',20);
 
 
 --- ADMIN
 
-insert into admin (id, username, email, password, phone) values (21, 'tripleh', 'tripleh@example.com', '1234', '102-381-0489');
-insert into admin (id, username, email, password, phone) values (22, 'rkillcross1', 'aairy1@hc360.com', 'zC9$ft53j=&', '438-250-2550');
-insert into admin (id, username, email, password, phone) values (23, 'dvaughanhughes2', 'amillthorpe2@ed.gov', 'bQ4$$}Z,PFl{o', '214-326-3416');
-insert into admin (id, username, email, password, phone) values (24, 'amatterface3', 'ndanneil3@hud.gov', 'cW3?)hMX6Gzbs', '700-964-4874');
-insert into admin (id, username, email, password, phone) values (25, 'pthomasen4', 'gslym4@imdb.com', 'cM2}p)NgRpu6by', '700-772-7895');
+insert into admin (username, email, password, phone) values ('tripleh', 'tripleh@example.com', '1234', '102-381-0489');
+insert into admin (username, email, password, phone) values ('rkillcross1', 'aairy1@hc360.com', 'zC9$ft53j=&', '438-250-2550');
+insert into admin (username, email, password, phone) values ('dvaughanhughes2', 'amillthorpe2@ed.gov', 'bQ4$$}Z,PFl{o', '214-326-3416');
+insert into admin (username, email, password, phone) values ('amatterface3', 'ndanneil3@hud.gov', 'cW3?)hMX6Gzbs', '700-964-4874');
+insert into admin (username, email, password, phone) values ('pthomasen4', 'gslym4@imdb.com', 'cM2}p)NgRpu6by', '700-772-7895');
 
 --- WISHLIST
 
@@ -578,12 +541,12 @@ INSERT INTO cart_item (id_cart, id_item) VALUES (10, 5);
 
 --- REVIEW
 
-INSERT INTO review (id,description,rating,id_user,id_item) values (1,'This is a masterpiece',5,1,1);
-INSERT INTO review (id,description,rating,id_user,id_item) values (2,'i do not like this',1,2,1);
-INSERT INTO review (id,description,rating,id_user,id_item) values (3,'great product, dont like the color tho',4,3,2);
-INSERT INTO review (id,description,rating,id_user,id_item) values (4,'my name is jeff',5,1,5);
-INSERT INTO review (id,description,rating,id_user,id_item) values (5,'wow.',5,4,3);
-INSERT INTO review (id,description,rating,id_user,id_item) values (6,'This is a masterpiece!!',5,1,1);
+INSERT INTO review (description,rating,id_user,id_item) values ('This is a masterpiece',5,1,1);
+INSERT INTO review (description,rating,id_user,id_item) values ('i do not like this',1,2,1);
+INSERT INTO review (description,rating,id_user,id_item) values ('great product, dont like the color tho',4,3,2);
+INSERT INTO review (description,rating,id_user,id_item) values ('my name is jeff',5,1,5);
+INSERT INTO review (description,rating,id_user,id_item) values ('wow.',5,4,3);
+INSERT INTO review (description,rating,id_user,id_item) values ('This is a masterpiece!!',5,1,1);
 
 --- PURCHASE
 
@@ -592,8 +555,8 @@ VALUES ( 109.98, '2023-10-10', '2023-10-15', 'Processing', 'Transfer', 1, 1, 1);
 INSERT INTO purchase (price, purchase_date, delivery_date, purchase_status, payment_method, id_user, id_location, id_cart)
 VALUES (45.00 , '2023-10-08', '2023-10-20', 'Processing', 'Paypal', 2,2, 2);
 
+/* testing notification triggers */
 
-/* testing triggers */
 UPDATE item SET stock = 1 WHERE id = 6;
 UPDATE item SET price = 99.99 WHERE id = 6;
 UPDATE purchase SET purchase_status = 'Packed' WHERE id = 1;

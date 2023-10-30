@@ -1,0 +1,257 @@
+openapi: 3.0.0
+
+info:
+ version: '0.1'
+ title: 'LBAW Antiquus Web API'
+ description: 'Web Resources Specification (A7) for Antiquus'
+ 
+servers:
+- url: http://lbaw.fe.up.pt
+  description: Production server
+
+externalDocs:
+ description: Find more info here.
+ url: https://web.fe.up.pt/~ssn/wiki/teach/lbaw/medialib/a07
+
+tags:
+ - name: 'M01: Authentication and Individual Profile'
+ - name: 'M02: Items'
+ - name: 'M03: Reviews and Wishlists'
+ - name: 'M04: Purchases'
+ - name: 'M05: User Administration'
+ - name: 'M06: Static Pages'
+
+paths:
+ /login:
+    get:
+    operationId: R101
+     summary: 'R101: Login Form'
+     description: 'Provide login form. Access: PUB'
+     tags:
+       - 'M01: Authentication and Individual Profile'
+     responses:
+       '200':
+         description: 'Show Log-in UI'
+   post:
+     operationId: R102
+     summary: 'R102: Login Action'
+     description: 'Processes the login form submission. Access: PUB'
+     tags:
+       - 'M01: Authentication and Individual Profile'
+
+     requestBody:
+       required: true
+       content:
+         application/x-www-form-urlencoded:
+           schema:
+             type: object
+             properties:
+               email:          # <!--- form field name
+                 type: string
+               password:    # <!--- form field name
+                 type: string
+             required:
+                  - email
+                  - password
+
+     responses:
+       '302':
+         description: 'Redirect after processing the login credentials.'
+         headers:
+           Location:
+             schema:
+               type: string
+             examples:
+               302Success:
+                 description: 'Successful authentication. Redirect to user profile.'
+                 value: '/users/{id}'
+               302Error:
+                 description: 'Failed authentication. Redirect to login form.'
+                 value: '/login'
+    
+ /logout:
+    post:
+        operationId: R103
+        summary: 'R103: Logout Action'
+        description: 'Logout the current authenticated user. Acess: ADM, USR'
+        tags:
+         - 'M01: Authentication and Individual Profile'
+        responses:
+         '302':
+            description: 'Logout authenticated user after processing logout action.'
+            headers:
+                Location:
+                    schema:
+                        type: 'string'
+                    examples:
+                        302Sucess:
+                            description: 'Logged out. Redirecting to login'
+                            value: '/login'
+ /register:
+    get:
+    operationId: R104
+     summary: 'R104: Register Form'
+     description: 'Provide register form. Access: PUB'
+     tags:
+       - 'M01: Authentication and Individual Profile'
+     responses:
+       '200':
+         description: 'Show Register UI'
+   post:
+     operationId: R105
+     summary: 'R105: Register Action'
+     description: 'Processes the Register form submission. Access: PUB'
+     tags:
+       - 'M01: Authentication and Individual Profile'
+     requestBody:
+       required: true
+       content:
+         application/x-www-form-urlencoded:
+           schema:
+             type: object
+             properties:
+                name:
+                 type: string
+                email:          # <!--- form field name
+                 type: string
+                password:    # <!--- form field name
+                 type: string
+                picture:
+                 type: string
+                 format: binary
+                phone_number:
+                  type: string
+             required:
+                  - name 
+                  - email
+                  - password
+     responses:
+      '302':
+        description: 'Redirect to homepage after processing the register form submission.'
+        headers:
+            Location:
+                schema:
+                 type: string 
+                examples:
+                    302Sucess:
+                        description: 'New user registered. Redirect to homepage.'
+                        value: '/users/{id}'
+                    302Failure:
+                        description: 'Registration failed. Redirecting to register form.'
+                        value: '/register'
+/users/{id}:
+    get:
+     operationId: R106 
+     summary: 'R106: Show user profile'
+     description: 'Show user profile. Access: ADM, USR'
+     tags: 
+        -'M01: Authentication and User Profile'
+     requestBody:
+        required: true
+        content:
+         application/x-www-form-urlencoded:
+            schema:
+            /api/products:
+    get:
+        operationId: 201
+        summary: 'R202: Search Products API'
+        description: 'Searches for poducts and returns the results in JSON. Acess: PUB'
+        
+        tags: 
+            - 'M02: Products'
+            
+        parameters:
+            - in: query
+              name: query
+              description: 'String to use for full-text search' 
+            schema:
+                type: string
+                required: false
+              - in: query
+                name: item
+                description: Name of the item to be searched for.
+            schema:
+                type: string
+                required: false
+              - in: query
+                name: category
+                description: category of the item
+            schema:
+                type: string
+                required: false
+              - in: query
+                name: size
+                description: size of the item
+            schema: 
+                type: string
+                required: false
+              - in: query
+                name: color
+                description: color of the item
+            schema:
+                type: string
+                required: false
+              - in: query
+                name: brand
+                description: item's brand
+            schema: 
+                type: string
+                required: false
+              - in: query
+                name: era
+                description: item's era 
+            schema:
+              type: object
+             
+properties:
+                minRating:
+                  type: number
+                  format: float
+                  description: The minimum rating value (inclusive).
+                maxRating:
+                  type: number
+                  format: float
+                  description: The maximum rating value (inclusive)
+              required:
+                - minRating
+                - maxRating
+                        schema:
+                type: string
+                required: false
+              - in: query
+                name: brand
+                description: item's material
+
+ responses:
+        '200':
+            description: Success
+            content:
+                application/json:
+                schema:
+                    type: array
+                    items:
+                        type: object
+                        properties:
+                            id:
+                                type: integer
+                            name:
+                                type: string
+                            category:
+                                type: string
+                            size:
+                                type: string
+                            color
+                                type: string
+                            brand: 
+                                type: string
+                            era:
+                                type: string
+                        example: 
+                            - id: 1
+                            Name: Retro T-Shirt
+                            Description: White Oversized T-shirt from the 2000s.
+                            category: T-Shirt
+                            Size: L
+                            Color: White
+                            Brand: Polo Ralph Lauren
+                            era: 2000s

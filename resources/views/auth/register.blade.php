@@ -19,6 +19,15 @@
           {{ $errors->first('email') }}
       </span>
     @endif
+    
+    <label for="username">Username</label>
+    <input id="username" type="text" name="username" value="{{ old('username') }}" required>
+    @if ($errors->has('username'))
+      <span class="error">
+          {{ $errors->first('username') }}
+      </span>
+    @endif
+
 
     <label for="password">Password</label>
     <input id="password" type="password" name="password" required>

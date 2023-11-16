@@ -15,6 +15,11 @@ class Item extends Model
     // Don't add create and update timestamps in database.
     public $timestamps  = false;
 
+    protected $table = 'item';
+
+    protected $fillable = ['name', 'price', 'rating', 'fabric', 'brand', ' stock', 'description', 'era', 'color'];
+    
+
     /**
      * Get the card where the item is included.
      */

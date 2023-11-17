@@ -6,8 +6,13 @@ use Illuminate\Http\Request;
 
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Cart;
+use App\Models\Review;
+use App\Models\Item;
+use App\Models\Purchase;
+
 
 class CartController extends Controller
 {
@@ -40,8 +45,81 @@ class CartController extends Controller
 
         } else {
 
-            $carts = Auth::user()->carts()->get();
+            //$carts = Auth::user()->carts()->get();
+            $user = Auth::user();
+            $carts =  Auth::user()->cart()->get();
 
+            //FindPurchase using cart
+            /*
+            $cartTest = Cart::find(1);
+            Log::info('Cart information', ['cartTest' => $cartTest]);
+            $purchase = $cartTest->purchase()->get();
+            Log::info('Purchase information', ['purchase' => $purchase]);
+            */
+
+            //Purchase Information Test
+            /*
+            $purchase = Purchase::find(1);
+            Log::info('Purchase information', ['purchase' => $purchase]);
+            $user_purchase = $purchase->user()->get();
+            $user_location = $purchase->location()->get();
+            $user_cart = $purchase->cart()->get();
+            Log::info('User purchase information', ['user_purchase' => $user_purchase]);
+            Log::info('Location purchase information', ['user_location' => $user_location]);
+            Log::info('Cart purchase information', ['user_cart' => $user_cart]);
+            */
+
+            /*
+            $review = Review::find(1);
+            $user_review = $review->user()->get();
+            $item_review = $review->item()->get();
+            Log::info('User of a review', ['user_review' => $user_review]);
+            Log::info('Item of a review', ['item_review' => $item_review]);
+            */
+
+            //Ver as reviews de um item
+            /*
+            $item = Item::find(1);
+            $reviews = $item->reviews()->get();
+            Log::info('Reviews of an item', ['reviews' => $reviews]);
+            */
+
+
+            //Ver as imagens de um item
+            /*
+            $item = Item::find(1);
+            $images = $item->images()->get();
+            Log::info('Images of an item', ['images' => $images]);
+            */
+
+            //Ver os carts de um user
+            /*
+            Log::info('Carts of an user', ['cart' => $carts]);
+            */
+
+            //Testar as reviews de um user, e ver so a primeira
+            /*
+            $reviews = Auth::user()->reviews()->get();
+            $first_review = $reviews->first();
+            Log::info('Reviews of an user', ['review' => $reviews]);
+            Log::info('First review of an user', ['first_review' => $first_review]);
+            foreach($reviews as $review){
+                Log::info('Each review: ', ['review' => $review]);
+            }
+            */
+
+            //Testar os produtos que estao num cart
+            /*
+            $cart1 = Cart::find(1);
+            Log::info('Cart1', ['cart1' => $cart1]);
+            Tem de usar products sem o ()
+            $products = $cart1->products;
+            Log::info('Products of cart1', ['products' => $products]);
+            */
+
+
+            //Log::info('User login attempt', ['cart' => $cartid]);
+            //$reviews = Auth::user()->reviews()->get();
             
 
 

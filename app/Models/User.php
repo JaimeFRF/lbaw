@@ -28,6 +28,8 @@ class User extends Authenticatable
         'email',
         'username',
         'password',
+        'id_cart',
+        //'id_location',
     ];
 
     /**
@@ -53,8 +55,27 @@ class User extends Authenticatable
     /**
      * Get the carts for a user.
      */
-    public function carts()
+    public function cart()
     {
-        return $this->belongsTo(Cart::class);
+        return $this->belongsTo(Cart::class, 'id_cart');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'id_user');
+    }
+
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class, 'id_user');
+    }
+
+    /*
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'id_location');
+    }
+    */
+
 }
+?>

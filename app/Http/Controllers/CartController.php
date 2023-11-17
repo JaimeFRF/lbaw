@@ -12,6 +12,11 @@ use App\Models\Cart;
 use App\Models\Review;
 use App\Models\Item;
 use App\Models\Purchase;
+use App\Models\Shirt;
+use App\Models\Tshirt;
+use App\Models\Jacket;
+use App\Models\Jeans;
+use App\Models\Sneaker;
 
 
 class CartController extends Controller
@@ -49,9 +54,15 @@ class CartController extends Controller
             $user = Auth::user();
             $carts =  Auth::user()->cart()->get();
 
-            $item = Item::find(1);
-            $user_wishlist = $item->users()->get();
-            Log::info('User wishlist', ['user_wishlist' => $user_wishlist]);
+            $sneaker = Sneaker::find(5);
+            $item = $sneaker->item()->get();
+            Log::info('sneaker: ', ['sneaker' => $sneaker]);
+            Log::info('item: ', ['item' => $item]);
+
+
+            //$item = Item::find(1);
+            //$user_wishlist = $item->users()->get();
+            //Log::info('User wishlist', ['user_wishlist' => $user_wishlist]);
 
 
             //FindPurchase using cart

@@ -23,6 +23,9 @@
             return $this->belongsTo(Cart::class, 'id_cart');
         }
 
+        public function notifications(){
+            return $this->hasMany(Notification::class, 'id_purchase');
+        }
 
 
     }

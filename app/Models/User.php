@@ -75,6 +75,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Item::class, 'wishlist', 'id_user', 'id_item');
     }
 
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'id_user');
+    }
 
     /*
     public function location()

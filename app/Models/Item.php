@@ -34,6 +34,11 @@ class Item extends Model
         return $this->hasMany(Review::class, 'id_item');
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'wishlist', 'id_item', 'id_user');
+    }
+
 }
 
 ?>

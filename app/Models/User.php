@@ -70,6 +70,12 @@ class User extends Authenticatable
         return $this->hasMany(Purchase::class, 'id_user');
     }
 
+    public function items()
+    {
+        return $this->belongsToMany(Item::class, 'wishlist', 'id_user', 'id_item');
+    }
+
+
     /*
     public function location()
     {

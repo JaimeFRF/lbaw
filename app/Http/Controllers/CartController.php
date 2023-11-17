@@ -49,6 +49,11 @@ class CartController extends Controller
             $user = Auth::user();
             $carts =  Auth::user()->cart()->get();
 
+            $item = Item::find(1);
+            $user_wishlist = $item->users()->get();
+            Log::info('User wishlist', ['user_wishlist' => $user_wishlist]);
+
+
             //FindPurchase using cart
             /*
             $cartTest = Cart::find(1);

@@ -35,15 +35,16 @@ CREATE TABLE cart(
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 );
 
-CREATE TABLE "user"(
+CREATE TABLE users(
     id SERIAL PRIMARY KEY,
+    name TEXT,
     username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
     email TEXT NOT NULL CONSTRAINT user_email_uk UNIQUE,
     password TEXT NOT NULL CONSTRAINT password_length CHECK (length(password) >= 10),
     phone VARCHAR(20), 
     is_banned boolean NOT NULL DEFAULT FALSE,
     remember_token TEXT DEFAULT NULL,
-    id_cart INTEGER NOT NULL REFERENCES cart(id)
+    id_cart INTEGER REFERENCES cart(id)
 );
 
 CREATE TABLE admin(
@@ -62,7 +63,7 @@ CREATE TABLE cart_item(
 );
 
 CREATE TABLE wishlist(
-    id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     id_item INTEGER NOT NULL REFERENCES item(id),
     PRIMARY KEY(id_user, id_item)
 );
@@ -83,7 +84,7 @@ CREATE TABLE purchase(
     delivery_date DATE NOT NULL CONSTRAINT delivery_date_check CHECK (delivery_date >= purchase_date),
     purchase_status PurchaseStatus NOT NULL,
     payment_method PaymentMethod NOT NULL,
-    id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE SET NULL,
+    id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
     id_location INTEGER NOT NULL REFERENCES location(id),
     id_cart INTEGER NOT NULL REFERENCES cart(id)
 );
@@ -94,7 +95,7 @@ CREATE TABLE review(
     rating FLOAT NOT NULL CONSTRAINT rating_positive CHECK (rating >= 0.0 AND rating <= 5.0),
     up_votes INTEGER DEFAULT 0,
     down_votes INTEGER DEFAULT 0,
-    id_user INTEGER REFERENCES "user"(id) ON DELETE SET NULL,
+    id_user INTEGER REFERENCES users(id) ON DELETE SET NULL,
     id_item INTEGER NOT NULL REFERENCES item(id)
 );
 
@@ -103,7 +104,7 @@ CREATE TABLE notification(
     description TEXT NOT NULL,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
     notification_type NotificationType NOT NULL,
-    id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE SET NULL,
+    id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
     id_item INTEGER  REFERENCES item(id) ON DELETE SET NULL,
     id_purchase INTEGER REFERENCES purchase(id) ON DELETE SET NULL
 );
@@ -111,7 +112,7 @@ CREATE TABLE notification(
 CREATE TABLE image(
     id serial PRIMARY KEY,
     id_item INTEGER REFERENCES item(id) ON DELETE CASCADE,
-    id_user INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
+    id_user INTEGER REFERENCES users(id) ON DELETE CASCADE,
     filepath TEXT
 );
 
@@ -355,7 +356,7 @@ BEGIN
     INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
 
     -- Update the user's record with the new cart ID
-    UPDATE "user" SET id_cart = new_cart_id WHERE id = NEW.id_user;
+    UPDATE users SET id_cart = new_cart_id WHERE id = NEW.id_user;
 
     RETURN NEW;
 END;
@@ -367,28 +368,53 @@ FOR EACH ROW
 WHEN (NEW.id_user IS NOT NULL)
 EXECUTE FUNCTION create_new_cart_for_user();
 
+-- TRIGGER 7: Creating cart for new user
+
+CREATE OR REPLACE FUNCTION create_new_cart_for_new_user()
+RETURNS TRIGGER AS $$
+DECLARE
+    new_cart_id INTEGER;
+BEGIN
+    -- Create a new empty cart for the user and capture the new ID
+    INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
+
+    -- Update the user's record with the new cart ID
+    UPDATE users SET id_cart = new_cart_id WHERE id = NEW.id;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER user_registered
+AFTER INSERT ON users
+FOR EACH ROW
+WHEN (NEW.id IS NOT NULL)
+EXECUTE FUNCTION create_new_cart_for_new_user();
+
+
+
 --- CART
 
-INSERT INTO cart DEFAULT VALUES; 
-INSERT INTO cart DEFAULT VALUES;
-INSERT INTO cart DEFAULT VALUES;
-INSERT INTO cart DEFAULT VALUES;
-INSERT INTO cart DEFAULT VALUES;
-INSERT INTO cart DEFAULT VALUES;
-INSERT INTO cart DEFAULT VALUES;
-INSERT INTO cart DEFAULT VALUES;
-INSERT INTO cart DEFAULT VALUES;
-INSERT INTO cart DEFAULT VALUES; 
-INSERT INTO cart DEFAULT VALUES; 
-INSERT INTO cart DEFAULT VALUES; 
-INSERT INTO cart DEFAULT VALUES; 
-INSERT INTO cart DEFAULT VALUES; 
-INSERT INTO cart DEFAULT VALUES; 
-INSERT INTO cart DEFAULT VALUES; 
-INSERT INTO cart DEFAULT VALUES; 
-INSERT INTO cart DEFAULT VALUES; 
-INSERT INTO cart DEFAULT VALUES; 
-INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
 
 --- LOCATION
 
@@ -443,31 +469,31 @@ INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 
 
 --- USER
 
-insert into "user" (username, email, password, phone, id_cart) values ('johndoe', 'johndoe@example.com', '1234567890', '938203081', 1);
-insert into "user" (username, email, password, phone, id_cart) values ('bjamieson1', 'sbraxton1@example.com', 'kD7!qF?n&K', '932798895', 2);
-insert into "user" (username, email, password, phone, id_cart) values ('kkennelly2', 'ddallywater2@example.com', 'aV8(dRf$kP', '939401278', 3);
-insert into "user" (username, email, password, phone, id_cart) values ('tpechell3', 'ffooter3@example.com', 'zI1>5#6a6,k', '938762590', 4);
-insert into "user" (username, email, password, phone, id_cart) values ('acastree4', 'jreford4@example.com', 'sO7~eEoK=`W<', '937716046', 5);
-insert into "user" (username, email, password, phone, id_cart) values ('smahedy5', 'pboschmann5@example.com', 'fR4&!%#vXkvP', '937796246', 6);
-insert into "user" (username, email, password, phone, id_cart) values ('mmcfater6', 'lghelerdini6@example.com', 'cH7#uiRmS`h`', '930855105', 7);
-insert into "user" (username, email, password, phone, id_cart) values ('kestable7', 'bswann7@example.com', 'qU1=9mSxgWt+', '935748655', 8);
-insert into "user" (username, email, password, phone, id_cart) values ('msommerled8', 'emothersdale8@example.com', 'fJ1`KU<1&$R', '937270532', 9);
-insert into "user" (username, email, password, phone, id_cart) values ('amarjoribanks9', 'dmantripp9@example.com', 'bP4.=9)pH\p`', '932783259', 10);
-insert into "user" (username, email, password, phone, id_cart) values ('nskilletta', 'kbeckleya@example.com', 'fP7%9BczXBDQ', '933756062', 11);
-insert into "user" (username, email, password, phone, id_cart) values ('gdeignanb', 'mkaszperb@example.com', 'gA3|)?lF#eJ', '939431839', 12);
-insert into "user" (username, email, password, phone, id_cart) values ('ndurdlec', 'mbenzac@example.com', 'mK9*kVj#4$I<', '932374374',13);
-insert into "user" (username, email, password, phone, id_cart) values ('dwhitcombd', 'emadged@example.com', 'gA8\)aOC&h4K', '937788943',14);
-insert into "user" (username, email, password, phone, id_cart) values ('evongrollmanne', 'lmccarrolle@example.com', 'aR4}r&=5P`0F', '938541696',15);
-insert into "user" (username, email, password, phone, id_cart) values ('pirwinf', 'gkestonf@example.com', 'uU8<G2LXy)R?', '933213027',16);
-insert into "user" (username, email, password, phone, id_cart) values ('bliffeyg', 'ldrennang@example.com', 'uN9&S%ccnfmk', '933378542',17);
-insert into "user" (username, email, password, phone, id_cart) values ('freichelth', 'bpochonh@example.com', 'wM8=%||FA%QF', '939829485',18);
-insert into "user" (username, email, password, phone, id_cart) values ('ahedgesi', 'jantonuttii@example.com', 'gK3=wACQr5T7', '936239761',19);
-insert into "user" (username, email, password, phone, id_cart) values ('ftrailj', 'cperchj@example.com', 'wM4|L+.1.''Ki', '933875393',20);
+insert into users (username, email, password, phone) values ('johndoe', 'johndoe@example.com', '$2y$10$xAvXOTsApkcRzaJ0ZKQyyuE24KAc0X8RfTJxHMtDHSc7fcOvTQxjK', '938203081'); -- password is 1234567890
+insert into users (username, email, password, phone) values ('bjamieson1', 'sbraxton1@example.com', 'kD7!qF?n&K', '932798895');
+insert into users (username, email, password, phone) values ('kkennelly2', 'ddallywater2@example.com', 'aV8(dRf$kP', '939401278');
+insert into users (username, email, password, phone) values ('tpechell3', 'ffooter3@example.com', 'zI1>5#6a6,k', '938762590');
+insert into users (username, email, password, phone) values ('acastree4', 'jreford4@example.com', 'sO7~eEoK=`W<', '937716046');
+insert into users (username, email, password, phone) values ('smahedy5', 'pboschmann5@example.com', 'fR4&!%#vXkvP', '937796246');
+insert into users (username, email, password, phone) values ('mmcfater6', 'lghelerdini6@example.com', 'cH7#uiRmS`h`', '930855105');
+insert into users (username, email, password, phone) values ('kestable7', 'bswann7@example.com', 'qU1=9mSxgWt+', '935748655');
+insert into users (username, email, password, phone) values ('msommerled8', 'emothersdale8@example.com', 'fJ1`KU<1&$R', '937270532');
+insert into users (username, email, password, phone) values ('amarjoribanks9', 'dmantripp9@example.com', 'bP4.=9)pH\p`', '932783259');
+insert into users (username, email, password, phone) values ('nskilletta', 'kbeckleya@example.com', 'fP7%9BczXBDQ', '933756062');
+insert into users (username, email, password, phone) values ('gdeignanb', 'mkaszperb@example.com', 'gA3|)?lF#eJ', '939431839');
+insert into users (username, email, password, phone) values ('ndurdlec', 'mbenzac@example.com', 'mK9*kVj#4$I<', '932374374');
+insert into users (username, email, password, phone) values ('dwhitcombd', 'emadged@example.com', 'gA8\)aOC&h4K', '937788943');
+insert into users (username, email, password, phone) values ('evongrollmanne', 'lmccarrolle@example.com', 'aR4}r&=5P`0F', '938541696');
+insert into users (username, email, password, phone) values ('pirwinf', 'gkestonf@example.com', 'uU8<G2LXy)R?', '933213027');
+insert into users (username, email, password, phone) values ('bliffeyg', 'ldrennang@example.com', 'uN9&S%ccnfmk', '933378542');
+insert into users (username, email, password, phone) values ('freichelth', 'bpochonh@example.com', 'wM8=%||FA%QF', '939829485');
+insert into users (username, email, password, phone) values ('ahedgesi', 'jantonuttii@example.com', 'gK3=wACQr5T7', '936239761');
+insert into users (username, email, password, phone) values ('ftrailj', 'cperchj@example.com', 'wM4|L+.1.''Ki', '933875393');
 
 
 --- ADMIN
 
-insert into admin (username, email, password, phone) values ('tripleh', 'tripleh@example.com', '1234', '102-381-0489');
+insert into admin (username, email, password, phone) values ('tripleh', 'tripleh@example.com', '$2y$10$011i8OjsUtRMBWbhww3oh.zzv.RmdiN.qufOgiTR52nv5GKJLph.y', '102-381-0489'); -- password is 1234
 insert into admin (username, email, password, phone) values ('rkillcross1', 'aairy1@hc360.com', 'zC9$ft53j=&', '438-250-2550');
 insert into admin (username, email, password, phone) values ('dvaughanhughes2', 'amillthorpe2@ed.gov', 'bQ4$$}Z,PFl{o', '214-326-3416');
 insert into admin (username, email, password, phone) values ('amatterface3', 'ndanneil3@hud.gov', 'cW3?)hMX6Gzbs', '700-964-4874');

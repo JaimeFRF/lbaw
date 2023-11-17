@@ -37,7 +37,7 @@
       <div class = "navbar-nav d-flex flex-row">
         @if (Auth::check())    
             @if(!Auth::user()->isadmin)
-              <a title="Wishlist" class="btn btn-primary m-2" href = "{{route('wishlist')}}">
+              <a title="Wishlist" class="btn btn-primary m-2" href = "">
                 <i class="fa fa-heart"></i>
               </a>
             @endif
@@ -46,29 +46,29 @@
               $n = DB::table('notification')->where('id_user', '=', Auth::id())->count();
             @endphp
 
-            <a title="Notifications" class="btn btn-primary m-2" href = "{{route('notifications')}}">   
+            <a title="Notifications" class="btn btn-primary m-2" href = "">   
               @if($n > 0){{$n}}@endif  
                 <i class="fa fa-bell"></i>
             </a> 
             
             @if(!Auth::user()->isadmin)
-              <a title="Cart" class="btn btn-primary m-2" href = "{{route('cart')}}">
+              <a title="Cart" class="btn btn-primary m-2"  href = "">
                 <i class="fa fa-shopping-cart"></i>
               </a> 
             @endif
 
-            <a title="Profile" class="btn btn-primary m-2" href = "{{route('profile')}}">
+            <a title="Profile" class="btn btn-primary m-2" href = "">
               <i class="fa fa-user"></i>
               <span>{{Auth::user()->username}}</span>
             </a>
             
 
-            <a title="Logout" class="btn btn-primary m-2" href = "{{route('logout')}}">
+            <a title="Logout" class="btn btn-primary m-2" href = "">
               <i class="fa fa-sign-out"></i>
             </a> 
 
         @else
-          <a title="Login" class="btn btn-primary m-2" href = "{{ route('login') }}"> 
+          <a title="Login" class="btn btn-primary m-2" href = ""> 
             <i class="fa fa-sign-in"></i>
             <span>Login</span>
           </a>

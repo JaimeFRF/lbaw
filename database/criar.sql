@@ -33,8 +33,9 @@ CREATE TABLE cart(
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 );
 
-CREATE TABLE "user"(
+CREATE TABLE users(
     id SERIAL PRIMARY KEY,
+    name TEXT,
     username TEXT NOT NULL CONSTRAINT username_uk UNIQUE,
     email TEXT NOT NULL CONSTRAINT user_email_uk UNIQUE,
     password TEXT NOT NULL CONSTRAINT password_length CHECK (length(password) >= 10),
@@ -60,7 +61,7 @@ CREATE TABLE cart_item(
 );
 
 CREATE TABLE wishlist(
-    id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE CASCADE,
+    id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     id_item INTEGER NOT NULL REFERENCES item(id),
     PRIMARY KEY(id_user, id_item)
 );
@@ -81,7 +82,7 @@ CREATE TABLE purchase(
     delivery_date DATE NOT NULL CONSTRAINT delivery_date_check CHECK (delivery_date >= purchase_date),
     purchase_status PurchaseStatus NOT NULL,
     payment_method PaymentMethod NOT NULL,
-    id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE SET NULL,
+    id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
     id_location INTEGER NOT NULL REFERENCES location(id),
     id_cart INTEGER NOT NULL REFERENCES cart(id)
 );
@@ -92,7 +93,7 @@ CREATE TABLE review(
     rating FLOAT NOT NULL CONSTRAINT rating_positive CHECK (rating >= 0.0 AND rating <= 5.0),
     up_votes INTEGER DEFAULT 0,
     down_votes INTEGER DEFAULT 0,
-    id_user INTEGER REFERENCES "user"(id) ON DELETE SET NULL,
+    id_user INTEGER REFERENCES users(id) ON DELETE SET NULL,
     id_item INTEGER NOT NULL REFERENCES item(id)
 );
 
@@ -101,7 +102,7 @@ CREATE TABLE notification(
     description TEXT NOT NULL,
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
     notification_type NotificationType NOT NULL,
-    id_user INTEGER NOT NULL REFERENCES "user"(id) ON DELETE SET NULL,
+    id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
     id_item INTEGER  REFERENCES item(id) ON DELETE SET NULL,
     id_purchase INTEGER REFERENCES purchase(id) ON DELETE SET NULL
 );
@@ -109,7 +110,7 @@ CREATE TABLE notification(
 CREATE TABLE image(
     id serial PRIMARY KEY,
     id_item INTEGER REFERENCES item(id) ON DELETE CASCADE,
-    id_user INTEGER REFERENCES "user"(id) ON DELETE CASCADE,
+    id_user INTEGER REFERENCES users(id) ON DELETE CASCADE,
     filepath TEXT
 );
 
@@ -353,7 +354,7 @@ BEGIN
     INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
 
     -- Update the user's record with the new cart ID
-    UPDATE "user" SET id_cart = new_cart_id WHERE id = NEW.id_user;
+    UPDATE users SET id_cart = new_cart_id WHERE id = NEW.id_user;
 
     RETURN NEW;
 END;

@@ -22,8 +22,8 @@
     </head>
     <body>
         <main>
-            <header>
-                <h1><a href="{{ url('/cards') }}">Antiquus</a></h1>
+            <header class="topbar">
+                <h1 class="headerTitle" ><a href="{{ url('/cards') }}">Antiquus</a></h1>
                 @if (Auth::check())
                     <a class="button" href="{{ url('/logout') }}"> Logout </a> <span>{{ Auth::user()->name }}</span>
                 @endif

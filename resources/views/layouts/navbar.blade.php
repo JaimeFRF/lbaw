@@ -58,7 +58,7 @@
               </a> 
             @endif
 
-            <a title="Profile" class="btn btn-primary m-2" href = "">
+            <a title="Profile" class="btn btn-primary m-2" href = "{{route('profile')}}">
               <i class="fa fa-user"></i>
               <span>{{Auth::user()->username}}</span>
             </a>

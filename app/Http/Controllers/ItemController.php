@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 use App\Models\Item;
 
@@ -31,6 +32,13 @@ class ItemController extends Controller
         return response()->json($item);
     }
 
+    public function nextItems($offset)
+    {
+        //Log::info('Offset', ['offset' => $offset]);
+        $items = Item::skip($offset)->take(3)->get();
+        //Log::info('User of a review', ['items' => $items]);
+        return view('partials.item-list', ['items' => $items]);
+    }
     /**
      * Updates the state of an individual item.
      */

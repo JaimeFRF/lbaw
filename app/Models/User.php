@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 // Added to define Eloquent relationships.
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class User extends Authenticatable
 {
@@ -28,6 +28,8 @@ class User extends Authenticatable
         'email',
         'username',
         'password',
+        'id_cart',
+        //'id_location',
     ];
 
     /**
@@ -51,10 +53,39 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the cards for a user.
+     * Get the carts for a user.
      */
-    public function cards(): HasMany
+    public function cart()
     {
-        return $this->hasMany(Card::class);
+        return $this->belongsTo(Cart::class, 'id_cart');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'id_user');
+    }
+
+    public function purchases()
+    {
+        return $this->hasMany(Purchase::class, 'id_user');
+    }
+
+    public function items()
+    {
+        return $this->belongsToMany(Item::class, 'wishlist', 'id_user', 'id_item');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'id_user');
+    }
+
+    /*
+    public function location()
+    {
+        return $this->belongsTo(Location::class, 'id_location');
+    }
+    */
+
 }
+?>

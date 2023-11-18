@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\CardController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\ItemController;
 
 use App\Http\Controllers\HomeController;
@@ -22,18 +22,26 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 // Home
-Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/', function () {
+    return redirect('/home');
+});
+
+Route::get('/home', [HomeController::class, 'home'])->name('home');
+
+// web.php
+Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
+
 
 
 // Cards
-Route::controller(CardController::class)->group(function () {
+Route::controller(CartController::class)->group(function () {
     Route::get('/cards', 'list')->name('cards');
     Route::get('/cards/{id}', 'show');
 });
 
 
 // API
-Route::controller(CardController::class)->group(function () {
+Route::controller(CartController::class)->group(function () {
     Route::put('/api/cards', 'create');
     Route::delete('/api/cards/{card_id}', 'delete');
 });

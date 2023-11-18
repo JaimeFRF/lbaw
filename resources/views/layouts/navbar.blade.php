@@ -65,12 +65,12 @@
             
 
             <a title="Logout" class="btn btn-primary m-2" href = "{{route('logout')}}">
-              <i class="fa fa-sign-out"></i>
+              <i class="fa fa-sign-out-alt"></i>
             </a> 
 
         @else
           <a title="Login" class="btn btn-primary m-2" href = "{{route('login')}}"> 
-            <i class="fa fa-sign-in"></i>
+            <i class="fa fa-sign-in-alt"></i>
             <span>Login</span>
           </a>
         @endif

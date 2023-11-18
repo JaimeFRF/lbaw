@@ -73,4 +73,15 @@ class ItemController extends Controller
         $item->delete();
         return response()->json($item);
     }
+    
+    /**
+     * Shows info about a specific item.
+     */
+    
+    public function show($id)
+    {
+        $item = Item::find($id);
+        return view('pages.items.item', ['item' => $item]);
+    }
 }
+

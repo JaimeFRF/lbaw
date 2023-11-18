@@ -2,6 +2,10 @@
 @extends('layouts.app')
 
 @section('content')
+    <script>
+        window.totalItems = {{ $totalItems }};
+    </script>
+    <script src="js/item-list.js" data-total-items="{{ $totalItems }}"></script>
     <section class="hero-section">
         <div class="hero-image">
             <!-- Vintage image goes here -->
@@ -19,40 +23,23 @@
         </div>
     </section>
 
+ 
     <section class="product-section">
-        <h3>Some of our products</h2>
+        <h3>Some of our products</h3>
 
         <div class="product-container">
 
-            <button class="prev-arrow" onclick="">&#8249;</button>
+            <button class="prev-arrow">&#8249;</button>
 
-            <!-- Product 1 -->
-            <div class="product">
-                <img src="{{ asset('images/default-product-image.png') }}" alt="Product 1">
-                <h4>Product 1</h4>
-                <p>Description of Product 1.</p>
-                <span>$19.99</span>
+            <div class="product-row" id="productRow">
+                @include('partials.item-list', ['items' => $items->take(3)])
             </div>
 
-            <!-- Product 2 -->
-            <div class="product">
-                <img src="{{ asset('images/default-product-image.png') }}" alt="Product 2">
-                <h4>Product 2</h4>
-                <p>Description of Product 2.</p>
-                <span>$24.99</span>
-            </div>
 
-            <!-- Product 3 -->
-            <div class="product">
-                <img src="{{ asset('images/default-product-image.png') }}" alt="Product 3">
-                <h4>Product 3</h4>
-                <p>Description of Product 3.</p>
-                <span>$29.99</span>
-            </div>
-
-            <button class="next-arrow" onclick="">&#8250;</button>
+            <button class="next-arrow">&#8250;</button>
 
         </div>
     </section>
+
 @endsection
 

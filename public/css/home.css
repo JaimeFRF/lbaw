@@ -150,3 +150,8 @@ body {
     padding: 10px;
     cursor: pointer;
 }
+
+.product-row {
+    display: flex;
+    align-items: center;
+}

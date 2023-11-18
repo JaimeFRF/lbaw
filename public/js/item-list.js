@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log(totalItems);
 
     document.querySelector('.next-arrow').addEventListener('click', function() {
-        currentOffset += 2;
+        currentOffset += 3;
 
         if (currentOffset >= totalItems) {
             currentOffset = 0;
@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     document.querySelector('.prev-arrow').addEventListener('click', function() {
-        currentOffset -= 2; 
+        currentOffset -= 3; 
 
         if (currentOffset < 0) {
-            currentOffset = totalItems - 2;
+            currentOffset = totalItems - 3;
         }
 
         fetch('/next-items/' + currentOffset)

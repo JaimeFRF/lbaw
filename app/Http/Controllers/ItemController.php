@@ -35,7 +35,7 @@ class ItemController extends Controller
     public function nextItems($offset)
     {
         //Log::info('Offset', ['offset' => $offset]);
-        $items = Item::skip($offset)->take(2)->get();
+        $items = Item::skip($offset)->take(3)->get();
         //Log::info('User of a review', ['items' => $items]);
         return view('partials.item-list', ['items' => $items]);
     }

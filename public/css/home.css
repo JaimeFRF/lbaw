@@ -153,4 +153,5 @@ body {
 
 .product-row {
     display: flex;
+    align-items: center;
 }

@@ -32,7 +32,7 @@
             <button class="prev-arrow">&#8249;</button>
 
             <div class="product-row" id="productRow">
-                @include('partials.item-list', ['items' => $items->take(2)])
+                @include('partials.item-list', ['items' => $items->take(3)])
             </div>
 
 

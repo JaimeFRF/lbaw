@@ -18,11 +18,11 @@
                     <div class="card-body d-flex align-items-center">
                         <div class="profile-picture me-4">
                             <!-- User profile picture -->
-                            <img src="#" alt="Profile Picture" class="rounded-circle" width="100" height="100">
+                            <img src={{$profile_picture}} alt="Profile Picture" class="rounded-circle" width="100" height="100">
                         </div>
                         <div>
-                            <p class="mb-1"><strong>Username:</strong> Sirona Ryan</p>
-                            <p class="mb-0"><strong>Email:</strong> email.com</p>
+                            <p class="mb-1"><strong>Username:</strong> {{$user->username}}</p>
+                            <p class="mb-0"><strong>Email:</strong> {{$user->email}}</p>
                         </div>
                     </div>
                 </div>

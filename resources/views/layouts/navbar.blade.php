@@ -42,6 +42,7 @@
               </a>
             @endif
             
+     
             @php
               $n = DB::table('notification')->where('id_user', '=', Auth::id())->count();
             @endphp

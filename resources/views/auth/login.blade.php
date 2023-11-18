@@ -41,12 +41,6 @@
                         <a class="w-50 m-2" href="{{route('register')}}">Register</a>
                     </button>
                 </div>
-
-                @if (session('success'))
-                    <p class="success">
-                        {{ session('success') }}
-                    </p>
-                @endif
             </form>
         </div>
     </section>

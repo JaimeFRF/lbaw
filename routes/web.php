@@ -22,8 +22,14 @@ use App\Http\Controllers\Auth\RegisterController;
 */
 
 // Home
-Route::get('/', [HomeController::class, 'home'])->name('home');
+Route::get('/', function () {
+    return redirect('/home');
+});
 
+Route::get('/home', [HomeController::class, 'home'])->name('home');
+
+// web.php
+Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
 
 // Cards
 Route::controller(CartController::class)->group(function () {

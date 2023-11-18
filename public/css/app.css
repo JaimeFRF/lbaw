@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+
 :root{
   --website-main-color: #1b1b1b;
 }
@@ -39,6 +41,12 @@ input:focus{
   background: none !important;
 }
 
+.navbar-brand{
+  font-family: 'Playfair Display', serif; font-size: 24px; 
+  font-weight: 700;
+  font-style: italic;
+}
+
 #collapsable{
   
 }
@@ -60,7 +68,6 @@ input:focus{
 
 .price{
   color: var(--website-main-color);
-  font-weight: bold;
 }
 
 /*!********************************* BUTTONS COLORS ********************************!*/

@@ -51,6 +51,7 @@ Route::controller(ItemController::class)->group(function () {
     Route::put('/api/cards/{card_id}', 'create');
     Route::post('/api/item/{id}', 'update');
     Route::delete('/api/item/{id}', 'delete');
+    Route::get('/api/item/{id}', 'show');
 });
 
 

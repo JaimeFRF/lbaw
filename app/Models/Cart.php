@@ -14,12 +14,24 @@ class Cart extends Model
     //Associate to database
     protected $table = 'cart';
 
-    /**
-     * Get the user that owns the cart.
-     */
+    protected $fillable = ['id'];
+
     public function user() 
     {
-        return $this->hasOne(User::class);
+        return $this->hasOne(User::class, 'id_cart');
     }
 
+    public function purchase()
+    {
+        return $this->hasOne(Purchase::class, 'id_cart');
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Item::class, 'cart_item', 'id_cart', 'id_item')->withPivot('quantity');
+    }
+
+
 }
+
+?>

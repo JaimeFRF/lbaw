@@ -4,12 +4,11 @@
     <section class="small-container cart-page">
       <table>
         <tr>
-          <th>Item</th>
+          <th>Product</th>
           <th>Quantity</th>
           <th>Subtotal</th>
         </tr>
-
-        <tr> 
+        <tr>
           <td>
             <div class ="cart-info">
               <img src="image">
@@ -21,20 +20,9 @@
               </div>
             </div>
           </td>
-
           <td><input type= "number" value="1"</td>
-
           <td>30.00€</td>
         </tr>
       </table>
-
-      <div class = "total-price">
-        <table>
-            <tr>
-                <td>Total</td>
-                <td>30.00</td>
-            </tr>
-        </table>
-      </div>
     </section>
 @endsection

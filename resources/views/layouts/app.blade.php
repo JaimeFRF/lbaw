@@ -17,6 +17,7 @@
         <link href="{{ url('css/app.css') }}" rel="stylesheet">
         <link href="{{ url('css/login_register.css') }}" rel="stylesheet">
         <link href="{{ url('css/home.css') }}" rel="stylesheet">
+        <link href="{{ url('css/cart.css') }}" rel="stylesheet">
 
             
          <!-- Icons -->

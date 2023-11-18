@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
   <div class="container-fluid jusityf-content-between">
-    <a class="navbar-brand" href="#"> <span>Antiquus</span> </a>
+    <a class="navbar-brand" href="{{route('home')}}"> <span>Antiquus</span> </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -63,12 +63,12 @@
             </a>
             
 
-            <a title="Logout" class="btn btn-primary m-2" href = "">
+            <a title="Logout" class="btn btn-primary m-2" href = "{{route('logout')}}">
               <i class="fa fa-sign-out"></i>
             </a> 
 
         @else
-          <a title="Login" class="btn btn-primary m-2" href = ""> 
+          <a title="Login" class="btn btn-primary m-2" href = "{{route('login')}}"> 
             <i class="fa fa-sign-in"></i>
             <span>Login</span>
           </a>

@@ -31,6 +31,8 @@ Route::get('/home', [HomeController::class, 'home'])->name('home');
 // web.php
 Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
 
+
+
 // Cards
 Route::controller(CartController::class)->group(function () {
     Route::get('/cards', 'list')->name('cards');

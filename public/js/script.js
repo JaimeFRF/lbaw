@@ -17,7 +17,7 @@ const removeItemCart = document.getElementById('removeItem');
 removeItemCart.addEventListener('click', function(e) {
 
     e.preventDefault();
-    fetch('CartItemControlller.php', {
+    fetch('CartItemController.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

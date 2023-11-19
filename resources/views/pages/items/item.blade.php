@@ -8,7 +8,7 @@
                 <small class="text-muted">Article: 01234</small>
 
                 <h4 class="my-4 price">
-                    <span>PREÇO</span> {{$item->price}} €
+                    <span>Preço</span> {{$item->price}} €
                 </h4>
 
                 <div class="mt-3">
@@ -54,7 +54,7 @@
 
             <div class="col-md m-1">
                 <div class="d-flex flex-column align-items-center">
-                    <img src="https://s2.glbimg.com/OJaLvTztZb--1SM69gMp8ynZ7bI=/e.glbimg.com/og/ed/f/original/2019/04/10/roupa-branca.jpg"
+                    <img src="{{ asset($item->images()->first()->filepath) }}"
                         class="m-1 w-100 sliderMainImage" alt="NOME DA ROUPA">
 
                     <div class="d-flex justify-content-between mt-3">

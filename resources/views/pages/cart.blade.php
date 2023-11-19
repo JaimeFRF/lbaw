@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', $cart->name)
+@section('title', 'Cart')
 
 @section('content')
     <section id="carts">

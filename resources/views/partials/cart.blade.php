@@ -1,12 +1,16 @@
-<article class="cart" data-id="{{ $cart->id }}">
-    <header>
-        <h2><a href="/carts/{{ $cart->id }}">{{ $cart->name }}</a></h2>
-        <a href="#" class="delete">&#10761;</a>
-    </header>
-    <ul>
-        @each('partials.item', $cart->items()->orderBy('id')->get(), 'item')
-    </ul>
-    <form class="new_item">
-        <input type="text" name="description" placeholder="new item">
-    </form>
-</article>
+
+<tr> 
+  <td>
+    <div class ="cart-info">
+      <img src= {{$item->picture}}>
+      <div>
+        <p id=name value={{$item->name}}></p>
+        <small>Price: {{$item->price}}€</small>
+        <br>
+        <a href = ""> Remove</a>
+      </div>
+    </div>
+  </td>
+  <td><input type= "number" value={{$item->pivot->quantity}}> </td>
+  <td>{{$item->price}}€</td>
+</tr>

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="shop">
         <div class="row">
             <div class="col-md-3">
                 <label for="category">Category:</label>

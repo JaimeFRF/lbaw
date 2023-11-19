@@ -7,7 +7,7 @@
         <p id=name value={{$item->name}}></p>
         <small>Price: {{$item->price}}€</small>
         <br>
-        <a href = ""> Remove</a>
+        <a class = "remove" href = ""> Remove</a>
       </div>
     </div>
   </td>

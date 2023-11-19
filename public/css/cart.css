@@ -35,7 +35,7 @@ td input{
   height:30px;
   padding: 5px; 
 }
-td a{
+.remove{
   color: #cf1919;
   font-size: 12px;
 }

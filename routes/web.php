@@ -11,6 +11,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\EditProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,8 +36,6 @@ Route::get('/home', [HomeController::class, 'home'])->name('home');
 
 // web.php
 Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
-
-
 
 // Cards
 Route::controller(CartController::class)->group(function () {
@@ -72,9 +71,11 @@ Route::controller(RegisterController::class)->group(function () {
 });
 
 Route::controller(ProfileController::class)->group(function () {
-    Route::get('/profile', 'show')->name('profile');
+    Route::get('/profile', 'show')->name('profile');  
 });
 
 Route::controller(CartController::class)->group(function () {
     Route::get('/cart', 'list')->name('cart');
 });
+
+Route::get('/edit-profile', [EditProfileController::class, 'show'])->name('edit_profile');

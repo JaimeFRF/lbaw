@@ -6,10 +6,14 @@
 
 /*!********************************** COMMON TAGS **********************************!*/
 body{
+  margin: 0;
+  padding: 0;
   overflow-y: scroll;
   overflow-x: hidden;
   min-height: 90vh;
   position: relative;
+  background-color: #f8f9fa;
+  font-family: 'Playfair Display', serif;
 }
 
 header, 
@@ -38,6 +42,14 @@ input:focus{
 /*!******************************** NAVBAR CLASSES *********************************!*/
 .navbar-button{
   background: none !important;
+}
+
+.bar-icon:hover{
+  color: rgb(201, 200, 200)!important;
+}
+
+.bar-icon:active{
+  color: rgb(109, 109, 109)!important;
 }
 
 .navbar-brand{
@@ -70,18 +82,6 @@ input:focus{
 .btn a{
   color: inherit;
 }
-/*!************************************* COLORS ************************************!*/
-.text-orange-500{
-  color: #fd7e14;
-}
-
-.text-teal-500{
-  color: #20c997;
-}
-
-.text-red-500{
-  color: #dc3545;
-}
 
 /*!********************************** USEFUL SIZES *********************************!*/
 .w-5{
@@ -94,6 +94,14 @@ input:focus{
 
 .w-15{
   width: 15%;
+}
+
+.w-40{
+  width: 40%;
+}
+
+.w-30{
+  width: 30%;
 }
 
 .w-60{

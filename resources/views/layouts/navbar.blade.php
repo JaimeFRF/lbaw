@@ -8,7 +8,7 @@
 
     <div class="collapse navbar-collapse  " id="navbarSupportedContent">
 
-      <ul class="navbar-nav ms-auto mb-lg-0 align-items-center w-40  me-4">
+      <ul class="navbar-nav ms-auto mb-lg-0 align-items-center w-30  me-4">
         <li>
           <div class="dropdown m-2">
             <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" data-toggle="dropdown">
@@ -37,7 +37,7 @@
         @if (Auth::check())    
           @if(!Auth::user()->isadmin)
             <a title="Wishlist" class="m-3 me-4" href="">
-              <i class="fa fa-heart text-white fs-5"></i>
+              <i class="fa fa-heart text-white fs-5 bar-icon"></i>
             </a>     
           @endif
 
@@ -47,22 +47,22 @@
 
           <a title="Notifications" class="m-3 me-4" href="">   
             @if($n > 0){{$n}}@endif  
-            <i class="fa fa-bell text-white fs-5"></i>
+            <i class="fa fa-bell text-white fs-5 bar-icon"></i>
           </a> 
           
           @if(!Auth::user()->isadmin)
             <a title="Cart" class="m-3 me-4" href="{{route('cart')}}">
-              <i class="fa fa-shopping-cart text-white fs-5"></i>
+              <i class="fa fa-shopping-cart text-white fs-5 bar-icon"></i>
               <span class="text-white">(0)</span>
             </a> 
           @endif
 
           <a title="Profile" class="m-3 me-4" href="{{route('profile')}}">
-            <i class="fa fa-user text-white fs-5"></i>
+            <i class="fa fa-user text-white fs-5 bar-icon"></i>
           </a>
 
           <a title="Logout" class="m-3 me-4" href="{{route('logout')}}">
-            <i class="fa fa-sign-out-alt fs-5 text-white"></i>
+            <i class="fa fa-sign-out-alt fs-5 text-white bar-icon"></i>
           </a> 
 
         @else

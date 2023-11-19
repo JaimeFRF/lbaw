@@ -25,9 +25,9 @@
         </li>
         <li class="w-100">
           <!-- Search bar -->
-          <form class="d-flex justify-content-end me-2" method="POST" action="#">
+          <form class="d-flex" method = "POST" action = "{{route('search')}}">
             @csrf
-            <input class="form-control form-control-sm" type="search" name="search" placeholder="Search">
+            <input class="form-control me-2" type="search" name="search" placeholder="Search for a specific product...">
           </form>
         </li>
       </ul>

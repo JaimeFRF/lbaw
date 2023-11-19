@@ -10,7 +10,9 @@ use App\Http\Controllers\ShopController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CartItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,16 +35,23 @@ Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
 
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 
-// web.php
+// Items on home-page
 Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
 
 
+//Item
+Route::post('/search', [ItemController::class, 'search'])->name('search');
+Route::post('/search/filter', [ItemController::class, 'filter'])->name('filter');
+Route::post('/search/clearFilters', [ItemController::class, 'clearFilters'])->name('clearFilters');
 
 // Cards
 Route::controller(CartController::class)->group(function () {
     Route::get('/cards', 'list')->name('cards');
     Route::get('/cards/{id}', 'show');
 });
+
+//wishlist
+Route::put('users/wishlist/product/{id_item}', [WishlistController::class, 'add']);
 
 
 // API
@@ -78,3 +87,10 @@ Route::controller(ProfileController::class)->group(function () {
 Route::controller(CartController::class)->group(function () {
     Route::get('/cart', 'list')->name('cart');
 });
+
+Route::controller(CartItemController::class)->group(function () {
+    Route::post('/cart/add/{productId}', 'addToCart')->name('cart.add');
+    Route::post('/cart/delete/{productId}', 'deleteFromCart')->name('cart.delete');
+    Route::post('/cart/remove/{productId}', 'removeFromCart')->name('cart.remove');
+});
+

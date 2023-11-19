@@ -35,11 +35,25 @@
                         Wishlist
                     </div>
                     <div class="card-body d-flex flex-column">
-                        <p class="card-text">Your wishlist is empty.</p>
+                        @foreach($items_wishlist as $item)
+                            <div class="wishlist-item mb-3 d-flex align-items-center">
+                                                        
+                            @if($item->images()->first())
+                                <img src="{{ asset($item->images()->first()->filepath) }}" style="width: 100px; height: 100px;">
+                            @else
+                                <img src="{{ asset('images/default-product-image.png') }}" style="width: 100px; height: 100px;">
+                            @endif
+                                <div class = "ms-2" style="max-width: 200px;">
+                                <h6>{{ $item->name }}</h6>
+                                <a class = "remove" href = ""> Remove</a>
+                                </div>
+                                <hr class="my-2">
+                                </div>
+                        @endforeach
                         <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto">See more...</a>
                     </div>
                 </div>
-            </div>
+            </div>        
 
             <!-- Order History -->
             <div class="col-md-4 mb-4">

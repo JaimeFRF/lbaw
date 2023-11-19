@@ -62,3 +62,11 @@ td:last-child{
 th:last-child{
   text-align: right;
 }
+
+.readonly-number-input {
+  border: none;
+  appearance: textfield;
+  -moz-appearance: textfield;
+  width: 30px; /* Adjust the width as needed */
+  text-align: center;
+}

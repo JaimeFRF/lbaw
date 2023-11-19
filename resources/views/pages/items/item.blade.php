@@ -58,17 +58,18 @@
                         class="m-1 w-100 sliderMainImage" alt="NOME DA ROUPA">
 
                     <div class="d-flex justify-content-between mt-3">
-                        <button class="btn btn-outline-danger me-2" type="submit">
-                            <i class="fa fa-heart"></i>
-                            <span>Add to wishlist</span>
-                        </button>
-                        <form action="{{ route('cart.add', $item->id) }}" method="POST">
+                        <form method="POST" action="{{ url('/users/wishlist/product/'.$item->id) }}">
                             @csrf
-                            <button class="btn btn-outline-primary" type="submit">
-                                <i class="fa fa-cart-plus"></i>
-                                <span>Add to Cart</span>
+                            @method('PUT')
+                            <button class="btn btn-outline-danger me-2" type="submit">
+                                <i class="fa fa-heart"></i>
+                                <span>Add to wishlist</span>
                             </button>
                         </form>
+                        <button class="btn btn-outline-primary" type="submit">
+                            <i class="fa fa-cart-plus"></i>
+                            <span>Add to Cart</span>
+                        </button>
                     </div>
                 </div>
             </div>

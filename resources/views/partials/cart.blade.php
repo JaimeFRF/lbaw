@@ -4,10 +4,10 @@
     <div class ="cart-info">
       <img src= {{$item->picture}}>
       <div>
-        <p id=name value={{$item->name}}></p>
-        <small>Price: {{$item->price}}€</small>
+        <p id=name>{{$item->name}}</p>
+        <small>Size: {{$item->size}}</small>
         <br>
-        <a href = ""> Remove</a>
+        <a id="removeItem" href = "">Remove</a>
       </div>
     </div>
   </td>

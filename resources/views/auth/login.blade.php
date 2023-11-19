@@ -2,6 +2,7 @@
 
 @section('content')
     <section class="d-flex justify-content-center m-5" id = "content">
+        <script src="{{ asset('js/script.js') }}"></script>
         <div class="card w-50 d-flex flex-column align-items-center">
             <form class = "card-body w-75"  id = "login-form" method="POST" action="{{ route('login') }}">
                 {{ csrf_field() }}

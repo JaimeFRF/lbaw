@@ -62,10 +62,13 @@
                             <i class="fa fa-heart"></i>
                             <span>Add to wishlist</span>
                         </button>
-                        <button class="btn btn-outline-primary" type="submit">
-                            <i class="fa fa-cart-plus"></i>
-                            <span>Add to Cart</span>
-                        </button>
+                        <form action="{{ route('cart.add', $item->id) }}" method="POST">
+                            @csrf
+                            <button class="btn btn-outline-primary" type="submit">
+                                <i class="fa fa-cart-plus"></i>
+                                <span>Add to Cart</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

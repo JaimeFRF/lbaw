@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CartItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,3 +87,10 @@ Route::controller(ProfileController::class)->group(function () {
 Route::controller(CartController::class)->group(function () {
     Route::get('/cart', 'list')->name('cart');
 });
+
+Route::controller(CartItemController::class)->group(function () {
+    Route::post('/cart/add/{productId}', 'addToCart')->name('cart.add');
+    Route::post('/cart/delete/{productId}', 'deleteFromCart')->name('cart.delete');
+    Route::post('/cart/remove/{productId}', 'removeFromCart')->name('cart.remove');
+});
+

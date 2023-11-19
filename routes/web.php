@@ -70,3 +70,7 @@ Route::controller(RegisterController::class)->group(function () {
 Route::controller(ProfileController::class)->group(function () {
     Route::get('/profile', 'show')->name('profile');
 });
+
+Route::controller(CartController::class)->group(function () {
+    Route::get('/cart', 'list')->name('cart');
+});

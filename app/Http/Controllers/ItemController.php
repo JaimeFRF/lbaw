@@ -178,6 +178,8 @@ class ItemController extends Controller
             }
             else{
                 $items = Item::where('color','=', $color)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string)->get();
+                Log::info('items: ', ['items' => $items]);
+
             }
         }else{
             if($color == "None"){

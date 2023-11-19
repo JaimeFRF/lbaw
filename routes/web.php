@@ -10,6 +10,7 @@ use App\Http\Controllers\ShopController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ProfileController;
 
 /*
@@ -47,6 +48,9 @@ Route::controller(CartController::class)->group(function () {
     Route::get('/cards', 'list')->name('cards');
     Route::get('/cards/{id}', 'show');
 });
+
+//wishlist
+Route::put('users/wishlist/product/{id_item}', [WishlistController::class, 'add']);
 
 
 // API

@@ -201,6 +201,8 @@ class ItemController extends Controller
         $request->session()->put('category', "None");
         $request->session()->put('orderBy', "None");
         $request->session()->put('price', "null");
+        $request->session()->put('inStock', true); 
+
 
         $items = Item::all();
         return view('pages.shop', ['items' => $items]);

@@ -43,7 +43,7 @@
                     </select>
                     
                     <label for="inStock">In Stock:</label>
-                    <input type="checkbox" id="inStock" name="inStock" value="1" checked>
+                    <input type="checkbox" id="inStock" name="inStock" value="1" {{ session('inStock') ? 'checked' : '' }}>
 
                     <label for="price">Price:</label>
                     <select id="price" name="price" class="form-select mb-3">

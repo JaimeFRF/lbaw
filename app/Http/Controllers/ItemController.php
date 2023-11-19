@@ -126,6 +126,15 @@ class ItemController extends Controller
         $inStock = $request->input('inStock');
         $price = $request->input('price');
 
+
+        // Store the filter configuration in the session
+        $request->session()->put('color', $color);
+        $request->session()->put('category', $category);
+        $request->session()->put('orderBy', $orderBy);
+        $request->session()->put('inStock', $inStock);
+        $request->session()->put('price', $price);
+
+
         $rangeMin = 0;
         $rangeMax = 1000000;
         if($price == "0to15"){
@@ -185,6 +194,17 @@ class ItemController extends Controller
     
         return view('pages.shop', ['items' => $items]);
     }    
+
+    public function clearFilters(Request $request)
+    {
+        $request->session()->put('color', "all");
+        $request->session()->put('category', "None");
+        $request->session()->put('orderBy', "None");
+        $request->session()->put('price', "null");
+
+        $items = Item::all();
+        return view('pages.shop', ['items' => $items]);
+    }
     
     
 }

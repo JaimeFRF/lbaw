@@ -40,6 +40,7 @@ Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
 //Item
 Route::post('/search', [ItemController::class, 'search'])->name('search');
 Route::post('/search/filter', [ItemController::class, 'filter'])->name('filter');
+Route::post('/search/clearFilters', [ItemController::class, 'clearFilters'])->name('clearFilters');
 
 // Cards
 Route::controller(CartController::class)->group(function () {

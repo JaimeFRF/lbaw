@@ -17,6 +17,7 @@ use App\Models\Tshirt;
 use App\Models\Jacket;
 use App\Models\Jeans;
 use App\Models\Sneaker;
+use App\Models\Image;
 
 
 class CartController extends Controller
@@ -50,105 +51,21 @@ class CartController extends Controller
 
         } else {
 
-            //$carts = Auth::user()->carts()->get();
             $user = Auth::user();
-            $carts =  Auth::user()->cart()->get();
+            $cart =  Auth::user()->cart()->get();
+            Log::info('User: ', ['user' => $user]);
+            Log::info('Cart: ', ['cart' => $cart]);
+            $items = CartController::getItems($cart[0]->id);
 
-            $sneaker = Sneaker::find(5);
-            $item = $sneaker->item()->get();
-            Log::info('sneaker: ', ['sneaker' => $sneaker]);
-            Log::info('item: ', ['item' => $item]);
-
-
-            //$item = Item::find(1);
-            //$user_wishlist = $item->users()->get();
-            //Log::info('User wishlist', ['user_wishlist' => $user_wishlist]);
-
-
-            //FindPurchase using cart
-            /*
-            $cartTest = Cart::find(1);
-            Log::info('Cart information', ['cartTest' => $cartTest]);
-            $purchase = $cartTest->purchase()->get();
-            Log::info('Purchase information', ['purchase' => $purchase]);
-            */
-
-            //Purchase Information Test
-            /*
-            $purchase = Purchase::find(1);
-            Log::info('Purchase information', ['purchase' => $purchase]);
-            $user_purchase = $purchase->user()->get();
-            $user_location = $purchase->location()->get();
-            $user_cart = $purchase->cart()->get();
-            Log::info('User purchase information', ['user_purchase' => $user_purchase]);
-            Log::info('Location purchase information', ['user_location' => $user_location]);
-            Log::info('Cart purchase information', ['user_cart' => $user_cart]);
-            */
-
-            /*
-            $review = Review::find(1);
-            $user_review = $review->user()->get();
-            $item_review = $review->item()->get();
-            Log::info('User of a review', ['user_review' => $user_review]);
-            Log::info('Item of a review', ['item_review' => $item_review]);
-            */
-
-            //Ver as reviews de um item
-            /*
-            $item = Item::find(1);
-            $reviews = $item->reviews()->get();
-            Log::info('Reviews of an item', ['reviews' => $reviews]);
-            */
-
-
-            //Ver as imagens de um item
-            /*
-            $item = Item::find(1);
-            $images = $item->images()->get();
-            Log::info('Images of an item', ['images' => $images]);
-            */
-
-            //Ver os carts de um user
-            /*
-            Log::info('Carts of an user', ['cart' => $carts]);
-            */
-
-            //Testar as reviews de um user, e ver so a primeira
-            /*
-            $reviews = Auth::user()->reviews()->get();
-            $first_review = $reviews->first();
-            Log::info('Reviews of an user', ['review' => $reviews]);
-            Log::info('First review of an user', ['first_review' => $first_review]);
-            foreach($reviews as $review){
-                Log::info('Each review: ', ['review' => $review]);
+            foreach ($items as $item) {
+                $item->picture = Image::where('id_item', $item->id)->first()->filepath;
             }
-            */
-
-            //Testar os produtos que estao num cart
-            /*
-            $cart1 = Cart::find(1);
-            Log::info('Cart1', ['cart1' => $cart1]);
-            Tem de usar products sem o ()
-            $products = $cart1->products;
-            Log::info('Products of cart1', ['products' => $products]);
-            */
-
-
-            //Log::info('User login attempt', ['cart' => $cartid]);
-            //$reviews = Auth::user()->reviews()->get();
-            
-
-
-            // Check if the current user can list the cards.
-           // $this->authorize('list', Cart::class);
-
-            // The current user is authorized to list cards.
-
-            // Use the pages.cards template to display all cards.
+            Log::info('Items: ', ['items' => $items]);
             return view('pages.carts', [
-                'carts' => $carts
+                'items' => $items
             ]);
         }
+        
     }
 
     /**
@@ -186,5 +103,12 @@ class CartController extends Controller
         // Delete the cart and return it as JSON.
         $cart->delete();
         return response()->json($cart);
+    }
+
+    public function getItems($cartID)
+    {
+        $cart = Cart::find($cartID);
+        $items = $cart->products()->get();
+        return $items;
     }
 }

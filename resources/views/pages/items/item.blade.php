@@ -4,6 +4,7 @@
     <section class="container-fluid mt-2">
         <div class="row m-5 mt-1">
             <div class="col-md product-info">
+                <p class= "mt-1">Home / CATEGORIA DE ITEM</p>
                 <h2 class= "mt-4" id="productName">{{$item->name}}</h2>
                 <small class="text-muted">Article: 01234</small>
 

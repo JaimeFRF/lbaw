@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ItemController;
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ShopController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -26,6 +27,9 @@ use App\Http\Controllers\ProfileController;
 Route::get('/', function () {
     return redirect('/home');
 });
+
+//Shop
+Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
 
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 

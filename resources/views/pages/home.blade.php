@@ -18,7 +18,7 @@
             </div>
 
             <div class="image-overlay-btn">
-                <a href="">Shop Now</a>
+                <a href="{{route('shop')}}">Shop Now</a>
             </div>
         </div>
     </section>

@@ -8,6 +8,8 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShopController;
 
+use App\Http\Controllers\StaticController;
+
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\WishlistController;
@@ -30,10 +32,17 @@ Route::get('/', function () {
     return redirect('/home');
 });
 
-//Shop
-Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
+
 
 Route::get('/home', [HomeController::class, 'home'])->name('home');
+
+//Statics
+Route::get('/faq', [StaticController::class, 'faq'])->name('faq');
+Route::get('/contacts', [StaticController::class, 'contacts'])->name('contacts');
+Route::get('/about', [StaticController::class, 'about'])->name('about');
+
+//Shop
+Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
 
 // Items on home-page
 Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);

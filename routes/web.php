@@ -33,10 +33,13 @@ Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
 
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 
-// web.php
+// Items on home-page
 Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
 
 
+//Item
+Route::post('/search', [ItemController::class, 'search'])->name('search');
+Route::post('/search/filter', [ItemController::class, 'filter'])->name('filter');
 
 // Cards
 Route::controller(CartController::class)->group(function () {

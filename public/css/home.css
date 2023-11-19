@@ -148,4 +148,6 @@
 .product-row {
     display: flex;
     align-items: center;
+    flex-wrap: wrap; /* Add this line */
+
 }

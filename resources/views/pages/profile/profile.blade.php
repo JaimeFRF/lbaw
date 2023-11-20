@@ -38,7 +38,7 @@
                         @foreach($items_wishlist as $item)
                             <div class="wishlist-item mb-3 d-flex align-items-center">
                                                         
-                            @if($item->images()->first())
+                            @if($item->images()->first() && $item->images()->first()->filepath)
                                 <img src="{{ asset($item->images()->first()->filepath) }}" style="width: 100px; height: 100px;">
                             @else
                                 <img src="{{ asset('images/default-product-image.png') }}" style="width: 100px; height: 100px;">

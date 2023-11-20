@@ -25,7 +25,7 @@ public function authenticate(Request $request): RedirectResponse
         if (Auth::guard('admin')->attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
  
-            return redirect()->intended('/admin-add-item');
+            return redirect()->intended('/admin-home');
         }
  
         return back()->withErrors([

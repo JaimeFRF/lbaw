@@ -44,6 +44,7 @@ Route::post('/purchase', [PurchaseController::class, 'createPurchase'])->name('a
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 
 //Admin
+Route::get('/admin-home', [AdminController::class, 'viewHome'])->name('admin-home');
 Route::get('/admin-add-item', [AdminController::class, 'addItem'])->name('addItem');
 Route::get('/admin-view-users',[AdminController::class, 'viewUsers'])->name('view-users-admins');
 Route::get('/stock', [AdminController::class, 'viewStock'])->name('stock');

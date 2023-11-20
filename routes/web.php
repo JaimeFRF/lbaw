@@ -99,6 +99,11 @@ Route::controller(CartController::class)->group(function () {
 });
 
 Route::get('/edit-profile', [EditProfileController::class, 'show'])->name('edit_profile');
+Route::post('/edit-profile/username', [EditProfileController::class, 'changeUsername'])->name('change_username');
+Route::post('/edit-profile/name', [EditProfileController::class, 'changeName'])->name('change_name');
+Route::post('/edit-profile/password', [EditProfileController::class, 'changePassword'])->name('change_password');
+
+
 Route::controller(CartItemController::class)->group(function () {
     Route::post('/cart/add/{productId}', [CartItemController::class , 'addToCart'])->name('cart.add');
     Route::post('/cart/delete/{productId}', 'deleteFromCart')->name('cart.delete');

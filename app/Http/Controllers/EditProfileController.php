@@ -77,12 +77,25 @@ class EditProfileController extends Controller
         return view('pages.profile.edit_profile', ['user' => $user, 'errorPassword' => 'Passwords do not match']);
       }
       else{
-        $user->password = $new_password;
+        $user->password = Hash::make($new_password);
         $user->save();
         return view('pages.profile.edit_profile', ['user' => $user, 'successPassword' => 'Password changed successfully']);
       }
     }
   }
+
+
+  public function removeUser(){
+    if(Auth::check()){
+      $user = User::find(Auth::id());
+      $password = request()->input('password');
+      if(!Hash::check($password, $user->password)){
+        return view('pages.profile.edit_profile', ['user' => $user, 'errorRemove' => 'Incorrect password']);
+      }
+      else{
+        $user->delete();
+        return redirect()->route('home');
+      }
 
   public function changePicture(Request $request){
     if(Auth::check()){

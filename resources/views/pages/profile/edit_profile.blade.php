@@ -72,18 +72,32 @@
             <div class="alert alert-danger">
                 {{ $errorPassword }}
             </div>
-        @endif
+      @endif
     </article>
 
-
-<!-- 
     <article class="update-form">
       <h2>Delete Profile</h2>
-      <form id="delete-profile-form" class="delete-profile" action="" method="">
-
+      <form id="delete-profile-form" class="delete-profile" method="POST" action="{{ route('remove_user') }}">
+        @csrf
         <input type="password" name="password" placeholder="Current Password">
-        <button id="delete-profile-button" type="submit" value="Delete Profile">Delete Profile</button>
+        <button id="delete-profile-button" type="submit" value="Delete Profile" onclick="return confirmDelete()">Delete Profile</button>
       </form>
+      @if(isset($errorRemove))
+            <div class="alert alert-danger">
+                {{ $errorRemove }}
+            </div>
+      @endif    
     </article>
-  </section>  -->
+
+    <script>
+      function confirmDelete() {
+        var confirmation = confirm("Are you sure you want to delete your profile?");
+        if (confirmation) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    </script>
+  </section>  
 @endsection

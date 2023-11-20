@@ -44,6 +44,8 @@ Route::get('/about', [StaticController::class, 'about'])->name('about');
 
 //Shop
 Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
+Route::post('/shop/{filter}', [ShopController::class, 'shopFilter'])->name('shopFilter');
+
 
 // Items on home-page
 Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
@@ -102,6 +104,7 @@ Route::get('/edit-profile', [EditProfileController::class, 'show'])->name('edit_
 Route::post('/edit-profile/username', [EditProfileController::class, 'changeUsername'])->name('change_username');
 Route::post('/edit-profile/name', [EditProfileController::class, 'changeName'])->name('change_name');
 Route::post('/edit-profile/password', [EditProfileController::class, 'changePassword'])->name('change_password');
+Route::post('/edit-profile/remove', [EditProfileController::class, 'removeUser'])->name('remove_user');
 Route::post('/edit-profile/picture', [EditProfileController::class, 'changePicture'])->name('update_profile_pic');
 
 

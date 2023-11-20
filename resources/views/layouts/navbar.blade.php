@@ -7,7 +7,7 @@
     </button>
 
     <div class="collapse navbar-collapse  " id="navbarSupportedContent">
-
+      <script src="{{asset('js/navbar_script.js')}}"defer></script>
       <ul class="navbar-nav ms-auto mb-lg-0 align-items-center w-30  me-4">
         <li>
           <div class="dropdown m-2">
@@ -53,7 +53,7 @@
           @if(!Auth::user()->isadmin)
             <a title="Cart" class="m-3 me-4" href="{{route('cart')}}">
               <i class="fa fa-shopping-cart text-white fs-5 bar-icon"></i>
-              <span class="text-white">(0)</span>
+              <span id="ItemCartNumber" class="text-white"></span>
             </a> 
           @endif
 

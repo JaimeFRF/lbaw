@@ -18,8 +18,9 @@ use App\Models\Purchase;
 class CartItemController extends Controller
 {
 
-    public function addToCart(Request $request, $productId)
+    public function addToCart(Request $request)
     {
+        $productId = $request->input('productId');
         $cart =  Auth::user()->cart()->first();
         $items = $cart->products()->get();
         $item = Item::find($productId);
@@ -81,6 +82,14 @@ class CartItemController extends Controller
     }
 
     return redirect()->back()->with('success', 'Item updated in cart.');
+}
+
+public function countItemCart(Request $request){
+
+    $cart = Auth::user()->cart()->first()->products()->get();
+    // Log::info('Cart: ', ['cart' => $cart]);
+    $nrItems = $cart->count();
+    return response()->json(['count' => $nrItems]);
 }
 
 

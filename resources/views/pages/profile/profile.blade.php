@@ -35,32 +35,33 @@
                         Wishlist
                     </div>
                     <div class="card-body d-flex flex-column">
-                        
-                        <div class="wishlist-item mb-3 d-flex align-items-center">
-                
-                            <img src="images/classic_flannel_shirt_1.png" alt="Item 1" class="img-fluid rounded mr-3 w-25 h-25">
+                        @foreach($items_wishlist as $item)
+                            <div class="wishlist-item mb-3 d-flex align-items-center">
+                                                        
+                            @if($item->images()->first())
+                                <img src="{{ asset($item->images()->first()->filepath) }}" style="width: 100px; height: 100px;">
+                            @else
+                                <img src="{{ asset('images/default-product-image.png') }}" style="width: 100px; height: 100px;">
+                            @endif
+                                <div class = "ms-2" style="max-width: 200px;">
+                                <h6>{{ $item->name }}</h6>
+                                <form method = "POST" action={{url('users/wishlist/product/'.$item->id)}}>
+                                    @csrf
+                                    @method('delete')
 
-                            <div class = "ms-2" style="max-width: 200px;">
-                                <h6>Classic Flannel Shirt</h6>
-                                <a class = "remove" href = ""> Remove</a>
-                            </div>
-                        </div>
-                        
-                        <hr class="my-2">
-
-                        <div class="wishlist-item mb-3 d-flex align-items-center">
-                
-                            <img src="images/vintage_highwaist_jeans_1.png" alt="Item 1" class="img-fluid rounded mr-3 w-25 h-25">
-
-                            <div class = "ms-2" style="max-width: 200px;">
-                                <h6>Sapato</h6>
-                                <a class = "remove" href = ""> Remove</a>
-                            </div>
-                        </div>                             
+                                    <button class = "btn btn-outline-danger" type = "submit">
+                                        <i class="fa fa-times"></i>
+                                        <span>Remove</span>
+                                    </button>
+                                </form>
+                                </div>
+                                <hr class="my-2">
+                                </div>
+                        @endforeach
                         <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto">See more...</a>
                     </div>
                 </div>
-            </div>                        
+            </div>        
 
             <!-- Order History -->
             <div class="col-md-4 mb-4">

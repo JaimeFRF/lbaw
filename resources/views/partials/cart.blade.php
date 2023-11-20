@@ -4,13 +4,13 @@
     <div class ="cart-info">
       <img src= {{$item->picture}}>
       <div>
-        <p id=name value={{$item->name}}></p>
-        <small>Price: {{$item->price}}€</small>
+        <h6  id=name> {{$item->name}}</h5>
+        <small>Size: {{$item->size}}</small>
         <br>
         <a class = "remove" href = ""> Remove</a>
       </div>
     </div>
   </td>
-  <td><input type= "number" value={{$item->pivot->quantity}}> </td>
+  <td><input type= "number" min="0" value={{$item->pivot->quantity}}> </td>
   <td>{{$item->price}}€</td>
 </tr>

@@ -4,6 +4,7 @@
 
 @section('content')
 <section class="small-container cart-page">
+    <script src="{{ asset('js/script.js') }}"></script>
     <table>
         <tr>
           <th>Item</th>
@@ -17,9 +18,7 @@
         <table>
             <tr>
                 <td>Total</td>
-                <td>@foreach($items as $item)
-                    {{$item->price * $item->pivot->quantity}}€
-                    @endforeach
+                <td>{{ $items->sum(function($item) { return $item->price * $item->pivot->quantity; }) }}€
                 </td>
             </tr>
         </table>

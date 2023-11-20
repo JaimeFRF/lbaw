@@ -17,7 +17,13 @@ class Item extends Model
 
     protected $table = 'item';
 
+    protected $casts = [
+        'price' => 'float',
+    ];
+
+
     protected $fillable = ['id', 'name', 'price', 'rating', 'fabric', 'brand', ' stock', 'description', 'era', 'color'];
+    
 
     public function carts()
     {

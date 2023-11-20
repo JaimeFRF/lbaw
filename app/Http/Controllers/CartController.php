@@ -51,12 +51,13 @@ class CartController extends Controller
 
         } else {
 
-            $user = Auth::user();
-            $cart =  Auth::user()->cart()->get();
-            Log::info('User: ', ['user' => $user]);
-            Log::info('Cart: ', ['cart' => $cart]);
-            $items = CartController::getItems($cart[0]->id);
-
+            // $user = Auth::user();
+            // $cart =  Auth::user()->cart()->get();
+            // Log::info('User: ', ['user' => $user]);
+            // Log::info('Cart: ', ['cart' => $cart]);
+            // $cart = Cart::find($cart[0]->id);
+            $cart =  Auth::user()->cart()->first();
+            $items = $cart->products()->get();
             foreach ($items as $item) {
                 $item->picture = Image::where('id_item', $item->id)->first()->filepath;
             }
@@ -105,10 +106,6 @@ class CartController extends Controller
         return response()->json($cart);
     }
 
-    public function getItems($cartID)
-    {
-        $cart = Cart::find($cartID);
-        $items = $cart->products()->get();
-        return $items;
-    }
+
+
 }

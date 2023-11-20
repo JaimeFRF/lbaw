@@ -1,9 +1,9 @@
-body{
+body {
     background-color: #d8d8d8;
     font-family: 'Playfair Display', serif;
 }
 
-h6{
+h6 {
     color: #212529;
     text-align: center;
     font-size: 10rem;
@@ -41,4 +41,24 @@ h6{
 
 .arrow.up {
     transform: rotate(180deg);
+}
+
+@media screen and (max-width: 768px) {
+
+    h6{
+        font-size: 6rem;
+
+    }
+
+    .faq-section {
+        width: 90%;
+    }
+
+    .question {
+        font-size: 1rem;
+    }
+
+    .answer {
+        font-size: 0.9rem;
+    }
 }

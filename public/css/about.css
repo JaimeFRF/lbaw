@@ -1,0 +1,40 @@
+.aboutText {
+    text-align: center;
+    padding-top: 1em;
+    font-family: 'Playfair Display', serif;
+}
+
+.aboutText h7 {
+    padding-top: 1.5em;
+    font-size: 6em;
+}
+
+.aboutText p:first-of-type {
+    padding-top: 3em;
+}
+
+.aboutText p {
+    font-size: 1.2em;
+}
+
+.aboutText a {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .aboutText h7 {
+        font-size: 2em;
+    }
+
+    .aboutText p {
+        font-size: 0.9em;
+    }
+}

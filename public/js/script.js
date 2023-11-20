@@ -40,6 +40,12 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 console.log(data);
                 quantityElement.innerText = data.newQuantity;
+                if (data.newQuantity == 0) {
+                    const productRow = cartItem.closest('tr'); // Assuming each cart item is in its own table row
+                    productRow.remove();
+                }
+
+
                 document.getElementById('total-price').innerText = data.totalPrice + '€';
                 //document.getElementById('total-price').innerText = 'Total Price: $' + data.totalPrice;
             })

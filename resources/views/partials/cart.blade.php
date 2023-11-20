@@ -1,5 +1,5 @@
 
-<tr> 
+<tr id="product-row"> 
   <td>
     <div class ="cart-info">
       <img src= {{$item->picture}}>

@@ -29,8 +29,7 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        Log::info('entrei');
-        Log::info($request);
+
         $request->validate([
             'username' => 'required|string|max:250|unique:users',
             'email' => 'required|email|max:250|unique:users',
@@ -47,7 +46,7 @@ class RegisterController extends Controller
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
         $request->session()->regenerate();
-        return redirect()->route('cards')
+        return redirect()->route('home')
             ->withSuccess('You have successfully registered & logged in!');
     }
 }

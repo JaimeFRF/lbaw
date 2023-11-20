@@ -24,10 +24,6 @@
         <h4 class="fw-bold">Cart Total</h4>
         <table>
         <tr>
-            <td> Cart Subtotal</td>
-            <td>{{ $items->sum(function($item) { return $item->price * $item->pivot->quantity; }) }}€</td>
-        </tr>
-        <tr>
             <td>Shipping</td>
             <td>Free</td>
         </tr>
@@ -36,15 +32,22 @@
             <td class="fw-bold">{{ $items->sum(function($item) { return $item->price * $item->pivot->quantity; }) }}€</td>
         </tr>
         </table>
-        <div class="cart-buttons d-flex justify-content-around">
-            <button class="btn btn-success m-2 w-100">
+    </div>
+    <div class="cart-buttons d-flex justify-content-around">
+        <form method="post" action="{{ route('add_purchase') }}">
+            @csrf
+            <div class="cart-buttons d-flex justify-content-around">
+                <!-- You can add hidden input for the items -->
+                <input type="hidden" name="items" value="{{ json_encode($items) }}">
+
+                <button type="submit" class="btn btn-success m-2 w-100">
                     Checkout
                 </button>
-            <button class="btn btn-outline-danger m-2 w-100">
-                    Empty Cart
-            </button>
-        </div>
-
+            </div>
+        </form>
+        <button type="submit" class="btn btn-outline-danger m-2 w-100">
+                Empty Cart
+        </button>
     </div>
 </section>
 

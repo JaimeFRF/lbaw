@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    <section class="container mt-5">
+
+<section class="container mt-5">
         <div class="row">
             <!-- User Information with Picture -->
             <div class="col-md-12 mb-4">
@@ -22,7 +23,7 @@
                         </div>
                         <div>
                             <p class="mb-1"><strong>Username:</strong> {{$user->username}}</p>
-                            <p class="mb-1"><strong>Name:</strong> NOMEEEEEE</p>
+                            <p class="mb-1"><strong>Name:</strong> {{$user->name}}</p>
                             <p class="mb-0"><strong>Email:</strong> {{$user->email}}</p>
                         </div>
                     </div>
@@ -75,45 +76,33 @@
                     </div>
                     <div class="card-body">
                         <!-- Order 1 -->
-                        <div class="order-history mb-3">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <h6 class="mb-1">Order #12345</h6>
-                                    <p class="mb-1">Date: October 20, 2023</p>
-                                    <p class="mb-1">Value: 100.00€</p>
-                                    <p class="mb-0">Items:
-                                    <span class="item-info">
-                                        <span class="item-quantity">Product A (2)</span>,
-                                        <span class="item-quantity">Product B (1)</span>,
-                                        <span class="item-quantity">Product C (3)</span>
-                                    </span>
-                                    </p>
-                                </div>
-                                <button class="btn btn-outline-dark btn-sm">Details</button>
-                            </div>
-                        </div>
+                        @for($i = 0; $i < count($purchases); $i++)
+                            <div class="order-history mb-3">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                        <h6 class="mb-1">{{$purchases[$i]->id}}</h6>
+                                        <p class="mb-1">Date: {{$purchases[$i]->purchase_date}}</p>
+                                        <p class="mb-1">Value: {{$purchases[$i]->price}}</p>
+                                        <p class="mb-0">Items:
+                                        <span class="item-info">
 
-                        <!-- Separator -->
-                        <hr class="my-3">
+                                            @php
+                                                $cart = $carts_purchase[$i];
+                                                $items_cart = $cart->products()->get();
+                                                for($j = 0; $j < count($items_cart); $j++) {
+                                                    echo "<span class='item-quantity'>{$items_cart[$j]->name} ({$items_cart[$j]->pivot->quantity})</span>, ";
+                                                }
+                                            @endphp
 
-                        <!-- Order 2 -->
-                        <div class="order-history mb-3">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div>
-                                    <h6 class="mb-1">Order #56789</h6>
-                                    <p class="mb-1">Date: November 15, 2023</p>
-                                    <p class="mb-1">Value: 75.50€</p>
-                                    <p class="mb-0">Items:
-                                    <span class="item-info">
-                                        <span class="item-quantity">Product A (2)</span>,
-                                        <span class="item-quantity">Product B (1)</span>,
-                                        <span class="item-quantity">Product C (3)</span>
-                                    </span>
-                                    </p>
+                                        </span>
+                                        </p>
+                                    </div>
+                                    <button class="btn btn-outline-dark btn-sm">Details</button>
                                 </div>
-                                <button class="btn btn-outline-dark btn-sm">Details</button>
                             </div>
-                        </div>
+                            <hr class="my-3">
+                        @endfor
+
                     </div>
                     <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto">See more...</a>
                 </div>

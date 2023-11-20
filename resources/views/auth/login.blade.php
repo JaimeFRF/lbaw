@@ -12,7 +12,7 @@
                 <div class="login-tab p-3 ml-2" data-tab="admin">Admin Login</div>
             </div>
 
-            <form class=" admin-login-fields card-body w-75" id="login-form" method="POST" action="{{ route('login') }}" data-current-tab="user">
+            <form class=" admin-login-fields card-body w-75" id="user-login-form" method="POST" action="{{ route('login') }}" data-current-tab="user">
                 {{ csrf_field() }}
 
                 <div class="user-login-fields">
@@ -54,7 +54,8 @@
                 </div>
             </form>
 
-            <form class="admin-login-fields card-body w-75" style="display: none;">
+            <form class="admin-login-fields card-body w-75" id="admin-login-form" method="POST" action="{{ route('admin-login') }}" style="display: none;">
+                {{ csrf_field() }}
                 <div class="user-login-fields">
                     <div class="form-group d-flex flex-column mt-3">
                         <label for="email"><h6>Email</h6></label>
@@ -86,28 +87,27 @@
     </section>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const loginTabs = document.querySelectorAll('.login-tab');
-            const loginForm = document.getElementById('login-form');
-
-            loginTabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const tabName = tab.getAttribute('data-tab');
-                    const currentTabFields = document.querySelector(`.${tabName}-login-fields`);
-
-                    document.querySelectorAll('.login-fields').forEach(field => {
-                        field.style.display = 'none';
-                    });
-
-                    currentTabFields.style.display = 'block';
-
-                    loginForm.setAttribute('data-current-tab', tabName);
-
-                    loginTabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                });
+        document.addEventListener('DOMContentLoaded', function() {
+            var userTab = document.querySelector('.login-tab[data-tab="user"]');
+            var adminTab = document.querySelector('.login-tab[data-tab="admin"]');
+            var userForm = document.getElementById('user-login-form');
+            var adminForm = document.getElementById('admin-login-form');
+        
+            userTab.addEventListener('click', function() {
+                userForm.style.display = 'block';
+                adminForm.style.display = 'none';
+                userTab.classList.add('active');
+                adminTab.classList.remove('active');
+            });
+        
+            adminTab.addEventListener('click', function() {
+                adminForm.style.display = 'block';
+                userForm.style.display = 'none';
+                adminTab.classList.add('active');
+                userTab.classList.remove('active');
             });
         });
     </script>
+        
 
 @endsection

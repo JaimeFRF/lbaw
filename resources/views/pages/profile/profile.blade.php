@@ -36,7 +36,7 @@
                         Wishlist
                     </div>
                     <div class="card-body d-flex flex-column">
-                        
+
                         @foreach($items_wishlist as $item)
                             <div class="wishlist-item mb-3 d-flex align-items-center">                   
                             @if($item->images()->first() && $item->images()->first()->filepath)
@@ -68,37 +68,50 @@
                 </div>
             </div>        
 
-            <!-- Order History -->
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-header text-center">
                         Order History
                     </div>
                     <div class="card-body">
-    
+                        <!-- Order 1 -->
                         <div class="order-history mb-3">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
                                     <h6 class="mb-1">Order #12345</h6>
                                     <p class="mb-1">Date: October 20, 2023</p>
                                     <p class="mb-1">Value: 100.00€</p>
-                                    <p class="mb-0">Items: Product A, Product B, Product C</p>
+                                    <p class="mb-0">Items:
+                                    <span class="item-info">
+                                        <span class="item-quantity">Product A (2)</span>,
+                                        <span class="item-quantity">Product B (1)</span>,
+                                        <span class="item-quantity">Product C (3)</span>
+                                    </span>
+                                    </p>
                                 </div>
-                                <button class="btn btn-outline-primary btn-sm">Details</button>
+                                <button class="btn btn-outline-dark btn-sm">Details</button>
                             </div>
                         </div>
 
+                        <!-- Separator -->
                         <hr class="my-3">
 
+                        <!-- Order 2 -->
                         <div class="order-history mb-3">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
                                     <h6 class="mb-1">Order #56789</h6>
                                     <p class="mb-1">Date: November 15, 2023</p>
                                     <p class="mb-1">Value: 75.50€</p>
-                                    <p class="mb-0">Items: Product D, Product E</p>
+                                    <p class="mb-0">Items:
+                                    <span class="item-info">
+                                        <span class="item-quantity">Product A (2)</span>,
+                                        <span class="item-quantity">Product B (1)</span>,
+                                        <span class="item-quantity">Product C (3)</span>
+                                    </span>
+                                    </p>
                                 </div>
-                                <button class="btn btn-outline-primary btn-sm">Details</button>
+                                <button class="btn btn-outline-dark btn-sm">Details</button>
                             </div>
                         </div>
                     </div>

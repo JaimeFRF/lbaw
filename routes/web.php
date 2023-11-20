@@ -121,5 +121,8 @@ Route::controller(CartItemController::class)->group(function () {
     Route::post('/cart/delete/{productId}', 'deleteFromCart')->name('cart.delete');
     Route::post('/cart/remove/{productId}', 'removeFromCart')->name('cart.remove');
     Route::get('/api/cart/count', 'countItemCart')->name('cart.count');
+    Route::post('/update-cart-item', [CartItemController::class, 'addToCart']);
 });
+
+
 

@@ -11,12 +11,11 @@ function addItemToCart(product) {
             'X-Requested-With': 'XMLHttpRequest',
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
-        body: JSON.stringify({ productId: product })
+        body: JSON.stringify({ itemId: product, quantity: 1 })
     }).then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        console.log(response.json());
         return response.json();
     })
     .then(data => {

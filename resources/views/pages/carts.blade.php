@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <td class="fw-bold">Total</td>
-            <td class="fw-bold">{{ $items->sum(function($item) { return $item->price * $item->pivot->quantity; }) }}€</td>
+            <td id="total-price" class="fw-bold">{{ $items->sum(function($item) { return $item->price * $item->pivot->quantity; }) }}€</td>
         </tr>
         </table>
     </div>

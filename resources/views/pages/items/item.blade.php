@@ -2,10 +2,13 @@
 
 @section('content')
     <section class="container-fluid mt-2">
+        <script src="{{asset('js/item-page_script.js')}}" defer></script>
         <div class="row m-5 mt-1">
             <div class="col-md product-info">
                 <p class= "mt-1">Home / CATEGORIA DE ITEM</p>
+
                 <h2 class= "mt-2" id="productName">{{$item->name}}</h2>
+
                 <small class="text-muted">Article: 01234</small>
 
                 <h4 class="my-4 price">
@@ -74,14 +77,22 @@
                         alt="NOME DA ROUPA">
 
                     <div class="d-flex justify-content-between mt-3">
-                        <button class="btn btn-outline-danger me-2" type="submit">
-                            <i class="fa fa-heart"></i>
-                            <span>Add to wishlist</span>
-                        </button>
-                        <button class="btn btn-outline-primary" type="submit">
-                            <i class="fa fa-cart-plus"></i>
-                            <span>Add to Cart</span>
-                        </button>
+                        <script src="{{asset('js/item-page_script.js')}}" defer></script>
+                        <form method="POST" action="{{ url('/users/wishlist/product/'.$item->id) }}">
+                            @csrf
+                            @method('PUT')
+                            <button class="btn btn-outline-danger me-2" type="submit">
+                                <i class="fa fa-heart"></i>
+                                <span>Add to wishlist</span>
+                            </button>
+                        </form>
+                        <form onclick="addItemToCart({{$item->id}})">
+                            @csrf
+                            <button class="btn btn-outline-primary" type="button" id="addToCart"> 
+                                <i class="fa fa-cart-plus"></i>
+                                <span>Add to Cart</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

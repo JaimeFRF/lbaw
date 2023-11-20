@@ -49,10 +49,13 @@
 }
 
 .cart-total{
-  width: 60%;
-  margin-bottom: 30px;
-  border: 1px solid #635b5b;
-  padding: 30px;
+  width: 60% ;
+  margin-bottom: 30px ;
+  border: none;
+  border-top: 3px solid #635b5b; /* Adjust the thickness as needed */
+  padding: 30px ;
+  margin-left: auto !important;
+  margin-right: 0 !important;
 }
 
 .cart-total table{
@@ -66,4 +69,32 @@
   border: 1px solid #635b5b;
   font-size: 13px;
   padding : 10px;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-btn {
+  background-color: #635b5b;
+  color: #fff;
+  border: none;
+  padding: 3px 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 4px;
+  transition: background-color 0.3s ease; /* Smooth color transition */
+}
+
+.quantity-btn:hover {
+  background-color: #868282; /* Darker color on hover */
+}
+
+.quantity-text {
+  margin: 0 10px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #464545; /* Darker text color */
 }

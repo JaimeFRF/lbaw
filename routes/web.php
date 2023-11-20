@@ -52,7 +52,7 @@ Route::controller(CartController::class)->group(function () {
 
 //wishlist
 Route::put('users/wishlist/product/{id_item}', [WishlistController::class, 'add']);
-
+Route::delete('users/wishlist/product/{product_id}', [WishlistController::class, 'delete']);
 
 // API
 Route::controller(CartController::class)->group(function () {

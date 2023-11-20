@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="{{ url('css/cart.css') }}" rel="stylesheet">
+@endsection
+
 @section('title', 'Cart')
 
 @section('content')
@@ -23,6 +27,17 @@
             </tr>
         </table>
     </div>
+
+    <div class="cart-buttons d-flex justify-content-around">
+            <button class="btn btn-success m-2 w-100">
+                Checkout
+            </button>
+            <button class="btn btn-outline-danger m-2 w-100">
+                Empty Cart
+            </button>
+    </div>
+
+
 </section>
 @endsection
 

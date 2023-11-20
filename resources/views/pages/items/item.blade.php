@@ -72,9 +72,14 @@
 
             <div class="col-md m-1">
                 <div class="d-flex flex-column align-items-center">
-                    <img src="{{ asset($item->images()->first()->filepath) }}"
-                        class="m-1 w-100 sliderMainImage"
+                        @if($item->images()->first())
+                            <img src="{{ asset($item->images()->first()->filepath) }}" class="m-1 w-100 sliderMainImage"
                         alt="NOME DA ROUPA">
+                        @else
+                            <!-- Handle the case where there are no images for the item -->
+                            <img src="{{ asset('images/default-product-image.png') }}" class="m-1 w-100 sliderMainImage"
+                        alt="NOME DA ROUPA">
+                        @endif
 
                     <div class="d-flex justify-content-between mt-3">
                         <script src="{{asset('js/item-page_script.js')}}" defer></script>

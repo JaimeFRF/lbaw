@@ -32,3 +32,10 @@
   top:29px;
   padding:10px 10px;
 }
+
+.login-tab {
+  cursor: pointer;
+}
+.login-tab.active {
+  border-bottom: 2px solid #007bff; /* Highlight the active tab */
+}

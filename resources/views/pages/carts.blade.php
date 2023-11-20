@@ -24,10 +24,6 @@
         <h4 class="fw-bold">Cart Total</h4>
         <table>
         <tr>
-            <td> Cart Subtotal</td>
-            <td>{{ $items->sum(function($item) { return $item->price * $item->pivot->quantity; }) }}€</td>
-        </tr>
-        <tr>
             <td>Shipping</td>
             <td>Free</td>
         </tr>

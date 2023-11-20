@@ -61,7 +61,7 @@ class CartController extends Controller
             foreach ($items as $item) {
                 $item->picture = Image::where('id_item', $item->id)->first()->filepath;
             }
-            Log::info('Items: ', ['items' => $items]);
+            //Log::info('Items: ', ['items' => $items]);
             return view('pages.carts', [
                 'items' => $items
             ]);

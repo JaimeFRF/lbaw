@@ -16,6 +16,8 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EditProfileController;
 use App\Http\Controllers\CartItemController;
+use App\Http\Controllers\PurchaseController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +35,8 @@ Route::get('/', function () {
     return redirect('/home');
 });
 
-
+//Purchase
+Route::post('/purchase', [PurchaseController::class, 'createPurchase'])->name('add_purchase');
 
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 

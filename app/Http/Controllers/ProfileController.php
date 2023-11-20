@@ -11,6 +11,9 @@ use App\Models\Image;
 use App\Models\Wishlist;
 use App\Models\User;
 use App\Models\Item;
+use App\Models\Cart;
+use App\Models\Purchase;
+
 
 
 class ProfileController extends Controller{
@@ -33,6 +36,12 @@ class ProfileController extends Controller{
           // For example, set a default image path
           $profile_picture = 'images/default-product-image.png';
       }  
+
+      $purchases = Purchase::where('id_user', $user->id)->get();
+
+      Log::info('Purchases: ', ['purchases' => $purchases]);
+
+
       $wishlist = Wishlist::where('id_user', $user->id)->get();
 
       $items_wishlist = [];
@@ -41,12 +50,23 @@ class ProfileController extends Controller{
         $items_wishlist[] = Item::find($item->id_item);
       }
 
-      Log::info('Wishlist: ', ['wishlist' => $items_wishlist]);
+      $carts_purchase = [];
+      $purchases = Purchase::where('id_user', $user->id)->get();
+      foreach($purchases as $purchase){
+        $carts_purchase[] = Cart::find($purchase->id_cart);
+      }
+
+
+
+
+
 
       return view('pages.profile.profile', [
         'user' => $user,
         'items_wishlist' => $items_wishlist,
-        'profile_picture' => $profile_picture
+        'profile_picture' => $profile_picture,
+        'purchases' => $purchases,
+        'carts_purchase' => $carts_purchase
       ]);
     }
 }

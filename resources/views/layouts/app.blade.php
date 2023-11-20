@@ -23,7 +23,6 @@
         <link href="{{ url('css/about.css') }}" rel="stylesheet">
         <link href="{{ url('css/contacts.css') }}" rel="stylesheet">
         <link href="{{ url('css/edit_profile.css') }}" rel="stylesheet">
-        <link href="{{ url('css/edit_profile.css') }}" rel="stylesheet">
 
 
 

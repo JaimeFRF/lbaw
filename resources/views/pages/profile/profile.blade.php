@@ -45,7 +45,15 @@
                             @endif
                                 <div class = "ms-2" style="max-width: 200px;">
                                 <h6>{{ $item->name }}</h6>
-                                <a class = "remove" href = ""> Remove</a>
+                                <form method = "POST" action={{url('users/wishlist/product/'.$item->id)}}>
+                                    @csrf
+                                    @method('delete')
+
+                                    <button class = "btn btn-outline-danger" type = "submit">
+                                        <i class="fa fa-times"></i>
+                                        <span>Remove</span>
+                                    </button>
+                                </form>
                                 </div>
                                 <hr class="my-2">
                                 </div>

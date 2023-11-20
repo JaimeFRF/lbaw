@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="{{ url('css/faq.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
 <body>
 

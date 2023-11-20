@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="{{ url('css/cart.css') }}" rel="stylesheet">
+@endsection
+
 @section('title', 'Cart')
 
 @section('content')

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="{{ url('css/contacts.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -25,7 +29,7 @@
                         <p>up202108789@up.pt</p>
                     </div>
 
-                    <div class="col-md-3 contact-person">
+                    <div class="col-md-3 contact-person last">
                         <img src="{{ asset('images/default-person.png') }}" alt="Manuel Maria Faria de Sousa e Silva">
                         <h4>Manuel Maria Faria de Sousa e Silva</h4>
                         <p>up202108874@up.pt</p>

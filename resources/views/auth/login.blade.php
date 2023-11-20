@@ -38,7 +38,10 @@
 
                 <div class="form-group d-flex mt-3">
                     <button class = "btn btn-primary w-50 m-2" type="submit">Login</button>
-                    <button class = "btn btn-outline-primary w-50 m-2" > Register </button>
+                    <button class = "btn btn-outline-primary w-50 m-2">
+                        <a class="w-50 m-2" href="{{route('register')}}">Register</a>
+                    </button>
+
                 </div>
             </form>
         </div>

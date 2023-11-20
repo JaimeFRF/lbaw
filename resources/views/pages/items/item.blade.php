@@ -2,6 +2,7 @@
 
 @section('content')
     <section class="container-fluid mt-2">
+        <script src="{{asset('js/item-page_script.js')}}" defer></script>
         <div class="row m-5 mt-1">
             <div class="col-md product-info">
                 <h2 id="productName">{{$item->name}}</h2>
@@ -58,6 +59,7 @@
                         class="m-1 w-100 sliderMainImage" alt="NOME DA ROUPA">
 
                     <div class="d-flex justify-content-between mt-3">
+                        <script src="{{asset('js/item-page_script.js')}}" defer></script>
                         <form method="POST" action="{{ url('/users/wishlist/product/'.$item->id) }}">
                             @csrf
                             @method('PUT')
@@ -66,10 +68,13 @@
                                 <span>Add to wishlist</span>
                             </button>
                         </form>
-                        <button class="btn btn-outline-primary" type="submit">
-                            <i class="fa fa-cart-plus"></i>
-                            <span>Add to Cart</span>
-                        </button>
+                        <form onclick="addItemToCart({{$item->id}})">
+                            @csrf
+                            <button class="btn btn-outline-primary" type="button" id="addToCart"> 
+                                <i class="fa fa-cart-plus"></i>
+                                <span>Add to Cart</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>

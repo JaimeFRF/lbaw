@@ -89,8 +89,9 @@ Route::controller(CartController::class)->group(function () {
 });
 
 Route::controller(CartItemController::class)->group(function () {
-    Route::post('/cart/add/{productId}', 'addToCart')->name('cart.add');
+    Route::post('/cart/add/{productId}', [CartItemController::class , 'addToCart'])->name('cart.add');
     Route::post('/cart/delete/{productId}', 'deleteFromCart')->name('cart.delete');
     Route::post('/cart/remove/{productId}', 'removeFromCart')->name('cart.remove');
+    Route::get('/api/cart/count', 'countItemCart')->name('cart.count');
 });
 

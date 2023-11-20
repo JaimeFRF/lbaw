@@ -11,6 +11,12 @@
       </div>
     </div>
   </td>
-  <td><input type= "number" min="0" value={{$item->pivot->quantity}}> </td>
+  <td>
+    <div class="quantity-control">
+        <button class="quantity-btn" onclick="updateQuantity({{ $item->id }}, -1)">-</button>
+        <span class="quantity-text">{{ $item->pivot->quantity }}</span>
+        <button class="quantity-btn" onclick="updateQuantity({{ $item->id }}, 1)">+</button>
+    </div>
+</td>
   <td>{{$item->price}}€</td>
 </tr>

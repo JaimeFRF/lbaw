@@ -1,0 +1,25 @@
+/* --------------------------------------------- ADMIN ADD ITEM ------------------------------------------------------------*/
+
+h2{
+    font-family: 'Playfair Display', serif;
+    font-size: 3em;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    text-align: center;
+}
+
+.add {
+    display: block;
+    margin: 0 auto;
+    color: #fff;
+    background-color: #666;
+    border: 1px solid #666;
+    transition: background-color 0.3s;
+    margin-top: 0.7em;
+    margin-bottom: 0.7em;
+}
+
+.add:hover {
+    background-color: #333;
+    border: 1px solid #333;
+}

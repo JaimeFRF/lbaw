@@ -10,9 +10,14 @@ use Illuminate\Support\Facades\Log;
 
 class HomeController extends Controller
 {
-    public function home() {
+    public function home(Request $request) {
         $items = Item::all();
-       // Log::info('User of a review', ['items' => $items]);
+
+        $request->session()->put('color', "all");
+        $request->session()->put('category', "None");
+        $request->session()->put('orderBy', "None");
+        $request->session()->put('price', "null");
+        $request->session()->put('inStock', true); 
 
         return view('pages.home', [
             'items' => $items,

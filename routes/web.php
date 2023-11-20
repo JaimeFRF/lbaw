@@ -44,6 +44,8 @@ Route::get('/about', [StaticController::class, 'about'])->name('about');
 
 //Shop
 Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
+Route::post('/shop/{filter}', [ShopController::class, 'shopFilter'])->name('shopFilter');
+
 
 // Items on home-page
 Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);

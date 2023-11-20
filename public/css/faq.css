@@ -1,0 +1,64 @@
+body {
+    background-color: #d8d8d8;
+    font-family: 'Playfair Display', serif;
+}
+
+h6 {
+    color: #212529;
+    text-align: center;
+    font-size: 10rem;
+    padding-bottom: 2rem;
+}
+
+.faq-section {
+    width: 75%;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+}
+
+.question {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #212529;
+    color: #fff;
+}
+
+.answer {
+    display: none;
+    font-size: 1rem;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #e5e5e5;
+    color: #212529;
+}
+
+.arrow {
+    float: right;
+}
+
+.arrow.up {
+    transform: rotate(180deg);
+}
+
+@media screen and (max-width: 768px) {
+
+    h6{
+        font-size: 6rem;
+
+    }
+
+    .faq-section {
+        width: 90%;
+    }
+
+    .question {
+        font-size: 1rem;
+    }
+
+    .answer {
+        font-size: 0.9rem;
+    }
+}

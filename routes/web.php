@@ -10,6 +10,8 @@ use App\Http\Controllers\ShopController;
 
 use App\Http\Controllers\StaticController;
 
+use App\Http\Controllers\AdminController;
+
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\WishlistController;
@@ -33,9 +35,10 @@ Route::get('/', function () {
     return redirect('/home');
 });
 
-
-
 Route::get('/home', [HomeController::class, 'home'])->name('home');
+
+//Admin
+Route::get('/admin-add-item', [AdminController::class, 'addItem'])->name('addItem');
 
 //Statics
 Route::get('/faq', [StaticController::class, 'faq'])->name('faq');

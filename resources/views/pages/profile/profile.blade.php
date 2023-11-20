@@ -22,7 +22,7 @@
                         </div>
                         <div>
                             <p class="mb-1"><strong>Username:</strong> {{$user->username}}</p>
-                            <p class="mb-1"><strong>Name:</strong> NOMEEEEEE</p>
+                            <p class="mb-1"><strong>Name:</strong> Não definido</p>
                             <p class="mb-0"><strong>Email:</strong> {{$user->email}}</p>
                         </div>
                     </div>

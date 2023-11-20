@@ -20,24 +20,57 @@ class CartItemController extends Controller
 
     public function addToCart(Request $request)
     {
-        $productId = $request->input('productId');
+        $itemId = $request->input('itemId');
+        $newQuantity = $request->input('quantity');
+        
+        Log::info('itemId',['itemId' => $itemId]);
+        Log::info('newQuantity',['newQuantity' => $newQuantity]);
+
         $cart =  Auth::user()->cart()->first();
         $items = $cart->products()->get();
-        $item = Item::find($productId);
-        if (!$item) {
-            return redirect()->back()->with('error', 'Item not found.');
+        if (!$itemId) {
+            return response()->json([
+                'totalPrice' => $totalPrice,
+                'message' => 'Item does not exist'
+            ]);
         }
-        $existsItem = $cart->products()->where('id', $productId)->first();
 
+        if ($newQuantity == 0){
+            Log::info('removido');
+            $cart->products()->detach($itemId);
+            Log::info('items',['items' => $items]);
+            return response()->json([
+                'totalPrice' => $totalPrice,
+                'newQuantity' => $newQuantity,
+                'message' => 'Item totally removed'
+            ]); 
+            //return redirect()->back()->with('success', 'Product removed from cart!');
+        }
+
+        $existsItem = $cart->products()->where('id', $itemId)->first();
         if ($existsItem) {
-            $cart->products()->updateExistingPivot($productId, ['quantity' => $existsItem->pivot->quantity + 1]);
+            
+            $cart->products()->updateExistingPivot($itemId, ['quantity' => $newQuantity]);
         }
         else{
             $cart->products()->attach($item);
         }
-
-        Log::info('New cart of Items: ', ['items' => $cart->products()->get()]);
-        return redirect()->back()->with('success', 'Product added to cart!');
+        Log::info('cart',['cart' => $cart->products()->get()]);
+        $totalPrice = 0;
+        
+        $products = $cart->products()->get();
+        foreach ($products as $item) {
+            $totalPrice += $item->price * $item->pivot->quantity;
+        }
+        
+        Log::info('totalPrice',['totalPrice' => $totalPrice]);
+        return response()->json([
+            'totalPrice' => $totalPrice,
+            'newQuantity' => $newQuantity,
+            'message' => 'Price updated!'
+        ]);
+        // Log::info('New cart of Items: ', ['items' => $cart->products()->get()]);
+        //return redirect()->back()->with('success', 'Product added to cart!');
     }
 
     public function deleteFromCart(Request $request, $productId)
@@ -58,7 +91,7 @@ class CartItemController extends Controller
     }
 
     public function removeFromCart(Request $request,$productId)
-{
+    {
     $cart = Auth::user()->cart()->first();
 
     if (!$cart) {
@@ -82,7 +115,7 @@ class CartItemController extends Controller
     }
 
     return redirect()->back()->with('success', 'Item updated in cart.');
-}
+    }
 
 public function countItemCart(Request $request){
 

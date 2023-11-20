@@ -96,6 +96,8 @@ class EditProfileController extends Controller
         $user->delete();
         return redirect()->route('home');
       }
+    }
+  }
 
   public function changePicture(Request $request){
     if(Auth::check()){

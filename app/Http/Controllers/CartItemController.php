@@ -22,12 +22,13 @@ class CartItemController extends Controller
     {
         $itemId = $request->input('itemId');
         $newQuantity = $request->input('quantity');
-        
+        $totalPrice = 0;
         Log::info('itemId',['itemId' => $itemId]);
         Log::info('newQuantity',['newQuantity' => $newQuantity]);
 
         $cart =  Auth::user()->cart()->first();
         $items = $cart->products()->get();
+        $item = Item::find($itemId);
         if (!$itemId) {
             return response()->json([
                 'totalPrice' => $totalPrice,
@@ -56,7 +57,7 @@ class CartItemController extends Controller
             $cart->products()->attach($item);
         }
         Log::info('cart',['cart' => $cart->products()->get()]);
-        $totalPrice = 0;
+        
         
         $products = $cart->products()->get();
         foreach ($products as $item) {

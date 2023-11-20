@@ -6,15 +6,16 @@
 
 @section('content')
   <section id="edit-profile">
-    <!-- <article class="update-form">
+    <script src="{{ asset('js/edit_profile.js') }}" defer></script>
+    <article class="update-form">
       <h2>Update Profile Picture</h2>
-      <form id="update-photo-form" class="change-information" action="">
-        <input type="file" name="image" accept="image/*" onchange="loadFile(event)">
-        <img id="output" src="#" style="max-height:15em; max-width:15em;" alt="Image Preview" />
-
+      <form id="update-photo-form" class="change-information" method="POST" action="{{route('update_profile_pic')}}" enctype="multipart/form-data">
+        @csrf
+        <input type="file" id="imageInput" name="imageInput" accept="image/*" >
+        <img id="imagePreview" style="max-width: 200px; max-height: 200px; display: none;">
         <button id="update_photo_button" type="submit" value="Update Password">Update</button>
       </form>
-    </article> -->
+    </article>
 
     <article class="update-form">
         <h2>Update Username</h2>

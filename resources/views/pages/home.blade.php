@@ -1,4 +1,3 @@
-<!-- resources/views/home.blade.php -->
 @extends('layouts.app')
 
 @section('css')
@@ -46,3 +45,4 @@
     </section>
 
 @endsection
+

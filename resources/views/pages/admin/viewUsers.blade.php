@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.adminApp')
 
 @section('content')
   <div>
@@ -32,7 +32,7 @@
                   <td>janesmith@example.com</td>
                   <td>987-654-3210</td>
                   <td><button class="btn btn-danger">Ban</button></td>
-                  <td><buttonclass="btn btn-primary">Upgrade to Admin</buttonclass=></td>
+                  <td><button class="btn btn-primary">Upgrade to Admin</button class=></td>
               </tr>
       
           </tbody>

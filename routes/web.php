@@ -19,6 +19,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EditProfileController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\Auth\AdminLoginController;
 
 
 /*
@@ -43,7 +44,11 @@ Route::post('/purchase', [PurchaseController::class, 'createPurchase'])->name('a
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 
 //Admin
+Route::get('/admin-home', [AdminController::class, 'viewHome'])->name('admin-home');
 Route::get('/admin-add-item', [AdminController::class, 'addItem'])->name('addItem');
+Route::get('/admin-view-users',[AdminController::class, 'viewUsers'])->name('view-users-admins');
+Route::get('/stock', [AdminController::class, 'viewStock'])->name('stock');
+Route::get('/items', [AdminController::class, 'viewItems'])->name('items');
 
 //Statics
 Route::get('/faq', [StaticController::class, 'faq'])->name('faq');
@@ -94,6 +99,12 @@ Route::controller(LoginController::class)->group(function () {
     Route::post('/login', 'authenticate');
     Route::get('/logout', 'logout')->name('logout');
 });
+
+Route::controller(AdminLoginController::class)->group(function () {
+    Route::post('/admin-login', 'authenticate')->name('admin-login');
+    
+});
+
 
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="{{ url('css/edit_profile.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
   <section id="edit-profile">
     <!-- <article class="update-form">

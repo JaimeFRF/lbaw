@@ -23,8 +23,16 @@ class ProfileController extends Controller{
     {
       $user = User::find(Auth::id());
 
-      $profile_picture = Image::where('id_user', $user->id)->first()->filepath;
-  
+      $image = Image::where('id_user', $user->id)->first();
+
+      // Check if the image record exists and filepath is not null
+      if ($image && $image->filepath) {
+          $profile_picture = $image->filepath;
+      } else {
+          // Handle the case where there is no image or filepath is null
+          // For example, set a default image path
+          $profile_picture = 'images/default-product-image.png';
+      }  
       $wishlist = Wishlist::where('id_user', $user->id)->get();
 
       $items_wishlist = [];

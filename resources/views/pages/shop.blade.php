@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="{{ url('css/shop.css') }}" rel="stylesheet">
+<link href="{{ url('css/home.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
     <div class="shop">
         <div class="row">

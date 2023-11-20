@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="{{ url('css/login_register.css') }}" rel="stylesheet">
+@endsection
+
+
 @section('content')
     <section class="d-flex justify-content-center m-5" id = "content">
         <script src="{{ asset('js/script.js') }}"></script>
@@ -24,9 +29,7 @@
                         <i class="bi bi-eye-slash" id="togglePassword"></i>
                     </span> 
                     @if ($errors->has('password'))
-                        <span class="error">
-                            {{ $errors->first('password') }}
-                        </span>
+                        <span class="text-danger">{{ $errors->first('password') }}</span>
                     @endif
                 </div>
 
@@ -38,10 +41,10 @@
 
                 <div class="form-group d-flex mt-3">
                     <button class = "btn btn-primary w-50 m-2" type="submit">Login</button>
-                    <button class = "btn btn-outline-primary w-50 m-2">
-                        <a class="w-50 m-2" href="{{route('register')}}">Register</a>
-                    </button>
-
+                </div>
+                <div class="form-group d-flex mt-3" >
+                    <span>Don't have an account?</span>
+                    <a class="btn p-0 btn-link mt-8 text-decoration-underline" href="{{route('register')}}" style="margin-left: 5px;">Sign up!</a>
                 </div>
             </form>
         </div>

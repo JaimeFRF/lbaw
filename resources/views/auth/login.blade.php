@@ -1,5 +1,10 @@
 @extends('layouts.app')
 
+@section('css')
+<link href="{{ url('css/login_register.css') }}" rel="stylesheet">
+@endsection
+
+
 @section('content')
     <section class="d-flex justify-content-center m-5" id = "content">
         <script src="{{ asset('js/script.js') }}"></script>

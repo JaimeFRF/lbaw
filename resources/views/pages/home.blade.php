@@ -1,6 +1,10 @@
 <!-- resources/views/home.blade.php -->
 @extends('layouts.app')
 
+@section('css')
+<link href="{{ url('css/home.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
     <script>
         window.totalItems = {{ $totalItems }};

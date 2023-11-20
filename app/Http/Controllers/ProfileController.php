@@ -28,7 +28,8 @@ class ProfileController extends Controller{
       // Check if the image record exists and filepath is not null
       if ($image && $image->filepath) {
           $profile_picture = $image->filepath;
-      } else {
+          Log::info('profile_picture: ', ['profile_picture' => $profile_picture]);
+        } else {
           // Handle the case where there is no image or filepath is null
           // For example, set a default image path
           $profile_picture = 'images/default-product-image.png';

@@ -9,8 +9,9 @@
     <script src="{{ asset('js/edit_profile.js') }}" defer></script>
     <article class="update-form">
       <h2>Update Profile Picture</h2>
-      <form id="update-photo-form" class="change-information" action="">
-        <input type="file" id="imageInput" accept="image/*">
+      <form id="update-photo-form" class="change-information" method="POST" action="{{route('update_profile_pic')}}" enctype="multipart/form-data">
+        @csrf
+        <input type="file" id="imageInput" name="imageInput" accept="image/*" >
         <img id="imagePreview" style="max-width: 200px; max-height: 200px; display: none;">
         <button id="update_photo_button" type="submit" value="Update Password">Update</button>
       </form>

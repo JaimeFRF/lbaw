@@ -17,39 +17,65 @@
     </article>
 
     <article class="update-form">
-      <h2>Update Username</h2>
-      <form id="update-username-form" class="change-username" action="">
-        <input type="text" name="new_username"  placeholder="New Username" >
-        <input type="password" name="password" placeholder="Current Password">
+        <h2>Update Username</h2>
+        <form id="update-username-form" class="change-username" method="POST" action="{{ route('change_username') }}">
+            @csrf
+            <input type="text" name="new_username" placeholder="{{ $user->username }}">
+            <button id="update-username-button" type="submit" value="Update Username">Update Username</button>
+        </form>
+        @if(isset($successUsername))
+            <div class="alert alert-success">
+                {{ $successUsername }}
+            </div>
+        @endif
+        @if(isset($errorUsername))
+            <div class="alert alert-danger">
+                {{ $errorUsername }}
+            </div>
+        @endif
 
-        <button id="update-username-button" type="submit" value="Update Username">Update Username</button>
-      </form>
     </article>
-
 
     <article class="update-form">
-      <h2>Update Email</h2>
-      <form id="update-email-form" class="change-email" action="../action/action_editProfile/action_edit_email.php" method="post">
+        <h2>Update Name</h2>
+        <form id="update-name-form" class="change-name" method="POST" action="{{ route('change_name') }}">
+            @csrf
+            <input type="text" name="new_name" placeholder="{{ $user->name }}">
+            <button id="update-name-button" type="submit" value="Update Name">Update Name</button>
+        </form>
+        @if(isset($successName))
+            <div class="alert alert-success">
+                {{ $successName }}
+            </div>
+        @endif
+    </article> 
 
-        <input type="email" name="new_email" placeholder="New Email" >
-        <input type="password" name="password" placeholder="Current Password">
 
-        <button id="update-email-button" type="submit" value="Update Email">Update Email</button>
-      </form>
-    </article>
 
     <article class="update-form">
       <h2>Update Password</h2>
-      <form id="update-password-form" class="change-password" action="">
-
+      <form id="update-password-form" class="change-password" method="POST" action="{{ route('change_password') }}">
+        @csrf
         <input type="password" name="new_password" placeholder="New Password">
-        <input type="password" name="confirm_password" placeholder="Confirm New Password">
-        <input type="password" name="password" placeholder="Current Password">
+        <input type="password" name="new_password_confirmation" placeholder="Confirm New Password">
 
         <button id="update-password-button" type="submit" value="Update Password">Update Password</button>
       </form>
+
+      @if(isset($successPassword))
+            <div class="alert alert-success">
+                {{ $successPassword }}
+            </div>
+      @endif
+      @if(isset($errorPassword))
+            <div class="alert alert-danger">
+                {{ $errorPassword }}
+            </div>
+        @endif
     </article>
 
+
+<!-- 
     <article class="update-form">
       <h2>Delete Profile</h2>
       <form id="delete-profile-form" class="delete-profile" action="" method="">
@@ -58,5 +84,5 @@
         <button id="delete-profile-button" type="submit" value="Delete Profile">Delete Profile</button>
       </form>
     </article>
-  </section>
+  </section>  -->
 @endsection

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+
 
 class RegisterController extends Controller
 {
@@ -27,10 +29,11 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
+        Log::info('entrei');
+        Log::info($request);
         $request->validate([
-            'name' => 'required|string|max:250',
-            'email' => 'required|email|max:250|unique:users',
             'username' => 'required|string|max:250|unique:users',
+            'email' => 'required|email|max:250|unique:users',
             'password' => 'required|min:8|confirmed'
         ]);
 

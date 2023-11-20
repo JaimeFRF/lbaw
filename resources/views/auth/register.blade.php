@@ -7,11 +7,11 @@
         {{ csrf_field() }}
 
         <div class="form-group m-2 d-flex flex-column">
-          <label class = "mb-2" for="name">Name</label>
-          <input class = "form-control" id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
-          @if ($errors->has('name'))
+          <label class = "mb-2" for="username">Username</label>
+          <input class = "form-control" id="username" type="text" name="username" value="{{ old('username') }}" required autofocus>
+          @if ($errors->has('username'))
             <span class="error">
-                {{ $errors->first('name') }}
+                {{ $errors->first('username') }}
             </span>
           @endif
         </div>  
@@ -44,11 +44,14 @@
 
         <div class="form-group d-flex mt-3">
           <button class = "btn btn-primary w-50 m-2" type="submit"> Register</button>
-          <button class = "btn btn-outline-primary w-50 m-2">
+          {{-- <button class = "btn btn-outline-primary w-50 m-2">
             <a class="w-50 m-2" href="{{ route('login') }}">Login</a>
-          </button>
+          </button> --}}
         </div>
-
+        <div style="display: flex; align-items: center; margin: 1em" >
+          <span>Already have an account? </span>
+          <a class="btn p-0 btn-link mt-8 text-decoration-underline" href="{{route('login')}}" style="margin-left: 5px;">Login!</a>
+        </div>
       </form>
     </div>
 </section>

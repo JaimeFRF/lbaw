@@ -19,6 +19,9 @@
         <link href="{{ url('css/home.css') }}" rel="stylesheet">
         <link href="{{ url('css/shop.css') }}" rel="stylesheet">
         <link href="{{ url('css/cart.css') }}" rel="stylesheet">
+        <link href="{{ url('css/faq.css') }}" rel="stylesheet">
+        <link href="{{ url('css/about.css') }}" rel="stylesheet">
+        <link href="{{ url('css/contacts.css') }}" rel="stylesheet">
 
             
          <!-- Icons -->

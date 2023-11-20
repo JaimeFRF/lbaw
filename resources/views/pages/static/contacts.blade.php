@@ -29,7 +29,7 @@
                         <p>up202108789@up.pt</p>
                     </div>
 
-                    <div class="col-md-3 contact-person">
+                    <div class="col-md-3 contact-person last">
                         <img src="{{ asset('images/default-person.png') }}" alt="Manuel Maria Faria de Sousa e Silva">
                         <h4>Manuel Maria Faria de Sousa e Silva</h4>
                         <p>up202108874@up.pt</p>

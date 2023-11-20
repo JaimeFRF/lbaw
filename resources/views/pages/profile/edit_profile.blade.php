@@ -6,12 +6,12 @@
 
 @section('content')
   <section id="edit-profile">
+    <script src="{{ asset('js/edit_profile.js') }}" defer></script>
     <article class="update-form">
       <h2>Update Profile Picture</h2>
       <form id="update-photo-form" class="change-information" action="">
-        <input type="file" name="image" accept="image/*" onchange="loadFile(event)">
-        <img id="output" src="#" style="max-height:15em; max-width:15em;" alt="Image Preview" />
-
+        <input type="file" id="imageInput" accept="image/*">
+        <img id="imagePreview" style="max-width: 200px; max-height: 200px; display: none;">
         <button id="update_photo_button" type="submit" value="Update Password">Update</button>
       </form>
     </article>
@@ -19,7 +19,7 @@
     <article class="update-form">
       <h2>Update Username</h2>
       <form id="update-username-form" class="change-username" action="">
-        <input type="text" name="new_username"  placeholder="New Username" value ="NOME ATUAL DO USER">
+        <input type="text" name="new_username"  placeholder="New Username" >
         <input type="password" name="password" placeholder="Current Password">
 
         <button id="update-username-button" type="submit" value="Update Username">Update Username</button>
@@ -31,7 +31,7 @@
       <h2>Update Email</h2>
       <form id="update-email-form" class="change-email" action="../action/action_editProfile/action_edit_email.php" method="post">
 
-        <input type="email" name="new_email" placeholder="New Email" value="EMAIL ATUAL DA PESSOA">
+        <input type="email" name="new_email" placeholder="New Email" >
         <input type="password" name="password" placeholder="Current Password">
 
         <button id="update-email-button" type="submit" value="Update Email">Update Email</button>

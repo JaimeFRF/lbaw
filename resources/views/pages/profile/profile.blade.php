@@ -10,7 +10,7 @@
                         <span>User Information</span>
                         <div>
                             <span class="ms-2">Edit Profile</span>
-                            <a href="#" class="btn btn-secondary rounded-circle">
+                            <a href="{{ route('edit_profile') }}" class="btn btn-secondary rounded-circle">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
                         </div>

@@ -7,7 +7,7 @@
         <h6  id=name> {{$item->name}}</h5>
         <small>Size: {{$item->size}}</small>
         <br>
-        <a id="removeItem" href = "">Remove</a>
+        <a class = "remove" href = ""> Remove</a>
       </div>
     </div>
   </td>

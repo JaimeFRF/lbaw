@@ -36,12 +36,19 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
+                let items = JSON.parse(document.getElementById('items').value);
+                let item = items.find(item => item.id == itemId);
+                console.log(item.pivot.quantity);
+                item.pivot.quantity += newQuantity;
+                console.log(item.pivot.quantity);
                 quantityElement.innerText = data.newQuantity;
                 if (data.newQuantity == 0) {
                     const productRow = cartItem.closest('tr'); // Assuming each cart item is in its own table row
                     productRow.remove();
                 }
                 document.getElementById('total-price').innerText = data.totalPrice + '€';
+                console.log(items);
+                document.getElementById('items').value = JSON.stringify(items);
             })
             .catch(error => {
                 console.error('Error:', error);

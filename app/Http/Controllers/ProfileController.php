@@ -28,20 +28,13 @@ class ProfileController extends Controller{
 
       $image = Image::where('id_user', $user->id)->first();
 
-      // Check if the image record exists and filepath is not null
       if ($image && $image->filepath) {
           $profile_picture = $image->filepath;
-          Log::info('profile_picture: ', ['profile_picture' => $profile_picture]);
         } else {
-          // Handle the case where there is no image or filepath is null
-          // For example, set a default image path
           $profile_picture = 'images/default-product-image.png';
       }  
 
       $purchases = Purchase::where('id_user', $user->id)->get();
-
-      Log::info('Purchases: ', ['purchases' => $purchases]);
-
 
       $wishlist = Wishlist::where('id_user', $user->id)->get();
 

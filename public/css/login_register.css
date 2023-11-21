@@ -1,0 +1,41 @@
+#login-form input[required]{
+  height: 50px;
+  border-radius: 10px;
+  border-width: 1px;
+}
+
+#register-button{
+  border-color: var(--website-main-color);
+}
+
+#register-button:hover{
+  background: none;
+}
+
+.required-input{
+  color: #ff5555;
+  font-weight: bold;
+}
+
+#togglePassword {
+  margin-left: 590px;
+  cursor: pointer;
+}
+
+#pwd {
+  position:relative;
+}
+
+#pwd i {
+  position:absolute;
+  left:0;
+  top:29px;
+  padding:10px 10px;
+}
+
+.login-tab {
+  cursor: pointer;
+}
+.login-tab.active {
+  border-bottom: 2px solid #007bff; /* Highlight the active tab */
+}

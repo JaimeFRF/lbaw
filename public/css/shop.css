@@ -1,0 +1,80 @@
+.shop {
+    max-width: 100%;
+}
+
+.shop .col-md-3 {
+    background-color: #bfbfbf;
+    min-height: 85vh;
+}
+
+.shop .col-md-3 label {
+    padding-top: 1rem;
+    padding-bottom: 0.5rem;
+    font-family: 'Playfair Display', serif;
+    color: #212529;
+}
+
+.shop .col-md-3 label:first-child {
+    padding-top: 6rem;
+}
+
+.shop .col-md-9 {
+    background-color: #d8d8d8;
+    margin-top: 0;
+}
+
+.shop h3 {
+    padding-top: 2rem;
+    font-family: 'Playfair Display', serif;
+    color: #fff;
+}
+
+.shop .col-md-9 li {
+    list-style-type: none;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.shop .button-margin {
+    margin-left: 10px;
+}
+
+.shop li.w-100 form button {
+    white-space: nowrap;
+    background-color: #fff;
+    color: #666;
+}
+
+.shop .card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    transition: box-shadow 0.3s;
+}
+
+.shop .card:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.shop .card-img-top {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.shop .card-body {
+    text-align: center;
+}
+
+.shop .btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.shop .btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.shop @media (max-width: 767px) {
+    .col-md-3 {
+        margin-bottom: 20px;
+    }
+}

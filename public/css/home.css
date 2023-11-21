@@ -1,0 +1,153 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap');
+
+/* --------------------------------------------- HERO BANNER SECTION ------------------------------------------------------------*/
+.hero-section {
+    position: relative;
+    height: 90vh;
+    overflow: hidden;
+}
+
+.hero-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensure the image covers the entire container */
+}
+
+.hero-banner {
+    width: 100%; /* Ensure the image width is 100% of the container */
+    height: auto; /* Allow the image height to adjust proportionally */
+}
+
+.image-overlay {
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+}
+
+.image-overlay h1 {
+    margin: 0;
+    font-size: 15em;
+    color: rgba(255, 255, 255, 0.8);
+
+}
+
+.image-overlay h2 {
+    margin: 0;
+    font-size: 2em;
+    color: rgba(255, 255, 255, 0.8);
+    letter-spacing: 0.8rem;
+
+}
+
+.image-overlay-btn {
+    position: absolute;
+    top: 85%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+}
+
+.image-overlay-btn a {
+    padding: 1rem;
+    font-size: 1.2em;
+    background-color: rgba(255, 255, 255, 0.95); /* Button background color */
+    color: #666; /* Button text color */
+    text-decoration: none;
+    border: 0.1rem solid #666; /* Button border */
+    border-radius: 20px; /* Rounded corners */
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Add transition effect */
+}
+
+.image-overlay-btn a:hover {
+    background-color: rgba(102, 102, 102, 0.95); /* Change background color on hover to a greyish color */
+    color: #fff; /* Change text color on hover */
+    border-color: #666; /* Change border color on hover */
+}
+
+
+/* --------------------------------------------- PRODUCT SECTION ------------------------------------------------------------*/
+
+.product-section {
+    background-color: #e5e5e5;
+    text-align: center;
+    padding: 1rem;
+    font-family: 'Playfair Display', serif;
+    position: relative;
+}
+
+.product-section h3{
+    font-size: 3.5rem;
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 0.3rem;
+    color: #666;
+}
+
+.product-section h4{
+    padding-top: 0.5rem;
+    color: #666;
+}
+
+.product-container {
+    padding-top: 0;
+    display: flex;
+    justify-content: space-around; /* Adjust as needed: space-around, space-between, etc. */
+    flex-wrap: wrap; /* Allow flex items to wrap to the next line */
+    position: relative;
+    align-items: center;
+}
+
+.product {
+    width: 200px; /* Set a fixed width for each product item */
+    margin: 20px; /* Add margin around each product item */
+}
+
+.product img {
+    max-width: 100%; /* Make sure images don't exceed the width of their container */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 8px; /* Add rounded corners to the product images */
+}
+
+.product h3 {
+    margin: 10px 0;
+}
+
+.product p {
+    color: #666;
+}
+
+.product span {
+    color: #333;
+    font-weight: bold;
+}
+
+.product-container button{
+    position: relative;
+    height: 50%;
+    top: 50%;
+}
+
+.prev-arrow,
+.next-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5em;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.product-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Add this line */
+
+}

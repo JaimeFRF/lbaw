@@ -1,0 +1,34 @@
+.text-center.title {
+    padding-top: 2%;
+    padding-bottom: 2%;
+    font-size: 6em;
+}
+
+.contact-person {
+    background-color: #d8d8d8;
+    padding-top: 5%;
+    min-height: 0;
+    padding-right: 5%;
+}
+
+.row.contacts h4,
+.row.contacts p {
+    font-size: 1.2em;
+}
+
+.row.contacts p {
+    font-size: 1em;
+}
+
+.row.contacts img {
+    max-width: 90%;
+}
+
+
+@media screen and (max-width: 768px) {
+
+    .text-center.title{
+        font-size: 4em;
+    }
+    
+}

@@ -20,11 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const cartItem = button.closest('.cart-item');
             const itemId = cartItem.dataset.itemId;
             const quantityElement = cartItem.querySelector('.quantity-text');
-            let newQuantity = parseInt(quantityElement.innerText) + (button.classList.contains('increment') ? 1 : -1);
+            let newQuantity = (button.classList.contains('increment') ? 1 : -1);
 
-            newQuantity = Math.max(newQuantity, 0);
 
-            // Send fetch request to update quantity
             fetch('/update-cart-item', {
                 method: 'POST',
                 headers: {
@@ -38,16 +36,19 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                console.log(data);
+                let items = JSON.parse(document.getElementById('items').value);
+                let item = items.find(item => item.id == itemId);
+                console.log(item.pivot.quantity);
+                item.pivot.quantity += newQuantity;
+                console.log(item.pivot.quantity);
                 quantityElement.innerText = data.newQuantity;
                 if (data.newQuantity == 0) {
                     const productRow = cartItem.closest('tr'); // Assuming each cart item is in its own table row
                     productRow.remove();
                 }
-
-
                 document.getElementById('total-price').innerText = data.totalPrice + '€';
-                //document.getElementById('total-price').innerText = 'Total Price: $' + data.totalPrice;
+                console.log(items);
+                document.getElementById('items').value = JSON.stringify(items);
             })
             .catch(error => {
                 console.error('Error:', error);

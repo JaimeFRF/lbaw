@@ -18,6 +18,7 @@ class PurchaseController extends Controller
         $user = User::find(Auth::id());
     
         $items = json_decode($request->input('items'), true);
+        Log::info('items: ',['items' => $items]);
         $purchase_price = 0;
         foreach($items as $item){
             Log::info('item: ', ['item' => $item]);

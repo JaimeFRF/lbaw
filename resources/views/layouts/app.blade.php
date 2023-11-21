@@ -24,6 +24,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     
         <script type="text/javascript" src={{ url('js/app.js') }} defer> </script>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
     </head>
     
     <body>

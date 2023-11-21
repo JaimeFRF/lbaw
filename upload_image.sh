@@ -3,7 +3,7 @@
 # Stop execution if a step fails
 set -e
 
-IMAGE_NAME=git.fe.up.pt:5050/lbaw/lbaw2223/lbaw22XX # Replace with your group's image name
+IMAGE_NAME=git.fe.up.pt:5050/lbaw/lbaw2324/lbaw2366 # Replace with your group's image name
 
 # Ensure that dependencies are available
 composer install
@@ -14,3 +14,5 @@ php artisan optimize
 # docker buildx build --push --platform linux/amd64 -t $IMAGE_NAME .
 docker build -t $IMAGE_NAME .
 docker push $IMAGE_NAME
+
+ 

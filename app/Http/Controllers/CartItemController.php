@@ -23,9 +23,6 @@ class CartItemController extends Controller
         $itemId = $request->input('itemId');
         $newQuantity = $request->input('quantity');
         $totalPrice = 0;
-        Log::info('itemId',['itemId' => $itemId]);
-        Log::info('newQuantity',['newQuantity' => $newQuantity]);
-
         $cart =  Auth::user()->cart()->first();
         $items = $cart->products()->get();
         $item = Item::find($itemId);
@@ -35,43 +32,42 @@ class CartItemController extends Controller
                 'message' => 'Item does not exist'
             ]);
         }
-
-        if ($newQuantity == 0){
-            Log::info('removido');
-            $cart->products()->detach($itemId);
-            Log::info('items',['items' => $items]);
-            return response()->json([
-                'totalPrice' => $totalPrice,
-                'newQuantity' => $newQuantity,
-                'message' => 'Item totally removed'
-            ]); 
-            //return redirect()->back()->with('success', 'Product removed from cart!');
-        }
-
-        $existsItem = $cart->products()->where('id', $itemId)->first();
+        
+        $updatedQuantity = $newQuantity;
+        $existsItem = $cart->products()->where('id_item', $itemId)->first();
         if ($existsItem) {
-            
-            $cart->products()->updateExistingPivot($itemId, ['quantity' => $newQuantity]);
+            $currentQuantity = $cart->products()->where('id_item', $itemId)->first()->pivot->quantity;
+            $updatedQuantity = $currentQuantity + $newQuantity;
+            if ($updatedQuantity == 0){
+                $cart->products()->detach($itemId);
+                $products = $cart->products()->get();
+                foreach ($products as $item) {
+                    $totalPrice += $item->price * $item->pivot->quantity;
+                }
+                return response()->json([
+                    'totalPrice' => $totalPrice,
+                    'newQuantity' => $updatedQuantity,
+                    'message' => 'Item totally removed'
+                ]); 
+            }
+            else{
+                $cart->products()->updateExistingPivot($itemId, ['quantity' => $updatedQuantity]);
+            }
         }
         else{
             $cart->products()->attach($item);
         }
-        Log::info('cart',['cart' => $cart->products()->get()]);
-        
-        
+
         $products = $cart->products()->get();
         foreach ($products as $item) {
             $totalPrice += $item->price * $item->pivot->quantity;
         }
         
-        Log::info('totalPrice',['totalPrice' => $totalPrice]);
         return response()->json([
             'totalPrice' => $totalPrice,
-            'newQuantity' => $newQuantity,
+            'newQuantity' => $updatedQuantity,
             'message' => 'Price updated!'
         ]);
-        // Log::info('New cart of Items: ', ['items' => $cart->products()->get()]);
-        //return redirect()->back()->with('success', 'Product added to cart!');
     }
 
     public function deleteFromCart(Request $request, $productId)

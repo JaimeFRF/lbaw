@@ -64,7 +64,7 @@ class CartItemController extends Controller
         }
         
         return response()->json([
-            'totalPrice' => $totalPrice,
+            'totalPrice' => number_format($totalPrice, 2, '.', ''),
             'newQuantity' => $updatedQuantity,
             'message' => 'Price updated!'
         ]);

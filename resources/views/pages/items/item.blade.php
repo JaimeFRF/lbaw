@@ -50,7 +50,7 @@
                         </h2>
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo">
                             <div class="accordion-body">
-                                {{$item->name}}
+                                {{$item->fabric}}
                             </div>
                         </div>
                     </div>

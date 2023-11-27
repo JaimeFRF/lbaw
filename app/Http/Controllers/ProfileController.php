@@ -7,12 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Image;
 use App\Models\Wishlist;
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Cart;
 use App\Models\Purchase;
+
 
 
 

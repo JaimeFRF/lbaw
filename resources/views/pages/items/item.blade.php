@@ -63,7 +63,11 @@
                         </h2>
                         <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree">
                             <div class="accordion-body">
-                                O NÚMERO DE STOCK
+                                <?php if($item->stock > 0): ?>
+                                    In Stock
+                                <?php else: ?>
+                                    Not In Stock
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

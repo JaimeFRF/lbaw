@@ -78,11 +78,17 @@
                 <div class="d-flex flex-column align-items-center">
                     <div id="carouselExampleIndicators" class="carousel slide carousel-no-zoom" data-ride="carousel" style="width: 90%; height: 90%; margin: auto;">
                             <div class="carousel-inner">
+                            @if($item->images()->get()->isEmpty())
+                                <div class="carousel-item active">
+                                    <img src="{{ asset('images/default-product-image.png') }}" class="d-block carImg">
+                                </div>
+                            @else
                                 @foreach($item->images()->get() as $image)
                                     <div class="carousel-item {{$loop->first ? 'active' : ''}}">
                                         <img src="{{ asset($image->filepath) }}" class="d-block carImg">
                                     </div>
                                 @endforeach
+                            @endif
                             </div>
                             <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>

@@ -76,14 +76,23 @@
 
             <div class="col-md m-1">
                 <div class="d-flex flex-column align-items-center">
-                        @if($item->images()->first())
-                            <img src="{{ asset($item->images()->first()->filepath) }}" class="m-1 w-100 sliderMainImage"
-                        alt="NOME DA ROUPA">
-                        @else
-                            <!-- Handle the case where there are no images for the item -->
-                            <img src="{{ asset('images/default-product-image.png') }}" class="m-1 w-100 sliderMainImage"
-                        alt="NOME DA ROUPA">
-                        @endif
+                    <div id="carouselExampleIndicators" class="carousel slide carousel-no-zoom" data-ride="carousel" style="width: 90%; height: 90%; margin: auto;">
+                            <div class="carousel-inner">
+                                @foreach($item->images()->get() as $image)
+                                    <div class="carousel-item {{$loop->first ? 'active' : ''}}">
+                                        <img src="{{ asset($image->filepath) }}" class="d-block carImg">
+                                    </div>
+                                @endforeach
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
 
                     <div class="d-flex justify-content-between mt-3">
                         <script src="{{asset('js/item-page_script.js')}}" defer></script>

@@ -18,6 +18,7 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EditProfileController;
 use App\Http\Controllers\CartItemController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Auth\AdminLoginController;
 
@@ -76,6 +77,7 @@ Route::controller(CartController::class)->group(function () {
     Route::get('/cart', 'list')->name('cart');
 });
 
+Route::post('/review', [ReviewController::class, 'createReview'])->name('add_review');
 
 // Cart Items
 Route::controller(CartItemController::class)->group(function () {

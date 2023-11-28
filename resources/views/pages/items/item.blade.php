@@ -1,6 +1,14 @@
 @extends('layouts.app')
 
+@section('css')
+    <link href="{{ url('css/item.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <body data-item-id="{{$item->id}}">
+    <script src="{{ asset('js/item-review.js') }}" defer></script>
+
     <section class="container-fluid mt-2">
         <script src="{{asset('js/item-page_script.js')}}" defer></script>
         <div class="row m-5 mt-1">
@@ -71,6 +79,30 @@
                             </div>
                         </div>
                     </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <strong>Rating</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingTwo">
+                            <div class="accordion-body">
+                                {{$item->rating}}
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="rating">
+                        @php $userRating = $review->rating; @endphp
+                        @for ($i = 5; $i >= 1; $i--)
+                            <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" @if ($userRating == $i) checked @endif>
+                            <label for="star{{ $i }}">&#9733;</label>
+                        @endfor
+                    </div>
+                    <div id="selectedRating"></div>
+
                 </div>
             </div>
 

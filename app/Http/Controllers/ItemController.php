@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Item;
+use App\Models\Review;
 use App\Models\Jacket;
 use App\Models\Jeans;
 use App\Models\Shirt;
@@ -90,7 +91,9 @@ class ItemController extends Controller
     public function show($id)
     {
         $item = Item::find($id);
-        return view('pages.items.item', ['item' => $item]);
+        $review = Review::where('id_item', $id)->get()->first();
+        Log::info('User of a review', ['review' => $review]);
+        return view('pages.items.item', ['item' => $item, 'review' => $review]);
     }
 
     public function search(Request $request)

@@ -64,7 +64,7 @@ class CartItemController extends Controller
         }
         
         return response()->json([
-            'totalPrice' => $totalPrice,
+            'totalPrice' => number_format($totalPrice, 2, '.', ''),
             'newQuantity' => $updatedQuantity,
             'message' => 'Price updated!'
         ]);
@@ -113,8 +113,12 @@ class CartItemController extends Controller
 
 public function countItemCart(Request $request){
 
-    $cart = Auth::user()->cart()->first()->products()->get();
-    $nrItems = $cart->count();
+    $items = Auth::user()->cart()->first()->products()->get();
+    $nrItems = 0;
+
+    foreach($items as $item) {
+        $nrItems += $item->pivot->quantity;
+    }
     return response()->json(['count' => $nrItems]);
 }
 

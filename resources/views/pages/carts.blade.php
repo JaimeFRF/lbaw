@@ -16,7 +16,7 @@
           <th>Subtotal</th>
         </tr>
         @foreach($items as $item)
-        @include('partials.cart', ['item' => $item])
+            @include('partials.cart', ['item' => $item])
         @endforeach
     </table>
 
@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <td class="fw-bold">Total</td>
-            <td id="total-price" class="fw-bold">{{ $items->sum(function($item) { return $item->price * $item->pivot->quantity; }) }}€</td>
+            <td id="total-price" class="fw-bold">{{ number_format($items->sum(function($item) { return $item->price * $item->pivot->quantity; }), 2) }}€</td>
         </tr>
         </table>
     </div>

@@ -43,9 +43,7 @@ class ItemController extends Controller
 
     public function nextItems($offset)
     {
-        //Log::info('Offset', ['offset' => $offset]);
         $items = Item::skip($offset)->take(3)->get();
-        //Log::info('User of a review', ['items' => $items]);
         return view('partials.item-list', ['items' => $items]);
     }
     /**
@@ -96,7 +94,6 @@ class ItemController extends Controller
     public function search(Request $request)
     {
         $user_input = $request->input('search');
-        Log::info('User input: '.$user_input);
 
         $keyword1 = strtolower($user_input); 
         $keyword2 = strtoupper($user_input); 
@@ -178,7 +175,6 @@ class ItemController extends Controller
             }
             else{
                 $items = Item::where('color','=', $color)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string)->get();
-                Log::info('items: ', ['items' => $items]);
 
             }
         }else{

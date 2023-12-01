@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Item;
+use Illuminate\Support\Facades\Log;
+
 
 class AdminController extends Controller
 {   
@@ -13,7 +17,8 @@ class AdminController extends Controller
         return view('pages.admin.addItem');
     }
     public function viewUsers(){
-        return view('pages.admin.viewUsers');
+      $users = User::all();
+      return view('pages.admin.viewUsers',['users' => $users]);
     }
     public function viewStock() 
     {
@@ -22,7 +27,10 @@ class AdminController extends Controller
 
     public function viewItems() 
     {
-      return view('pages.admin.viewItems');
+      $items = Item::all();      
+      return view('pages.admin.viewItems',['items'=> $items]);
     }
+
+
 
 }

@@ -16,9 +16,7 @@ class EditProfileController extends Controller
 
   public function show() {
     $user = User::find(Auth::id());
-    
-    Log::info('User: ', ['user' => $user]);
-
+  
     return view('pages.profile.edit_profile', [
       'user' => $user
     ]);
@@ -55,9 +53,6 @@ class EditProfileController extends Controller
       $new_name = $request->input('new_name');
       $user->name = $new_name;
       $user->save();
-
-      Log::info('new_name: ', ['new_name' => $new_name]);
-
       return view('pages.profile.edit_profile', ['user' => $user, 'successName' => 'Name changed successfully']);
     }else{
         return response()->json(['message' => 'User not authenticated']);
@@ -117,7 +112,6 @@ class EditProfileController extends Controller
         }
 
         $path = $file->storeAs('images', $filename, 'public');
-        Log::info('path: ', ['path' => $path]);
 
         $existingImage = Image::where('id_user', $user_id)->first();
 

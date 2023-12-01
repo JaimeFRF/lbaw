@@ -81,9 +81,6 @@ class CartItemController extends Controller
             return redirect()->back()->with('error', 'Item not found.');
         }
         $cart->products()->detach($productId);
-
-
-        Log::info('New cart of Items: ', ['items' => $cart->products()->get()]);
         return redirect()->back()->with('success', 'Product added to cart!');
     }
 
@@ -117,7 +114,6 @@ class CartItemController extends Controller
 public function countItemCart(Request $request){
 
     $cart = Auth::user()->cart()->first()->products()->get();
-    // Log::info('Cart: ', ['cart' => $cart]);
     $nrItems = $cart->count();
     return response()->json(['count' => $nrItems]);
 }

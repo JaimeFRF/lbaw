@@ -18,11 +18,8 @@ class PurchaseController extends Controller
         $user = User::find(Auth::id());
     
         $items = json_decode($request->input('items'), true);
-        Log::info('items: ',['items' => $items]);
         $purchase_price = 0;
         foreach($items as $item){
-            Log::info('item: ', ['item' => $item]);
-            Log::info('item_price: ', ['item_price' => $item['price']]);
             $purchase_price += $item['price'] * $item['pivot']['quantity'];
         }
     
@@ -39,9 +36,7 @@ class PurchaseController extends Controller
         $entry->save();
 
         $purchases = $user->purchases()->get();
-    
-        Log::info('purchases: ', ['purchases' => $purchases]);
-    
+        
         $items = Item::all();
         return view('pages.home', [
             'items' => $items,

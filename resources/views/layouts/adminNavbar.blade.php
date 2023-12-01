@@ -7,11 +7,7 @@
     </button>
 
       <!-- User features -->
-      <div class="navbar-nav text-white d-flex flex-row">
-        <a title="Stock" class="m-3 me-4" href="{{ route('stock') }}">
-            <i class="fa fa-th-list text-white fs-5 bar-icon"></i>
-            <span class="text-white">Stock</span>
-        </a>     
+      <div class="navbar-nav text-white d-flex flex-row">   
     
         <a title="Items" class="m-3 me-4" href="{{ route('items') }}">
             <i class="fa fa-th text-white fs-5 bar-icon"></i>

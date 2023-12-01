@@ -47,7 +47,6 @@ Route::get('/home', [HomeController::class, 'home'])->name('home');
 Route::get('/admin-home', [AdminController::class, 'viewHome'])->name('admin-home');
 Route::get('/admin-add-item', [AdminController::class, 'addItem'])->name('addItem');
 Route::get('/admin-view-users',[AdminController::class, 'viewUsers'])->name('view-users-admins');
-Route::get('/stock', [AdminController::class, 'viewStock'])->name('stock');
 Route::get('/items', [AdminController::class, 'viewItems'])->name('items');
 
 //Statics
@@ -101,8 +100,7 @@ Route::controller(LoginController::class)->group(function () {
 });
 
 Route::controller(AdminLoginController::class)->group(function () {
-    Route::post('/admin-login', 'authenticate')->name('admin-login');
-    
+    Route::post('/admin-login', 'authenticate')->name('admin-login'); 
 });
 
 

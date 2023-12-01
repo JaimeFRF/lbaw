@@ -77,7 +77,11 @@ Route::controller(CartController::class)->group(function () {
     Route::get('/cart', 'list')->name('cart');
 });
 
+// Reviews
 Route::post('/review', [ReviewController::class, 'createReview'])->name('add_review');
+Route::post('/review/edit/{id}', [ReviewController::class, 'editReview'])->name('edit_review');
+Route::delete('/review/delete/{id}', [ReviewController::class, 'deleteReview'])->name('delete_review');
+
 
 // Cart Items
 Route::controller(CartItemController::class)->group(function () {

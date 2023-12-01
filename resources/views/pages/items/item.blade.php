@@ -2,10 +2,12 @@
 
 @section('css')
     <link href="{{ url('css/item.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 @endsection
 
 @section('content')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <body data-item-id="{{$item->id}}">
     <script src="{{ asset('js/item-review.js') }}" defer></script>
 
@@ -81,27 +83,68 @@
                     </div>
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            <button class="accordion-button collapsed rating-button" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
                                 <strong>Rating</strong>
                             </button>
                         </h2>
                         <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingTwo">
-                            <div class="accordion-body">
+                            <div class="accordion-body" id="itemRating">
                                 {{$item->rating}}
                             </div>
                         </div>
                     </div>
 
-                    
-                    <div class="rating">
-                        @php $userRating = $review->rating; @endphp
-                        @for ($i = 5; $i >= 1; $i--)
-                            <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" @if ($userRating == $i) checked @endif>
-                            <label for="star{{ $i }}">&#9733;</label>
-                        @endfor
+                    @if(Auth::check())
+                        <div class="review-container">
+                            <form id="reviewForm" class="d-flex flex-column align-items-start">
+                                <label for="reviewText" class="mb-2">Add a Review</label>
+                                <div class="d-flex mb-3">
+                                    <div class="form-group me-3" style="padding-right: 10%;">
+                                        <textarea class="form-control transparent-textarea" id="reviewText" rows="5" style="width: 600px; height: 50px; resize: none;"></textarea>
+                                    </div>
+                                    <div class="rating">
+                                        @php $userRating = isset($review) ? $review->rating : 0; @endphp
+                                        @for ($i = 5; $i >= 1; $i--)
+                                            <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}" @if ($userRating == $i) checked @endif>
+                                            <label for="star{{ $i }}">&#9733;</label>
+                                        @endfor
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    @endif
+
+                    <div class="reviews-section">
+                        <h3>Reviews:</h3>
+                        @foreach($itemReviews as $review)
+                            <div class="review">
+                                <hr></hr>
+                                <div class="review-header">
+                                    <div class="username">{{ $review->user->username }}</div>
+                                    <div class="rating" data-rating="{{ $review->rating }}">
+                                        @php $reviewRating = $review->rating; @endphp
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= $reviewRating)
+                                                <span class="star">&#9733;</span>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                    @if(Auth::check())
+                                        @if(Auth::user()->id == $review->user->id)
+                                            <button class="edit-button" data-review-id="{{ $review->id }}"><i class="fa fa-pencil"></i></button>
+                                            <button class="delete-button" data-review-id="{{ $review->id }}"><i class="fa fa-trash"></i></button>
+                                        @endif
+                                    @endif
+                                </div>
+                                <p>{{ $review->description }}</p>
+                                <hr></hr>
+
+                            </div>
+                        @endforeach
                     </div>
-                    <div id="selectedRating"></div>
+
+
 
                 </div>
             </div>

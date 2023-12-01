@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Item;
 use App\Models\Review;
@@ -84,16 +85,35 @@ class ItemController extends Controller
         return response()->json($item);
     }
     
-    /**
-     * Shows info about a specific item.
-     */
+
     
     public function show($id)
     {
         $item = Item::find($id);
-        $review = Review::where('id_item', $id)->get()->first();
-        Log::info('User of a review', ['review' => $review]);
-        return view('pages.items.item', ['item' => $item, 'review' => $review]);
+        $itemReviews = $item->reviews()->get();
+
+        if(!Auth::check()){
+            $userReview = null;
+        }else{
+            $userReview = Review::where('id_item', $id)->where('id_user', Auth::id())->get()->first();
+        }
+        $otherReviews = Review::where('id_item', $id)->where('id_user', '<>', Auth::id())->get();
+
+
+        if(($userReview === null) && ($otherReviews !== null)){
+            $reviews = $otherReviews;
+        }else if($userReview !== null && ($otherReviews === null)){
+            $reviews = $userReview;
+        }
+        else if($userReview === null && ($otherReviews === null)){
+            $reviews = [];
+        }else{
+            $reviews = collect([$userReview])->concat($otherReviews);
+        }
+
+        Log::info('reviews: ', ['reviews' => $reviews]);
+
+        return view('pages.items.item', ['item' => $item, 'review' => $userReview, 'itemReviews' => $reviews]);
     }
 
     public function search(Request $request)

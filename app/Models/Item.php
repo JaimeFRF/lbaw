@@ -19,6 +19,7 @@ class Item extends Model
 
     protected $casts = [
         'price' => 'float',
+        'rating' => 'float',
     ];
 
 

@@ -6,3 +6,12 @@ document.getElementById('imageInput').addEventListener('change', function(event)
         URL.revokeObjectURL(output.src) // Free up memory
     }
 });
+
+function confirmDelete() {
+    var confirmation = confirm("Are you sure you want to delete your profile?");
+    if (confirmation) {
+      return true;
+    } else {
+      return false;
+    }
+}

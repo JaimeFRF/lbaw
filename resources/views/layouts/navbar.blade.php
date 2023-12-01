@@ -15,11 +15,26 @@
               Categories
             </button>
             <nav class="dropdown-menu">
-              <a class="dropdown-item" href="#">Shirt</a>
-              <a class="dropdown-item" href="#">T-Shirt</a>
-              <a class="dropdown-item" href="#">Jacket</a>
-              <a class="dropdown-item" href="#">Jeans</a>
-              <a class="dropdown-item" href="#">Sneaker</a>
+              <form method="POST" action="{{route('shopFilter', ['filter' => 'shirt'])}}">
+                  @csrf
+                  <button type="submit" class="dropdown-item">Shirt</button>
+              </form>
+              <form method="POST" action="{{route('shopFilter', ['filter' => 'tshirt'])}}">
+                  @csrf
+                  <button type="submit" class="dropdown-item">T-Shirt</button>
+              </form>
+              <form method="POST" action="{{route('shopFilter', ['filter' => 'jacket'])}}">
+                  @csrf
+                  <button type="submit" class="dropdown-item">Jacket</button>
+              </form>
+              <form method="POST" action="{{route('shopFilter', ['filter' => 'jeans'])}}">
+                  @csrf
+                  <button type="submit" class="dropdown-item">Jeans</button>
+              </form>
+              <form method="POST" action="{{route('shopFilter', ['filter' => 'sneaker'])}}">
+                  @csrf
+                  <button type="submit" class="dropdown-item">Sneaker</button>
+              </form>
             </nav>
           </div>
         </li>

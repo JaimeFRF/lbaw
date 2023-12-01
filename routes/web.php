@@ -18,6 +18,7 @@ use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EditProfileController;
 use App\Http\Controllers\CartItemController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Auth\AdminLoginController;
 
@@ -40,7 +41,6 @@ Route::get('/', function () {
 
 //Purchase
 Route::post('/purchase', [PurchaseController::class, 'createPurchase'])->name('add_purchase');
-
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 
 //Admin
@@ -55,41 +55,51 @@ Route::get('/faq', [StaticController::class, 'faq'])->name('faq');
 Route::get('/contacts', [StaticController::class, 'contacts'])->name('contacts');
 Route::get('/about', [StaticController::class, 'about'])->name('about');
 
-//Shop
-Route::get('/shop', [ShopController::class, 'shop'])->name('shop');
-Route::post('/shop/{filter}', [ShopController::class, 'shopFilter'])->name('shopFilter');
-
 
 // Items on home-page
 Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
-
-
-//Item
 Route::post('/search', [ItemController::class, 'search'])->name('search');
 Route::post('/search/filter', [ItemController::class, 'filter'])->name('filter');
 Route::post('/search/clearFilters', [ItemController::class, 'clearFilters'])->name('clearFilters');
 
-// Cards
-Route::controller(CartController::class)->group(function () {
-    Route::get('/cards', 'list')->name('cards');
-    Route::get('/cards/{id}', 'show');
-});
 
-//wishlist
+
+//Wishlist
 Route::put('users/wishlist/product/{id_item}', [WishlistController::class, 'add']);
 Route::delete('users/wishlist/product/{product_id}', [WishlistController::class, 'delete']);
 
-// API
+// Cart
 Route::controller(CartController::class)->group(function () {
+    Route::get('/cards', 'list')->name('cards');
+    Route::get('/cards/{id}', 'show');
     Route::put('/api/cards', 'create');
     Route::delete('/api/cards/{card_id}', 'delete');
+    Route::get('/cart', 'list')->name('cart');
 });
 
+// Reviews
+Route::post('/review', [ReviewController::class, 'createReview'])->name('add_review');
+Route::post('/review/edit/{id}', [ReviewController::class, 'editReview'])->name('edit_review');
+Route::delete('/review/delete/{id}', [ReviewController::class, 'deleteReview'])->name('delete_review');
+
+
+// Cart Items
+Route::controller(CartItemController::class)->group(function () {
+    Route::post('/cart/add/{productId}', [CartItemController::class , 'addToCart'])->name('cart.add');
+    Route::post('/cart/delete/{productId}', 'deleteFromCart')->name('cart.delete');
+    Route::post('/cart/remove/{productId}', 'removeFromCart')->name('cart.remove');
+    Route::get('/api/cart/count', 'countItemCart')->name('cart.count');
+    Route::post('/update-cart-item', [CartItemController::class, 'addToCart']);
+});
+
+// Items
 Route::controller(ItemController::class)->group(function () {
     Route::put('/api/cards/{card_id}', 'create');
     Route::post('/api/item/{id}', 'update');
     Route::delete('/api/item/{id}', 'delete');
     Route::get('/api/item/{id}', 'show');
+    Route::get('/shop', 'shop')->name('shop');
+    Route::post('/shop/{filter}', 'shopFilter')->name('shopFilter');
 });
 
 
@@ -100,40 +110,33 @@ Route::controller(LoginController::class)->group(function () {
     Route::get('/logout', 'logout')->name('logout');
 });
 
+
+// Login as admin
 Route::controller(AdminLoginController::class)->group(function () {
     Route::post('/admin-login', 'authenticate')->name('admin-login');
     
 });
 
+// Register
 
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
 
+// Profile
+
 Route::controller(ProfileController::class)->group(function () {
     Route::get('/profile', 'show')->name('profile');  
+    Route::get('/edit-profile', 'showEditProfile')->name('edit_profile');
+    Route::post('/edit-profile/username', 'changeUsername')->name('change_username');
+    Route::post('/edit-profile/name', 'changeName')->name('change_name');
+    Route::post('/edit-profile/password', 'changePassword')->name('change_password');
+    Route::post('/edit-profile/remove', 'removeUser')->name('remove_user');
+    Route::post('/edit-profile/picture', 'changePicture')->name('update_profile_pic');
 });
 
-Route::controller(CartController::class)->group(function () {
-    Route::get('/cart', 'list')->name('cart');
-});
 
-Route::get('/edit-profile', [EditProfileController::class, 'show'])->name('edit_profile');
-Route::post('/edit-profile/username', [EditProfileController::class, 'changeUsername'])->name('change_username');
-Route::post('/edit-profile/name', [EditProfileController::class, 'changeName'])->name('change_name');
-Route::post('/edit-profile/password', [EditProfileController::class, 'changePassword'])->name('change_password');
-Route::post('/edit-profile/remove', [EditProfileController::class, 'removeUser'])->name('remove_user');
-Route::post('/edit-profile/picture', [EditProfileController::class, 'changePicture'])->name('update_profile_pic');
-
-
-Route::controller(CartItemController::class)->group(function () {
-    Route::post('/cart/add/{productId}', [CartItemController::class , 'addToCart'])->name('cart.add');
-    Route::post('/cart/delete/{productId}', 'deleteFromCart')->name('cart.delete');
-    Route::post('/cart/remove/{productId}', 'removeFromCart')->name('cart.remove');
-    Route::get('/api/cart/count', 'countItemCart')->name('cart.count');
-    Route::post('/update-cart-item', [CartItemController::class, 'addToCart']);
-});
 
 
 

@@ -46,10 +46,10 @@
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-header text-center">
-                        Order History
+                        Pending Orders
                     </div>
                     <div class="card-body">
-                        @include('partials.profile.profile-purchases', ['purchases' => $purchases, 'carts_purchase' => $carts_purchase])
+                        @include('partials.profile.profile-pending', ['purchases' => $purchases, 'carts_purchase' => $carts_purchase])
                     </div>
                     <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto">See more...</a>
                 </div>
@@ -59,10 +59,10 @@
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-header text-center">
-                        Reviews
+                        Purchase History
                     </div>
                     <div class="card-body d-flex flex-column">
-                        <p class="card-text">No reviews yet.</p>
+                        @include('partials.profile.profile-purchases', ['purchases' => $purchases, 'carts_purchase' => $carts_purchase])
                     </div>
                     <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto">See more...</a>
                 </div>

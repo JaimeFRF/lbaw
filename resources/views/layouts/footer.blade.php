@@ -6,4 +6,3 @@
         <a class="m-3" href="{{route('contacts')}}" class="footer-link">Contact Us</a>
     </div>
 </footer>
-

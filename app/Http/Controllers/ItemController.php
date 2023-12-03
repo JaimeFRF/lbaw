@@ -116,26 +116,11 @@ class ItemController extends Controller
 
     public function search(Request $request)
     {
-        $user_input = $request->input('search');
-
-        $keyword1 = strtolower($user_input); 
-        $keyword2 = strtoupper($user_input); 
-        $keyword3 = ucfirst($user_input);   
-        $keyword4 = ucwords($user_input);
-
-        $queryName = Item::where('name', 'like', '%'.$user_input.'%');
-        $firstQuery = Item::where('name', 'like', '%'.$keyword1.'%');
-        $secondQuery = Item::where('name', 'like', '%'.$keyword2.'%');
-        $thirdQuery = Item::where('name', 'like', '%'.$keyword3.'%');
-        $fourthQuery = Item::where('name', 'like', '%'.$keyword4.'%');
-
-        $results = $queryName
-        ->union($firstQuery)
-        ->union($secondQuery)
-        ->union($thirdQuery)
-        ->union($fourthQuery)
-        ->get();
-
+        $user_input = $request->input('search');    
+        $results = Item::whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$user_input])
+            ->orWhere('name', 'like', '%'.$user_input.'%')
+            ->get();
+    
         return view('pages.shop', ['items' => $results]);
     }
     public function filter(Request $request)

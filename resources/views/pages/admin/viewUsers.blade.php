@@ -20,7 +20,7 @@
                   <th class="text-center">Email</th>
                   <th class="text-center">Phone Number</th>
                   <th class="text-center">Status</th>
-                  <th class="text-center"  colspan="3">Actions</th> <!-- New column for actions -->
+                  <th class="text-center"  colspan="4">Actions</th> <!-- New column for actions -->
               </tr>
           </thead>
           <tbody>
@@ -35,6 +35,7 @@
                     <td class="text-center"><button id="ban" class="btn btn-danger">Ban</button></td>
                     <td class="text-center"><button id="upgrade" class="btn btn-primary">Upgrade to Admin</button></td>
                     <td class="text-center"><button id="edit" class="btn btn-warning">Edit</button></td>
+                    <td class="text-center"><button id="delete" class="btn btn-primary">Delete</button></td>
                 </tr>
             @endforeach
           </tbody>

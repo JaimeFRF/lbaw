@@ -9,20 +9,37 @@
     <div class="collapse navbar-collapse  " id="navbarSupportedContent">
       <script src="{{asset('js/navbar_script.js')}}"defer></script>
       <ul class="navbar-nav ms-auto mb-lg-0 align-items-center w-30  me-4">
-        <li>
-          <div class="dropdown m-2">
-            <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" data-toggle="dropdown">
-              Categories
-            </button>
-            <nav class="dropdown-menu">
-              <a class="dropdown-item" href="#">Shirt</a>
-              <a class="dropdown-item" href="#">T-Shirt</a>
-              <a class="dropdown-item" href="#">Jacket</a>
-              <a class="dropdown-item" href="#">Jeans</a>
-              <a class="dropdown-item" href="#">Sneaker</a>
-            </nav>
-          </div>
-        </li>
+
+      <li>
+        <div class="dropdown m-2">
+          <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" data-bs-toggle="dropdown">
+            Categories
+          </button>
+          <ul class="dropdown-menu">
+            <form method="POST" action="{{ route('shopFilter', ['filter' => 'shirt']) }}">
+              @csrf
+              <button type="submit" class="dropdown-item">Shirt</button>
+            </form>
+            <form method="POST" action="{{ route('shopFilter', ['filter' => 'tshirt']) }}">
+              @csrf
+              <button type="submit" class="dropdown-item">T-Shirt</button>
+            </form>
+            <form method="POST" action="{{ route('shopFilter', ['filter' => 'jacket']) }}">
+              @csrf
+              <button type="submit" class="dropdown-item">Jacket</button>
+            </form>
+            <form method="POST" action="{{ route('shopFilter', ['filter' => 'jeans']) }}">
+              @csrf
+              <button type="submit" class="dropdown-item">Jeans</button>
+            </form>
+            <form method="POST" action="{{ route('shopFilter', ['filter' => 'sneaker']) }}">
+              @csrf
+              <button type="submit" class="dropdown-item">Sneaker</button>
+            </form>
+          </ul>
+        </div>
+      </li>
+
         <li class="w-100">
           <!-- Search bar -->
           <form class="d-flex" method = "POST" action = "{{route('search')}}">
@@ -45,10 +62,28 @@
             $n = DB::table('notification')->where('id_user', '=', Auth::id())->count();
           @endphp
 
-          <a title="Notifications" class="m-3 me-4" href="">   
-            @if($n > 0){{$n}}@endif  
+          <a title="Notifications" class="m-3 me-4" id="notificationsDropdown" data-bs-toggle="dropdown">   
             <i class="fa fa-bell text-white fs-5 bar-icon"></i>
-          </a> 
+            <span class="text-white">(2)</span>
+          </a>
+
+          <div class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="notificationsDropdown">
+            <a class="dropdown-item notifi-item" href="#">
+              <img src="img/notification_icon.png" alt="img">
+              <div class="text">
+                <h4>Purchase ID State Changed</h4>
+                <p>The state of your purchase has been updated to <strong> NAME OF THE STATE </strong></p>
+              </div> 
+            </a>
+            <a class="dropdown-item notifi-item" href="#">
+              <!-- Another notification item -->
+              <img src="img/calças.png" alt="img">
+              <div class="text">
+                <h4>Calças vintage</h4>
+                <p>The item is in <strong> stock</strong></p>
+              </div> 
+            </a>
+          </div>
           
           @if(!Auth::user()->isadmin)
             <a title="Cart" class="m-3 me-4" href="{{route('cart')}}">

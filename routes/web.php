@@ -7,6 +7,7 @@ use App\Http\Controllers\ItemController;
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\CheckoutController;
 
 use App\Http\Controllers\StaticController;
 
@@ -136,6 +137,8 @@ Route::controller(ProfileController::class)->group(function () {
     Route::post('/edit-profile/picture', 'changePicture')->name('update_profile_pic');
 });
 
+//Checkout 
+Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 
 
 

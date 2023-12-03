@@ -1,0 +1,90 @@
+.rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    font-size: 24px;
+    color: #777;
+    cursor: pointer;
+}
+
+.rating label:hover,
+.rating label:hover ~ label,
+.rating input:checked ~ label {
+    color: #ffcc00;
+}
+
+#selectedRating {
+    font-size: 20px;
+    margin-top: 10px;
+}
+
+.review-container {
+    background-color: #f8f9fa; /* Background color for the container */
+    padding: 5px; /* Adjust as needed */
+    border-radius: 10px; /* Add rounded corners to the container */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.transparent-textarea {
+    background-color: transparent;
+    color: #495057;
+    border-color: #ced4da;
+}
+
+.rating {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rating input[type="radio"] {
+    display: none;
+    margin-right: 5px; /* Add margin between stars */
+}
+
+.rating label {
+    color: #6c757d;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s; /* Smooth transition for color change */
+}
+
+.rating input[type="radio"]:checked ~ label {
+    color: #ffc107;
+}
+.review-header {
+    display: flex;
+    align-items: center;
+}
+
+.username, .rating {
+    margin-right: 10px;
+}
+
+
+.edit-button, .delete-button {
+    background-color: rgb(218, 149, 212); /* Green */
+    border: none;
+    color: white;
+    border-radius: 10px; 
+    padding: 5px 5px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.edit-button {
+    background-color: rgb(116, 202, 224); /* Blue */
+}

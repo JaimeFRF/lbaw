@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Item;
+use App\Models\Review;
 use App\Models\Jacket;
 use App\Models\Jeans;
 use App\Models\Shirt;
@@ -83,39 +85,47 @@ class ItemController extends Controller
         return response()->json($item);
     }
     
-    /**
-     * Shows info about a specific item.
-     */
+
     
     public function show($id)
     {
         $item = Item::find($id);
-        return view('pages.items.item', ['item' => $item]);
+        $itemReviews = $item->reviews()->get();
+
+        if(!Auth::check()){
+            $userReview = null;
+        }else{
+            $userReview = Review::where('id_item', $id)->where('id_user', Auth::id())->get()->first();
+        }
+        $otherReviews = Review::where('id_item', $id)->where('id_user', '<>', Auth::id())->get();
+
+
+        if(($userReview === null) && ($otherReviews !== null)){
+            $reviews = $otherReviews;
+        }else if($userReview !== null && ($otherReviews === null)){
+            $reviews = $userReview;
+        }
+        else if($userReview === null && ($otherReviews === null)){
+            $reviews = [];
+        }else{
+            $reviews = collect([$userReview])->concat($otherReviews);
+        }
+
+        Log::info('reviews: ', ['reviews' => $reviews]);
+
+        return view('pages.items.item', ['item' => $item, 'review' => $userReview, 'itemReviews' => $reviews]);
     }
 
     public function search(Request $request)
     {
         $user_input = $request->input('search');
         Log::info('User input: '.$user_input);
-
-        $keyword1 = strtolower($user_input); 
-        $keyword2 = strtoupper($user_input); 
-        $keyword3 = ucfirst($user_input);   
-        $keyword4 = ucwords($user_input);
-
-        $queryName = Item::where('name', 'like', '%'.$user_input.'%');
-        $firstQuery = Item::where('name', 'like', '%'.$keyword1.'%');
-        $secondQuery = Item::where('name', 'like', '%'.$keyword2.'%');
-        $thirdQuery = Item::where('name', 'like', '%'.$keyword3.'%');
-        $fourthQuery = Item::where('name', 'like', '%'.$keyword4.'%');
-
-        $results = $queryName
-        ->union($firstQuery)
-        ->union($secondQuery)
-        ->union($thirdQuery)
-        ->union($fourthQuery)
-        ->get();
-
+    
+        // Perform a full-text search using plainto_tsquery
+        $results = Item::whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$user_input])
+            ->orWhere('name', 'like', '%'.$user_input.'%')
+            ->get();
+    
         return view('pages.shop', ['items' => $results]);
     }
     public function filter(Request $request)
@@ -208,6 +218,23 @@ class ItemController extends Controller
 
         $items = Item::all();
         return view('pages.shop', ['items' => $items]);
+    }
+
+    public function shop() {
+        $items = Item::all();
+
+        return view('pages.shop', [
+            'items' => $items,
+        ]);
+    }
+
+    public function shopFilter(Request $request, $filter) {
+        $request->session()->put('category', $filter);
+        $items = Item::join($filter, 'item.id', '=', $filter . '.id_item')->get();
+
+        return view('pages.shop', [
+             'items' => $items,
+        ]);
     }
     
     

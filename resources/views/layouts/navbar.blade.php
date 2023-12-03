@@ -9,37 +9,35 @@
     <div class="collapse navbar-collapse  " id="navbarSupportedContent">
       <script src="{{asset('js/navbar_script.js')}}"defer></script>
       <ul class="navbar-nav ms-auto mb-lg-0 align-items-center w-30  me-4">
-
-      <li>
-        <div class="dropdown m-2">
-          <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" data-bs-toggle="dropdown">
-            Categories
-          </button>
-          <ul class="dropdown-menu">
-            <form method="POST" action="{{ route('shopFilter', ['filter' => 'shirt']) }}">
-              @csrf
-              <button type="submit" class="dropdown-item">Shirt</button>
-            </form>
-            <form method="POST" action="{{ route('shopFilter', ['filter' => 'tshirt']) }}">
-              @csrf
-              <button type="submit" class="dropdown-item">T-Shirt</button>
-            </form>
-            <form method="POST" action="{{ route('shopFilter', ['filter' => 'jacket']) }}">
-              @csrf
-              <button type="submit" class="dropdown-item">Jacket</button>
-            </form>
-            <form method="POST" action="{{ route('shopFilter', ['filter' => 'jeans']) }}">
-              @csrf
-              <button type="submit" class="dropdown-item">Jeans</button>
-            </form>
-            <form method="POST" action="{{ route('shopFilter', ['filter' => 'sneaker']) }}">
-              @csrf
-              <button type="submit" class="dropdown-item">Sneaker</button>
-            </form>
-          </ul>
-        </div>
-      </li>
-
+        <li>
+          <div class="dropdown m-2">
+            <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" data-toggle="dropdown">
+              Categories
+            </button>
+            <nav class="dropdown-menu">
+              <form method="POST" action="{{route('shopFilter', ['filter' => 'shirt'])}}">
+                  @csrf
+                  <button type="submit" class="dropdown-item">Shirt</button>
+              </form>
+              <form method="POST" action="{{route('shopFilter', ['filter' => 'tshirt'])}}">
+                  @csrf
+                  <button type="submit" class="dropdown-item">T-Shirt</button>
+              </form>
+              <form method="POST" action="{{route('shopFilter', ['filter' => 'jacket'])}}">
+                  @csrf
+                  <button type="submit" class="dropdown-item">Jacket</button>
+              </form>
+              <form method="POST" action="{{route('shopFilter', ['filter' => 'jeans'])}}">
+                  @csrf
+                  <button type="submit" class="dropdown-item">Jeans</button>
+              </form>
+              <form method="POST" action="{{route('shopFilter', ['filter' => 'sneaker'])}}">
+                  @csrf
+                  <button type="submit" class="dropdown-item">Sneaker</button>
+              </form>
+            </nav>
+          </div>
+        </li>
         <li class="w-100">
           <!-- Search bar -->
           <form class="d-flex" method = "POST" action = "{{route('search')}}">

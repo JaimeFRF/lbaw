@@ -168,3 +168,21 @@ input:focus{
 #productCard{
   min-height: 170px;
 }
+
+/*!********************************** USEFUL SIZES *********************************!*/
+
+.carImg{
+padding-top: 10px;
+border-radius: 15px;
+width: 90%;
+height: 90%;
+margin: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .carImg{
+    width: 100%;
+    height: 100%;
+  }
+  
+}

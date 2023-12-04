@@ -2,9 +2,10 @@
     <div class="order-history mb-3">
         <div class="d-flex align-items-center justify-content-between">
             <div>
-                <h6 class="mb-1">{{$purchases[$i]->id}}</h6>
+                <h6 class="mb-1">Order nº: {{$purchases[$i]-> id}}</h6>
                 <p class="mb-1">Date: {{$purchases[$i]->purchase_date}}</p>
                 <p class="mb-1">Value: {{$purchases[$i]->price}}</p>
+                <p class="mb-1">Status: Delivered</p>
                 <p class="mb-0">Items:
                 <span class="item-info">
 

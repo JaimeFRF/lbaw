@@ -57,7 +57,9 @@ class CartController extends Controller
             // Log::info('Cart: ', ['cart' => $cart]);
             // $cart = Cart::find($cart[0]->id);
             $cart =  Auth::user()->cart()->first();
+            Log::info('Cart: ', ['cart' => $cart]);
             $items = $cart->products()->get();
+            Log::info('Items: ', ['items' => $items]);
             foreach ($items as $item) {
                 $item->picture = Image::where('id_item', $item->id)->first()->filepath;
             }

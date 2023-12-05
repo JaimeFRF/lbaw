@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use App\Models\Item;
 use App\Models\User;
+use App\Models\Location;
 use App\Models\Cart;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\Log;
@@ -39,30 +40,30 @@ class PurchaseController extends Controller
                 'quantity' => $item['pivot']['quantity'],
             ];
         }
-    
+
+        $customer = \Stripe\Customer::create([
+            'email' => $user->email,
+        ]);
         $checkout_session = Session::create([
+            'customer' => $customer->id,
             'ui_mode' => 'hosted',
             'locale' => 'en',
-            'billing_address_collection' => 'required',
+            'shipping_address_collection' => [
+                'allowed_countries' => ['AT', 'BE', 'BG', 'HR', 'CY', 'CZ', 'DK', 'EE', 'FI', 'FR', 
+                'DE', 'GR', 'HU', 'IE', 'IT', 'LV', 'LT', 'LU', 'MT', 'NL', 
+                'PL', 'PT', 'RO', 'SK', 'SI', 'ES', 'SE', 'GB', 'IS', 'NO', 
+                'LI', 'CH', 'ME', 'MK', 'AL', 'RS', 'BA', 'XK', 'MD', 'AM', 
+                'BY', 'GE', 'AZ', 'RU', 'US', 'CA'],          
+            ],
+
             'line_items' => $line_items,
             'mode' => 'payment',
-            'success_url' => route('checkout.success', [], true)."?session_id={CHECKOUT_SESSION_ID}",
+            'success_url' => route('checkout.success', [], true)."?session_id={CHECKOUT_SESSION_ID}&cart_id=".$item['pivot']['id_cart']."&purchase_price=".$purchase_price,
             'cancel_url' => route('checkout.cancel', [], true),
         ]);
-
-        $entry = new Purchase;
-        $entry->id_user = $user->id;
-        $entry->price = $purchase_price;
-        $entry->id_cart = $item['pivot']['id_cart'];
-        $entry->purchase_date = date('Y-m-d'); 
-        $entry->delivery_date = date('Y-m-d', strtotime('+3 days')); 
-        $entry->purchase_status = 'Processing'; 
-        $entry->payment_method = 'Transfer'; 
-        $entry->id_location = 1; 
-        $entry->save();
+            
 
         
-    
         return redirect($checkout_session->url);
     }
 
@@ -71,6 +72,9 @@ class PurchaseController extends Controller
         //Falta mudar o status da purchase
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
         $sessionId = $request->get('session_id');
+        $cartId = $request->get('cart_id');
+        $purchasePrice = $request->get('purchase_price');
+
 
         try{
             $session = \Stripe\Checkout\Session::retrieve($sessionId); // Corrected here
@@ -82,6 +86,38 @@ class PurchaseController extends Controller
 
             throw new NotFoundHttpException();
         }
+
+        $customerEmail = $session->customer_details->email;
+        $cartId = $request->get('cart_id');
+
+
+        $shippingAddress = $session->shipping_details;
+        $city = $shippingAddress->address->city;
+        $country = $shippingAddress->address->country;
+        $postal_code = $shippingAddress->address->postal_code;
+        $mergedAddress = ($shippingAddress->address->line1 ?? "") . " " . ($shippingAddress->address->line2 ?? "");
+        $mergedAddress = trim($mergedAddress);
+
+        $entry = new Location;
+        $entry->city = $city;
+        $entry->country = $country;
+        $entry->postal_code = $postal_code;
+        $entry->address = $mergedAddress;
+        $entry->save();
+
+
+        Log::info('Cart ID: ' . $cartId);
+        $purchase = new Purchase;
+        $purchase->id_cart = $cartId;
+        $purchase->id_user = Auth::id();
+        $purchase->id_location = $entry->id;
+        $purchase->price = $purchasePrice;
+        $purchase->purchase_date = date('Y-m-d'); 
+        $purchase->delivery_date = date('Y-m-d', strtotime('+3 days')); 
+        $purchase->purchase_status = 'Processing'; 
+        $purchase->payment_method = 'Transfer'; 
+        $purchase->save();
+
 
         
         return redirect()->route('home');

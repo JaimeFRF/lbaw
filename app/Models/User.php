@@ -80,12 +80,11 @@ class User extends Authenticatable
         return $this->hasMany(Notification::class, 'id_user');
     }
 
-    /*
     public function location()
     {
         return $this->belongsTo(Location::class, 'id_location');
     }
-    */
+    
 
 }
 ?>

@@ -40,7 +40,9 @@ Route::get('/', function () {
 });
 
 //Purchase
-Route::post('/purchase', [PurchaseController::class, 'createPurchase'])->name('add_purchase');
+Route::post('/checkout', [PurchaseController::class, 'checkout'])->name('checkout');
+Route::get('/success', [PurchaseController::class, 'success'])->name('checkout.success');
+Route::get('/cancel', [PurchaseController::class, 'cancel'])->name('checkout.cancel');
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 
 //Admin
@@ -131,8 +133,6 @@ Route::controller(ProfileController::class)->group(function () {
     Route::post('/edit-profile/picture', 'changePicture')->name('update_profile_pic');
 });
 
-//Checkout 
-Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 
 
 

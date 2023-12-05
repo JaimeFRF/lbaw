@@ -34,7 +34,7 @@
         </table>
     </div>
     <div class="cart-buttons d-flex justify-content-around">
-        <form method="post" action="{{ route('add_purchase') }}">
+        <form method="post" action="{{ route('checkout') }}">
             @csrf
             <div class="cart-buttons d-flex justify-content-around">
                 <!-- You can add hidden input for the items -->

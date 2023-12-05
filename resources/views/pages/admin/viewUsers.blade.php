@@ -32,10 +32,19 @@
                     <td class="text-center">{{$user->email}}</td>
                     <td class="text-center">{{$user->phone}}</td>
                     <td id="status" class="text-center">{{$user->is_banned === false ? "Active" : "Banned"}}</td>
-                    <td class="text-center"><button id="ban" class="btn btn-danger">Ban</button></td>
+                    <td class="text-center">
+                        <button id="ban" data-user-id={{$user->id}} class="btn btn-danger">
+                            <span>Ban</span>
+                        </button>
+                    </td>
                     <td class="text-center"><button id="upgrade" class="btn btn-primary">Upgrade to Admin</button></td>
                     <td class="text-center"><button id="edit" class="btn btn-warning">Edit</button></td>
-                    <td class="text-center"><button id="delete" class="btn btn-primary">Delete</button></td>
+                    <td class="text-center">
+                        <button id="delete" data-user-id={{$user->id}} class="btn btn-outline-danger btn-sm">
+                            <i class="fa fa-times"></i>
+                            <span>Delete</span>
+                        </button>
+                    </td>
                 </tr>
             @endforeach
           </tbody>

@@ -53,8 +53,7 @@ CREATE TABLE users(
     phone VARCHAR(20), 
     is_banned boolean NOT NULL DEFAULT FALSE,
     remember_token TEXT DEFAULT NULL,
-    id_cart INTEGER REFERENCES cart(id),
-    id_location INTEGER REFERENCES location(id)
+    id_cart INTEGER REFERENCES cart(id)
 );
 
 CREATE TABLE admin(
@@ -77,6 +76,7 @@ CREATE TABLE wishlist(
     id_item INTEGER NOT NULL REFERENCES item(id),
     PRIMARY KEY(id_user, id_item)
 );
+
 
 CREATE TABLE purchase(
     id SERIAL PRIMARY KEY,
@@ -286,33 +286,7 @@ BEGIN
             'Item on your wishlist (' || NEW.name || ') is now back in stock.',
             'RESTOCK',
             w.id_user,
-            w.id_item<?php
-
-    namespace App\Models;
-    use Illuminate\Database\Eloquent\Model;
-
-    class Location extends Model
-    {
-        public $timestamps = false;
-
-        protected $table = 'location';
-
-        protected $fillable = ['id', 'address', 'city', 'country', 'postal_code', 'description'];
-
-        public function purchases(){
-            return $this->hasMany(Purchase::class, 'id_location');
-        }
-
-
-                
-        public function users(){
-            return $this->hasMany(User::class, 'id_location');
-        }
-        
-
-    }
-
-?>
+            w.id_item
         FROM wishlist AS w
         WHERE w.id_item = NEW.id;
     END IF;
@@ -418,6 +392,31 @@ FOR EACH ROW
 WHEN (NEW.id IS NOT NULL)
 EXECUTE FUNCTION create_new_cart_for_new_user();
 
+
+
+--- CART
+
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES;
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+-- INSERT INTO cart DEFAULT VALUES; 
+
 --- LOCATION
 
 insert into location (address, city, country, postal_code) values ('9 Sauthoff Circle', 'Goya', 'Argentina', '3450');
@@ -446,9 +445,32 @@ INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('
 INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Retro Sneakers', 50.00, 40, 'Multi', '90s', 'Canvas', 'Colorful sneakers with a retro look.');
 INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage leather Jacket', 109.99, 0, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
 
+
+/* INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Rock Band TShirt', 35.00, 30, 'Black', '80s', 'Cotton', 'Black TShirt with vintage rock band print.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('70s Denim Jacket', 95.00, 5, 'Blue', '70s', 'Denim', 'Blue denim jacket with 70s styling.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Retro Striped Shirt', 40.00, 25, 'Green', '80s', 'Cotton', 'Green striped shirt with a retro feel.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Classic Blue Jeans', 60.00, 20, 'Blue', '90s', 'Denim', 'Classic blue jeans with a relaxed fit.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Leather Sneakers', 80.00, 15, 'White', '70s', 'Leather', 'White leather sneakers with vintage design.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Baseball TShirt', 30.00, 35, 'White', '90s', 'Cotton', 'White baseball TShirt with vintage logo.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( '80s Style Denim Jacket', 89.99, 8, 'Blue', '80s', 'Denim', 'Denim jacket with 80s style accents.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro Western Shirt', 55.00, 18, 'Red', '70s', 'Cotton', 'Red western shirt with retro detailing.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Skinny Jeans', 70.00, 12, 'Black', '80s', 'Denim', 'Black skinny jeans with a vintage cut.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Classic Canvas Sneakers', 65.00, 30, 'Black', '90s', 'Canvas', 'Black classic canvas sneakers.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Band TShirt', 35.00, 28, 'Grey', '70s', 'Cotton', 'Grey TShirt with vintage band graphic.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro Leather Jacket', 120.00, 6, 'Black', '80s', 'Leather', 'Black leather jacket with retro styling.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Classic Plaid Shirt', 50.00, 22, 'Blue', '90s', 'Cotton', 'Blue plaid shirt with classic fit.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Straight-Leg Jeans', 75.00, 15, 'Blue', '70s', 'Denim', 'Straight-leg jeans with a vintage feel.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro High-Top Sneakers', 85.00, 10, 'Red', '80s', 'Canvas', 'Red high-top sneakers with retro flair.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Logo TShirt', 30.00, 40, 'Blue', '90s', 'Cotton', 'Blue TShirt with vintage brand logo.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( '70s Corduroy Jacket', 110.00, 4, 'Brown', '70s', 'Corduroy', 'Brown corduroy jacket from the 70s.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro Short Sleeve Shirt', 45.00, 20, 'Yellow', '80s', 'Cotton', 'Yellow short sleeve shirt with retro print.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Bootcut Jeans', 68.00, 13, 'Blue', '70s', 'Denim', 'Blue bootcut jeans with vintage styling.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Classic Leather Sneakers', 90.00, 18, 'White', '90s', 'Leather', 'Classic white leather sneakers.');
+*/
+
 --- USER
 
-insert into users (username, email, password, phone, id_location) values ('johndoe', 'johndoe@example.com', '$2y$10$xAvXOTsApkcRzaJ0ZKQyyuE24KAc0X8RfTJxHMtDHSc7fcOvTQxjK', '938203081', 1); -- password is 1234567890
+insert into users (username, email, password, phone) values ('johndoe', 'johndoe@example.com', '$2y$10$xAvXOTsApkcRzaJ0ZKQyyuE24KAc0X8RfTJxHMtDHSc7fcOvTQxjK', '938203081'); -- password is 1234567890
 insert into users (username, email, password, phone) values ('bjamieson1', 'sbraxton1@example.com', 'kD7!qF?n&K', '932798895');
 insert into users (username, email, password, phone) values ('kkennelly2', 'ddallywater2@example.com', 'aV8(dRf$kP', '939401278');
 insert into users (username, email, password, phone) values ('tpechell3', 'ffooter3@example.com', 'zI1>5#6a6,k', '938762590');

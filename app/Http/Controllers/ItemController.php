@@ -111,7 +111,7 @@ class ItemController extends Controller
             $reviews = collect([$userReview])->concat($otherReviews);
         }
 
-        $userHasNotPurchasedItem = false;
+        $userHasNotPurchasedItem = true;
         if(Auth::check()){
             $purchases = Auth::user()->purchases;
             foreach($purchases as $purchase){
@@ -120,7 +120,7 @@ class ItemController extends Controller
                 Log:info('Cart: ', ['cart' => $cart]);
                 foreach($cart->products as $cartItem){
                     if($cartItem->id == $id){
-                        $userHasNotPurchasedItem = true;
+                        $userHasNotPurchasedItem = false;
                         break 2;
                     }
                 }

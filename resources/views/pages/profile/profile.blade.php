@@ -1,6 +1,31 @@
 @extends('layouts.app')
 
 @section('content')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var deleteButtons = document.querySelectorAll('#cancel-button');
+
+    deleteButtons.forEach(function(button) {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            var orderId = this.getAttribute('data-review-id');
+            console.log(orderId);
+            fetch('/purchase/delete/' + orderId, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    this.closest('.order-history').remove();
+                }
+            });
+        });
+    });
+});
+</script>
 
 <section class="container mt-5">
         <div class="row">
@@ -48,6 +73,7 @@
                     <div class="card-header text-center">
                         Pending Orders
                     </div>
+                    
                     <div class="card-body">
                         @include('partials.profile.profile-pending', ['orders' => $orders, 'carts_orders' => $carts_orders])
                     </div>

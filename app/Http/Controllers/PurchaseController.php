@@ -114,7 +114,7 @@ class PurchaseController extends Controller
         $purchase->price = $purchasePrice;
         $purchase->purchase_date = date('Y-m-d'); 
         $purchase->delivery_date = date('Y-m-d', strtotime('+3 days')); 
-        $purchase->purchase_status = 'Processing'; 
+        $purchase->purchase_status = 'Paid'; 
         $purchase->payment_method = 'Transfer'; 
         $purchase->save();
 

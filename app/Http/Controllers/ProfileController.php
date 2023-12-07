@@ -36,7 +36,6 @@ class ProfileController extends Controller{
           $profile_picture = 'images/default-product-image.png';
       }  
 
-      $purchases = Purchase::where('id_user', $user->id)->get();
 
       $wishlist = Wishlist::where('id_user', $user->id)->get();
 
@@ -46,18 +45,26 @@ class ProfileController extends Controller{
         $items_wishlist[] = Item::find($item->id_item);
       }
 
-      $carts_purchase = [];
-      $purchases = Purchase::where('id_user', $user->id)->get();
+      $carts_orders = [];
+      $orders = Purchase::where('id_user', $user->id)->where('purchase_status', '!=', 'Delivered')->get();
+      foreach($orders as $order){
+        $carts_orders[] = Cart::find($order->id_cart);
+      }
+
+      $carts_purchases = [];
+      $purchases = Purchase::where('id_user', $user->id)->where('purchase_status', '=', 'Delivered')->get();
       foreach($purchases as $purchase){
-        $carts_purchase[] = Cart::find($purchase->id_cart);
+        $carts_purchases[] = Cart::find($purchase->id_cart);
       }
 
       return view('pages.profile.profile', [
         'user' => $user,
         'items_wishlist' => $items_wishlist,
         'profile_picture' => $profile_picture,
+        'orders' => $orders,
+        'carts_orders' => $carts_orders,
         'purchases' => $purchases,
-        'carts_purchase' => $carts_purchase
+        'carts_purchases' => $carts_purchases
       ]);
     }
 
@@ -112,7 +119,6 @@ class ProfileController extends Controller{
       }
     }
   
-  
     public function changePassword(){
       if(Auth::check()){
         $user = User::find(Auth::id());
@@ -131,7 +137,6 @@ class ProfileController extends Controller{
         }
       }
     }
-  
   
     public function removeUser(Request $request){
       if(Auth::check()){

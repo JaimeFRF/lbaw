@@ -4,7 +4,7 @@
 
 <section class="container mt-5">
         <div class="row">
-            <!-- User Information with Picture -->
+
             <div class="col-md-12 mb-4">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
@@ -18,7 +18,7 @@
                     </div>
                     <div class="card-body d-flex align-items-center">
                         <div class="profile-picture me-4">
-                            <!-- User profile picture -->
+                            
                             <img src={{$profile_picture}} alt="Profile Picture" class="rounded-circle" width="100" height="100">
                         </div>
                         <div>
@@ -49,24 +49,25 @@
                         Pending Orders
                     </div>
                     <div class="card-body">
-                        @include('partials.profile.profile-pending', ['purchases' => $purchases, 'carts_purchase' => $carts_purchase])
+                        @include('partials.profile.profile-pending', ['orders' => $orders, 'carts_orders' => $carts_orders])
                     </div>
                     <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto">See more...</a>
                 </div>
             </div>
 
-            <!-- Reviews -->
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-header text-center">
                         Purchase History
                     </div>
                     <div class="card-body d-flex flex-column">
-                        @include('partials.profile.profile-purchases', ['purchases' => $purchases, 'carts_purchase' => $carts_purchase])
+                        @include('partials.profile.profile-purchases', ['purchases' => $purchases, 'carts_purchases' => $carts_purchases])
                     </div>
                     <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto">See more...</a>
                 </div>
             </div>
+
+
         </div>
     </section>
 @endsection

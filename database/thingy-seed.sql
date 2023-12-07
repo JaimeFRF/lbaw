@@ -12,7 +12,7 @@ CREATE TYPE JacketType as ENUM ('Regular', 'Baseball', 'Bomber');
 
 CREATE TYPE PaymentMethod as ENUM ('Transfer', 'Paypal');
 
-CREATE TYPE PurchaseStatus as ENUM ('Processing', 'Packed', 'Sent', 'Delivered');
+CREATE TYPE PurchaseStatus as ENUM ('Paid', 'Packed', 'Sent', 'Delivered');
 
 CREATE TYPE NotificationType as ENUM ('SALE', 'RESTOCK','ORDER_UPDATE');
 
@@ -578,9 +578,9 @@ INSERT INTO review (description,rating,id_user,id_item) values ('This is a maste
 --- PURCHASE
 
 INSERT INTO purchase (price, purchase_date, delivery_date, purchase_status, payment_method, id_user, id_location, id_cart)
-VALUES ( 109.98, '2023-10-10', '2023-10-15', 'Processing', 'Transfer', 1, 1, 1);
+VALUES ( 109.98, '2023-10-10', '2023-10-15', 'Paid', 'Transfer', 1, 1, 1);
 INSERT INTO purchase (price, purchase_date, delivery_date, purchase_status, payment_method, id_user, id_location, id_cart)
-VALUES (45.00 , '2023-10-08', '2023-10-20', 'Processing', 'Paypal', 2,2, 2);
+VALUES (45.00 , '2023-10-08', '2023-10-20', 'Paid', 'Paypal', 2,2, 2);
 
 /* testing notification triggers */
 

@@ -20,7 +20,7 @@
             </div>
             <div class="d-flex flex-column align-items-end">
                 <button class="btn btn-outline-dark btn-sm mb-2">Details</button>
-                <button class="btn btn-outline-danger btn-sm" style="white-space: nowrap;">Cancel </button>
+                <button class="btn btn-outline-danger btn-sm" id="cancel-button" data-review-id="{{ $orders[$i]->id }}" style="white-space: nowrap;">Cancel </button>
             </div>
         </div>
     </div>

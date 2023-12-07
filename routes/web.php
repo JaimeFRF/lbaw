@@ -39,12 +39,14 @@ use App\Http\Controllers\Auth\AdminLoginController;
 Route::get('/', function () {
     return redirect('/home');
 });
+Route::get('/home', [HomeController::class, 'home'])->name('home');
+
 
 //Purchase
 Route::post('/checkout', [PurchaseController::class, 'checkout'])->name('checkout');
 Route::get('/success', [PurchaseController::class, 'success'])->name('checkout.success');
 Route::get('/cancel', [PurchaseController::class, 'cancel'])->name('checkout.cancel');
-Route::get('/home', [HomeController::class, 'home'])->name('home');
+Route::delete('/purchase/delete/{id}', [PurchaseController::class, 'cancelPurchase']);
 
 //Admin
 Route::get('/admin-home', [AdminController::class, 'viewHome'])->name('admin-home');

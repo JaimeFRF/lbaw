@@ -105,8 +105,6 @@ class PurchaseController extends Controller
         $entry->address = $mergedAddress;
         $entry->save();
 
-
-        Log::info('Cart ID: ' . $cartId);
         $purchase = new Purchase;
         $purchase->id_cart = $cartId;
         $purchase->id_user = Auth::id();
@@ -126,8 +124,17 @@ class PurchaseController extends Controller
 
     public function cancel(Request $request)
     {
-        //Falta corrigir o bug de dar um cart novo ao user
         return redirect()->route('cart');
     }
+
+    public function cancelPurchase(Request $request, $id)
+    {
+
+        $purchase = Purchase::find($id);
+        $purchase->delete();
+    
+        return response()->json(['success' => true]);
+    }
+
 
 }

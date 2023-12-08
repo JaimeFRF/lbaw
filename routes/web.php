@@ -113,6 +113,7 @@ Route::controller(ItemController::class)->group(function () {
     Route::get('/api/item/{id}', 'show');
     Route::get('/shop', 'shop')->name('shop');
     Route::post('/shop/{filter}', 'shopFilter')->name('shopFilter');
+    Route::get('/api/subcategories/{category}', 'getSubcategories');
 });
 
 

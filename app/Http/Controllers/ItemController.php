@@ -153,7 +153,7 @@ class ItemController extends Controller
             Log::info('Shoe sizes: ', ['shoe_sizes' => $shoe_sizes]);
         }
 
-        $subCategory = $request->input('subcategory');
+        $subCategory = $request->input('subcategorySelect');
         $orderBy = $request->input('orderBy');
         $inStock = $request->input('inStock');
         $price = $request->input('price');
@@ -240,6 +240,8 @@ class ItemController extends Controller
         else{
             if($subCategory != "None"){
                 if($color == "None"){
+                    Log::info('Category: ', ['category' => $category]);
+                    Log::info('Subcategory: ', ['subcategory' => $subCategory]);
                     $items = Item::join($category, function($join) use ($category, $subCategory) {
                         $join->on('item.id', '=', $category . '.id_item')
                              ->where($category.'_type', '=', $subCategory);
@@ -248,6 +250,7 @@ class ItemController extends Controller
                         ->where('price', '>=', $rangeMin)
                         ->where('price', '<=', $rangeMax)
                         ->orderBy($table, $string)->get();
+                        Log::info('Items: ', ['items' => $items]);
                 }
                 else{
                     $items = Item::join($category, function($join) use ($category, $subCategory) {

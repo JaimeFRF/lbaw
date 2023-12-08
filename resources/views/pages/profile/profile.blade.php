@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function(e) {
             e.preventDefault();
             var orderId = this.getAttribute('data-review-id');
-            console.log(orderId);
             fetch('/purchase/delete/' + orderId, {
                 method: 'DELETE',
                 headers: {

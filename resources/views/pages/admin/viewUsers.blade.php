@@ -7,7 +7,7 @@
 @section('content')
 <div class="d-flex align-items-center">
     <h2 class="flex-grow-1 text-center">All Users</h2>
-    <button type="button" class="btn btn-outline-dark me-5" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User/Admin</button>
+    <button type="button" class="btn btn-outline-dark me-5" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
 </div>
 <div>
     <table class="table table-bordered">
@@ -19,7 +19,7 @@
                 <th class="text-center">Email</th>
                 <th class="text-center">Phone Number</th>
                 <th class="text-center">Status</th>
-                <th class="text-center"  colspan="4">Actions</th> 
+                <th class="text-center"  colspan="3">Actions</th> 
             </tr>
         </thead>
         <tbody>
@@ -36,7 +36,6 @@
                           <span>Ban</span>
                       </button>
                   </td>
-                  <td class="text-center"><button id="upgrade" class="btn btn-primary">Promote to Admin</button></td>
                   <td class="text-center"><button class="btn btn-warning edit-btn">Edit</button></td>
                   <td class="text-center">
                       <button id="delete" data-user-id={{$user->id}} class="btn btn-outline-danger btn-sm">
@@ -93,7 +92,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addUserModalLabel">Add User/Admin</h5>
+                <h5 class="modal-title" id="addUserModalLabel">Add User</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -116,14 +115,6 @@
                     <div class="mb-3">
                         <label for="phone" class="form-label">Phone Number</label>
                         <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone number">
-                    </div>
-                    <div class="mb-3">
-                        <small class="text-danger required-text">*</small>
-                        <label for="role" class="form-label">Role</label>
-                        <select class="form-select" id="role" name="role">
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
                     </div>
                 </form>
             </div>

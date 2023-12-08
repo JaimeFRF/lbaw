@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .then(data => {
-            console.log(data);
             addUserForm.reset();
             addUserModal.hide();
             Swal.fire('User Added', `User ${data.username} has been added successfully.`, 'success');
@@ -49,11 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const userId = document.getElementById('editUserId').value;
         const formData = new FormData(editUserForm);
         formData.append('id_user', userId);
-        console.log(formData);
-
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
 
         fetch(`/admin-update-user/${userId}`, {
             method: 'POST',
@@ -78,6 +72,12 @@ document.addEventListener('DOMContentLoaded', function() {
         row.cells[4].innerText = data.updatedUserData.phone; 
 
         editUserModal.hide();
+
+        Swal.fire({
+            icon: 'success',
+            title: 'User Updated',
+            text: 'The user has been updated successfully!',
+        });
     })
     .catch(error => {
         console.error('There has been a problem with your fetch operation:', error);

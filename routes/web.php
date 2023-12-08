@@ -12,7 +12,6 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\StaticController;
 
 use App\Http\Controllers\AdminController;
-
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\WishlistController;
@@ -52,8 +51,13 @@ Route::delete('/purchase/delete/{id}', [PurchaseController::class, 'cancelPurcha
 Route::get('/admin-home', [AdminController::class, 'viewHome'])->name('admin-home');
 Route::get('/admin-add-item', [AdminController::class, 'addItem'])->name('addItem');
 Route::get('/admin-view-users',[AdminController::class, 'viewUsers'])->name('view-users-admins');
-Route::get('/stock', [AdminController::class, 'viewStock'])->name('stock');
 Route::get('/items', [AdminController::class, 'viewItems'])->name('items');
+Route::delete('admin-delete-user/{id}', [AdminController::class, 'deleteUser']);
+Route::post('admin-ban-user/{id}',[AdminController::class, 'banUser']);
+// UPDATAR COM PATH
+Route::post('/admin-update-user/{id}', [AdminController::class, 'updateUser']);
+Route::post('/admin-add-user',[AdminController::class, 'createUser']);
+
 
 //Statics
 Route::get('/faq', [StaticController::class, 'faq'])->name('faq');
@@ -66,8 +70,6 @@ Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
 Route::post('/search', [ItemController::class, 'search'])->name('search');
 Route::post('/search/filter', [ItemController::class, 'filter'])->name('filter');
 Route::post('/search/clearFilters', [ItemController::class, 'clearFilters'])->name('clearFilters');
-
-
 
 //Wishlist
 Route::put('users/wishlist/product/{id_item}', [WishlistController::class, 'add']);
@@ -118,19 +120,16 @@ Route::controller(LoginController::class)->group(function () {
 
 // Login as admin
 Route::controller(AdminLoginController::class)->group(function () {
-    Route::post('/admin-login', 'authenticate')->name('admin-login');
-    
+    Route::post('/admin-login', 'authenticate')->name('admin-login'); 
 });
 
 // Register
-
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
 
 // Profile
-
 Route::controller(ProfileController::class)->group(function () {
     Route::get('/profile', 'show')->name('profile');  
     Route::get('/edit-profile', 'showEditProfile')->name('edit_profile');

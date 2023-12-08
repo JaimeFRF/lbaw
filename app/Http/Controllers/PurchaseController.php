@@ -61,7 +61,6 @@ class PurchaseController extends Controller
             'success_url' => route('checkout.success', [], true)."?session_id={CHECKOUT_SESSION_ID}&cart_id=".$item['pivot']['id_cart']."&purchase_price=".$purchase_price,
             'cancel_url' => route('checkout.cancel', [], true),
         ]);
-            
 
         
         return redirect($checkout_session->url);

@@ -45,9 +45,7 @@ class ItemController extends Controller
 
     public function nextItems($offset)
     {
-        //Log::info('Offset', ['offset' => $offset]);
         $items = Item::skip($offset)->take(3)->get();
-        //Log::info('User of a review', ['items' => $items]);
         return view('partials.item-list', ['items' => $items]);
     }
     /**
@@ -133,10 +131,7 @@ class ItemController extends Controller
 
     public function search(Request $request)
     {
-        $user_input = $request->input('search');
-        Log::info('User input: '.$user_input);
-    
-        // Perform a full-text search using plainto_tsquery
+        $user_input = $request->input('search');    
         $results = Item::whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$user_input])
             ->orWhere('name', 'like', '%'.$user_input.'%')
             ->get();
@@ -203,7 +198,6 @@ class ItemController extends Controller
             }
             else{
                 $items = Item::where('color','=', $color)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string)->get();
-                Log::info('items: ', ['items' => $items]);
 
             }
         }else{

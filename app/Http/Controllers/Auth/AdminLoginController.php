@@ -16,7 +16,6 @@ class AdminLoginController extends Controller
 
 public function authenticate(Request $request): RedirectResponse
     {
-        Log::info('entrei filho');
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],

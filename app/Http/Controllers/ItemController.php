@@ -45,9 +45,7 @@ class ItemController extends Controller
 
     public function nextItems($offset)
     {
-        //Log::info('Offset', ['offset' => $offset]);
         $items = Item::skip($offset)->take(3)->get();
-        //Log::info('User of a review', ['items' => $items]);
         return view('partials.item-list', ['items' => $items]);
     }
     /**
@@ -133,9 +131,7 @@ class ItemController extends Controller
 
     public function search(Request $request)
     {
-        $user_input = $request->input('search');
-        Log::info('User input: '.$user_input);
-    
+        $user_input = $request->input('search');    
         $results = Item::whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$user_input])
             ->orWhere('name', 'like', '%'.$user_input.'%')
             ->get();
@@ -207,6 +203,17 @@ class ItemController extends Controller
             }
             else{
                 $items = Item::where('color','=', $color)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string)->get();
+
+            }
+        }else{
+            if($color == "None"){
+                $items = Item::join($category, 'item.id', '=', $category . '.id_item')->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string) 
+                ->get();
+            }
+            else{
+                $items = Item::where('color','=', $color)
+                ->join($category, 'item.id', '=', $category . '.id_item')->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string) 
+                ->get();
             }
         }
         else if($category == "sneaker"){

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\User;
 use Illuminate\View\View;
 
 class LoginController extends Controller
@@ -34,10 +34,18 @@ class LoginController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && $user->is_banned) {
+            return back()->withErrors([
+                'email' => 'Your account has been banned.',
+            ])->onlyInput('email');
+        }
  
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
- 
+            
             return redirect()->intended('/home');
         }
  

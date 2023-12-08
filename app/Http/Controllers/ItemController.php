@@ -109,9 +109,24 @@ class ItemController extends Controller
             $reviews = collect([$userReview])->concat($otherReviews);
         }
 
-        Log::info('reviews: ', ['reviews' => $reviews]);
+        $userHasNotPurchasedItem = false;
+        if(Auth::check()){
+            $purchases = Auth::user()->purchases;
+            foreach($purchases as $purchase){
+                Log::info('Purchase: ', ['purchase' => $purchase]);
+                $cart = $purchase->cart;
+                Log:info('Cart: ', ['cart' => $cart]);
+                foreach($cart->products as $cartItem){
+                    if($cartItem->id == $id){
+                        $userHasNotPurchasedItem = true;
+                        break 2;
+                    }
+                }
+            }
+        }
+        Log::info('User has purchased item: ', ['userHasPurchasedItem' => $userHasNotPurchasedItem]);
 
-        return view('pages.items.item', ['item' => $item, 'review' => $userReview, 'itemReviews' => $reviews]);
+        return view('pages.items.item', ['item' => $item, 'review' => $userReview, 'itemReviews' => $reviews, 'userHasNotPurchasedItem' => $userHasNotPurchasedItem]);
     }
 
     public function search(Request $request)

@@ -95,7 +95,7 @@
                         </div>
                     </div>
 
-                    @if(Auth::check())
+                    @if(Auth::check() && $userHasNotPurchasedItem)
                         <div class="review-container">
                             <form id="reviewForm" class="d-flex flex-column align-items-start">
                                 <label for="reviewText" class="mb-2">Add a Review</label>

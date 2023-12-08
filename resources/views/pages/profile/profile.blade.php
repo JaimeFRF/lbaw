@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+<script src="{{ url('js/profile.js') }}"></script>
+
 @section('content')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -54,7 +56,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
 
-            <!-- Wishlist -->
             <div class="col-md-4 mb-4">
                 <div class="card">
                     <div class="card-header text-center">

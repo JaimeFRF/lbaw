@@ -8,7 +8,6 @@
                 <p class="mb-1">Status: {{$purchases[$i]->purchase_status}}</p>
                 <p class="mb-0">Items:
                 <span class="item-info">
-
                     @php
                         $cart = $carts_purchases[$i];
                         $items_cart = $cart->products()->get();

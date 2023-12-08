@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\Review;
+use App\Models\Jacket;
+use App\Models\Jeans;
+use App\Models\Shirt;
+use App\Models\Sneaker;
+use App\Models\Tshirt;
+use Illuminate\Support\Facades\DB;
+
 
 
 class AdminController extends Controller
@@ -36,8 +44,60 @@ class AdminController extends Controller
 
     public function viewItems() 
     {
-      $items = Item::all();      
-      return view('pages.admin.viewItems',['items'=> $items]);
+
+    $items = [];
+
+    $allItems = DB::table('item')
+        ->select('id', 'name', 'price', 'stock', 'color', 'era', 'fabric', 'description', 'brand')
+        ->get();
+
+    foreach ($allItems as $item) {
+        $shirtDetails = DB::table('shirt')
+            ->select('shirt_type', 'size')
+            ->where('id_item', $item->id)
+            ->first();
+
+        $tshirtDetails = DB::table('tshirt')
+            ->select('tshirt_type', 'size')
+            ->where('id_item', $item->id)
+            ->first();
+
+        $jacketDetails = DB::table('jacket')
+            ->select('jacket_type', 'size')
+            ->where('id_item', $item->id)
+            ->first();
+
+        if ($shirtDetails) {
+            $category = 'Shirt';
+            $details = $shirtDetails;
+        } elseif ($tshirtDetails) {
+            $category = 'Tshirt';
+            $details = $tshirtDetails;
+        } elseif ($jacketDetails) {
+            $category = 'Jacket';
+            $details = $jacketDetails;
+        } else {
+            $category = 'Unknown'; 
+            $details = null;
+        }
+
+        $items[] = [
+            'id' => $item->id,
+            'name' => $item->name,
+            'price' => $item->price,
+            'stock' => $item->stock,
+            'color' => $item->color,
+            'era' => $item->era,
+            'fabric' => $item->fabric,
+            'description' => $item->description,
+            'brand' => $item->brand,
+            'category' => $category,
+            'details' => $details,
+        ];
+    }
+        
+    Log::info($items);
+    return view('pages.admin.viewItems',['items'=> $items]);
     }
 
     public function deleteUser($id, Request $request)

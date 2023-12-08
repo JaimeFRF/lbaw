@@ -24,14 +24,14 @@
       <tbody>
         @foreach ($items as $item)
           <tr>
-            <td class="text-center">{{$item->id}}</td>
+            <td class="text-center">{{$item['id']}}</td>
             {{-- <td><img src='path_to_image1'></td> --}}
-            <td class="text-center">{{$item->name}}</td>
-            {{-- <td class="text-center">{{$item->description}}</td> --}}
+            <td class="text-center">{{$item['name']}}</td>
+            {{-- <td class="text-center">{{$item['']description}}</td> --}}
             <td class="text-center">Categoria</td>
-            <td class="text-center">{{$item->size}}</td>            
-            <td class="text-center">{{$item->price}}€</td>
-            <td class="text-center">{{$item->stock}}</td>
+            <td class="text-center">{{$item['size']}}</td>            
+            <td class="text-center">{{$item['price']}}€</td>
+            <td class="text-center">{{$item['stock']}}</td>
 
             <td class="text-center"><button id="edit" class="btn btn-warning">Edit</button></td>
             <td class="text-center"><button id="delete" class="btn btn-danger">Delete</button></td>

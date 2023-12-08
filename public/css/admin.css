@@ -28,7 +28,7 @@ body{
     border: 1px solid #333;
 }
 
-#edit, #info{
+.edit-btn, #info{
     color: #fff;
 }
 
@@ -46,21 +46,21 @@ body{
     background-color: darkblue;
 }
 
-#edit:hover{
+.edit-btn:hover{
     box-shadow: 0 0 8px #ccc;
     -webkit-transition: all 0.5s ease-in-out;
     border: 0px;
     background-color: orange;
+    color: #fff;
 }
 
 .custom-dark-blue {
-    background-color: #004085; /* Example dark blue color */
-    border-color: #004085; /* Adjust the border color as well */
+    background-color: #004085; 
+    border-color: #004085; 
 }
 
-/* Optional: Change the hover and active state colors */
 .custom-dark-blue:hover, .custom-dark-blue:active {
-    background-color: #003366; /* Darker shade for hover */
+    background-color: #003366; 
     border-color: #003366;
 }
 

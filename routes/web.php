@@ -52,6 +52,11 @@ Route::get('/admin-view-users',[AdminController::class, 'viewUsers'])->name('vie
 Route::get('/items', [AdminController::class, 'viewItems'])->name('items');
 Route::delete('admin-delete-user/{id}', [AdminController::class, 'deleteUser']);
 Route::post('admin-ban-user/{id}',[AdminController::class, 'banUser']);
+// UPDATAR COM PATH
+Route::post('/admin-update-user/{id}', [AdminController::class, 'updateUser']);
+Route::post('/admin-add-user',[AdminController::class, 'createUser']);
+
+
 //Statics
 Route::get('/faq', [StaticController::class, 'faq'])->name('faq');
 Route::get('/contacts', [StaticController::class, 'contacts'])->name('contacts');

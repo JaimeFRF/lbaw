@@ -1,4 +1,3 @@
-
 <tr id="product-row"> 
   <td>
     <div class ="cart-info">

@@ -1,3 +1,7 @@
+@extends('layouts.app')
+
+
+@section('content')
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
   <div class="container-fluid jusityf-content-between">
     <a class="navbar-brand" href="{{route('home')}}"> <span class="fs-2 ms-4">Antiquus</span> </a>
@@ -9,35 +13,37 @@
     <div class="collapse navbar-collapse  " id="navbarSupportedContent">
       <script src="{{asset('js/navbar_script.js')}}"defer></script>
       <ul class="navbar-nav ms-auto mb-lg-0 align-items-center w-30  me-4">
-        <li>
-          <div class="dropdown m-2">
-            <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" data-toggle="dropdown">
-              Categories
-            </button>
-            <nav class="dropdown-menu">
-              <form method="POST" action="{{route('shopFilter', ['filter' => 'shirt'])}}">
-                  @csrf
-                  <button type="submit" class="dropdown-item">Shirt</button>
-              </form>
-              <form method="POST" action="{{route('shopFilter', ['filter' => 'tshirt'])}}">
-                  @csrf
-                  <button type="submit" class="dropdown-item">T-Shirt</button>
-              </form>
-              <form method="POST" action="{{route('shopFilter', ['filter' => 'jacket'])}}">
-                  @csrf
-                  <button type="submit" class="dropdown-item">Jacket</button>
-              </form>
-              <form method="POST" action="{{route('shopFilter', ['filter' => 'jeans'])}}">
-                  @csrf
-                  <button type="submit" class="dropdown-item">Jeans</button>
-              </form>
-              <form method="POST" action="{{route('shopFilter', ['filter' => 'sneaker'])}}">
-                  @csrf
-                  <button type="submit" class="dropdown-item">Sneaker</button>
-              </form>
-            </nav>
-          </div>
-        </li>
+
+      <li>
+        <div class="dropdown m-2">
+          <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" data-bs-toggle="dropdown">
+            Categories
+          </button>
+          <ul class="dropdown-menu">
+            <form method="POST" action="{{ route('shopFilter', ['filter' => 'shirt']) }}">
+              @csrf
+              <button type="submit" class="dropdown-item">Shirt</button>
+            </form>
+            <form method="POST" action="{{ route('shopFilter', ['filter' => 'tshirt']) }}">
+              @csrf
+              <button type="submit" class="dropdown-item">T-Shirt</button>
+            </form>
+            <form method="POST" action="{{ route('shopFilter', ['filter' => 'jacket']) }}">
+              @csrf
+              <button type="submit" class="dropdown-item">Jacket</button>
+            </form>
+            <form method="POST" action="{{ route('shopFilter', ['filter' => 'jeans']) }}">
+              @csrf
+              <button type="submit" class="dropdown-item">Jeans</button>
+            </form>
+            <form method="POST" action="{{ route('shopFilter', ['filter' => 'sneaker']) }}">
+              @csrf
+              <button type="submit" class="dropdown-item">Sneaker</button>
+            </form>
+          </ul>
+        </div>
+      </li>
+
         <li class="w-100">
           <!-- Search bar -->
           <form class="d-flex" method = "POST" action = "{{route('search')}}">
@@ -61,27 +67,15 @@
           @endphp
 
           <a title="Notifications" class="m-3 me-4" id="notificationsDropdown" data-bs-toggle="dropdown">   
-            <i class="fa fa-bell text-white fs-5 bar-icon"></i>
-            <span class="text-white">(2)</span>
-          </a>
+          <i class="fa fa-bell text-white fs-5 bar-icon"></i>
+          <span class="text-white">(2)</span>
+        </a>
 
-          <div class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="notificationsDropdown">
-            <a class="dropdown-item notifi-item" href="#">
-              <img src="img/notification_icon.png" alt="img">
-              <div class="text">
-                <h4>Purchase ID State Changed</h4>
-                <p>The state of your purchase has been updated to <strong> NAME OF THE STATE </strong></p>
-              </div> 
-            </a>
-            <a class="dropdown-item notifi-item" href="#">
-              <!-- Another notification item -->
-              <img src="img/calças.png" alt="img">
-              <div class="text">
-                <h4>Calças vintage</h4>
-                <p>The item is in <strong> stock</strong></p>
-              </div> 
-            </a>
-          </div>
+        <div class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="notificationsDropdown">
+          @foreach($notifications as $notification)
+              @include('partials.notification', ['notification' => $notification])
+          @endforeach
+        </div>
           
           @if(!Auth::user()->isadmin)
             <a title="Cart" class="m-3 me-4" href="{{route('cart')}}">
@@ -108,3 +102,4 @@
     </div>
   </div>
 </nav>
+@endsection

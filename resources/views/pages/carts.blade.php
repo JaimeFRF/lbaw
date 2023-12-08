@@ -33,11 +33,11 @@
         </tr>
         </table>
     </div>
+
     <div class="cart-buttons d-flex justify-content-around">
         <form method="post" action="{{ route('checkout') }}">
             @csrf
             <div class="cart-buttons d-flex justify-content-around">
-                <!-- You can add hidden input for the items -->
                 <input type="hidden" id="items" name="items" value="{{ json_encode($items) }}">
 
                 <button type="submit" class="btn btn-success m-2 w-100">

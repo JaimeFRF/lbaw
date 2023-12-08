@@ -136,7 +136,6 @@ class ItemController extends Controller
         $user_input = $request->input('search');
         Log::info('User input: '.$user_input);
     
-        // Perform a full-text search using plainto_tsquery
         $results = Item::whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$user_input])
             ->orWhere('name', 'like', '%'.$user_input.'%')
             ->get();
@@ -147,12 +146,19 @@ class ItemController extends Controller
     {
         $color = $request->input('color');
         $category = $request->input('category');
+        
+        if($category == "sneaker"){
+            $shoe_size_string = $request->input('shoeSizes');
+            $shoe_sizes = explode(',', $shoe_size_string);
+            Log::info('Shoe sizes: ', ['shoe_sizes' => $shoe_sizes]);
+        }
+
+        $subCategory = $request->input('subcategory');
         $orderBy = $request->input('orderBy');
         $inStock = $request->input('inStock');
         $price = $request->input('price');
 
 
-        // Store the filter configuration in the session
         $request->session()->put('color', $color);
         $request->session()->put('category', $category);
         $request->session()->put('orderBy', $orderBy);
@@ -180,12 +186,10 @@ class ItemController extends Controller
             $rangeMin = 100;
         }
 
-
         $helper = "=";
         if($inStock == "1"){
             $helper = ">";
         }
-
 
         $table = "price";
         if ($orderBy == "none")
@@ -203,22 +207,78 @@ class ItemController extends Controller
             }
             else{
                 $items = Item::where('color','=', $color)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string)->get();
-                Log::info('items: ', ['items' => $items]);
-
-            }
-        }else{
-            if($color == "None"){
-                $items = Item::join($category, 'item.id', '=', $category . '.id_item')->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string) 
-                ->get();
-            }
-            else{
-                $items = Item::where('color','=', $color)
-                ->join($category, 'item.id', '=', $category . '.id_item')->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string) 
-                ->get();
             }
         }
-    
-    
+        else if($category == "sneaker"){
+            if($color == "None"){
+                $items = Item::join($category, function($join) use ($category, $shoe_sizes, $shoe_size_string) {
+                    $join->on('item.id', '=', $category . '.id_item');
+                    if ($shoe_size_string !== null) {
+                        Log::info('Entrei');
+                        $join->whereIn($category . '.shoe_size', $shoe_sizes);
+                    }
+                })
+                ->where('stock', $helper, 0)
+                ->where('price', '>=', $rangeMin)
+                ->where('price', '<=', $rangeMax)
+                ->orderBy($table, $string)->get();
+            }
+            else{
+                $items = Item::join($category, function($join) use ($category, $shoe_sizes, $color, $shoe_size_string) {
+                    $join->on('item.id', '=', $category . '.id_item')
+                         ->where('color', '=', $color);
+                    if ($shoe_size_string !== null) {
+                        $join->whereIn($category . '.shoe_size', $shoe_sizes);
+                    }
+                })
+                ->where('stock', $helper, 0)
+                ->where('price', '>=', $rangeMin)
+                ->where('price', '<=', $rangeMax)
+                ->orderBy($table, $string)->get();
+            }
+        }
+        else{
+            if($subCategory != "None"){
+                if($color == "None"){
+                    $items = Item::join($category, function($join) use ($category, $subCategory) {
+                        $join->on('item.id', '=', $category . '.id_item')
+                             ->where($category.'_type', '=', $subCategory);
+                        })
+                        ->where('stock', $helper, 0)
+                        ->where('price', '>=', $rangeMin)
+                        ->where('price', '<=', $rangeMax)
+                        ->orderBy($table, $string)->get();
+                }
+                else{
+                    $items = Item::join($category, function($join) use ($category, $subCategory) {
+                        $join->on('item.id', '=', $category . '.id_item')
+                             ->where($category.'_type', '=', $subCategory);
+                        })
+                        ->where('stock', $helper, 0)
+                        ->where('price', '>=', $rangeMin)
+                        ->where('price', '<=', $rangeMax)
+                        ->where('color', '=', $color) 
+                        ->orderBy($table, $string)->get();
+                }   
+            }
+            else{
+                if($color == "None"){
+                    $items = Item::join($category, 'item.id', '=', $category . '.id_item')
+                        ->where('stock', $helper, 0)
+                        ->where('price', '>=', $rangeMin)
+                        ->where('price', '<=', $rangeMax)
+                        ->orderBy($table, $string)->get();
+                }
+                else{
+                    $items = Item::join($category, 'item.id', '=', $category . '.id_item')
+                        ->where('stock', $helper, 0)
+                        ->where('price', '>=', $rangeMin)
+                        ->where('price', '<=', $rangeMax)
+                        ->where('color', '=', $color) 
+                        ->orderBy($table, $string)->get();
+                }
+            }
+        }
         return view('pages.shop', ['items' => $items]);
     }    
 
@@ -250,6 +310,14 @@ class ItemController extends Controller
         return view('pages.shop', [
              'items' => $items,
         ]);
+    }
+
+    public function getSubcategories($category) {
+        $category = ucfirst($category) . 'Type';
+        $query = "SELECT unnest(enum_range(NULL::$category))";
+        $result = DB::select($query);
+        
+        return response()->json(array_column($result, 'unnest'));
     }
     
     

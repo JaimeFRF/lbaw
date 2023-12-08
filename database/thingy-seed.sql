@@ -10,6 +10,8 @@ CREATE TYPE TshirtType as ENUM ('Regular', 'Long sleeve', 'Football');
 
 CREATE TYPE JacketType as ENUM ('Regular', 'Baseball', 'Bomber');
 
+CREATE TYPE JeansType as ENUM ('Regular', 'Skinny', 'Baggy');
+
 CREATE TYPE PaymentMethod as ENUM ('Transfer', 'Paypal');
 
 CREATE TYPE PurchaseStatus as ENUM ('Paid', 'Packed', 'Sent', 'Delivered');
@@ -142,9 +144,8 @@ CREATE TABLE sneaker(
 
 CREATE TABLE jeans(
     id_item INTEGER PRIMARY KEY REFERENCES item(id) ON DELETE CASCADE,
-    waist_size INTEGER NOT NULL CONSTRAINT waist_size_check CHECK (waist_size > 0),
-    inseam_size INTEGER NOT NULL CONSTRAINT inseam_size_check CHECK (inseam_size > 0),
-    rise_size INTEGER NOT NULL CONSTRAINT rise_size_check CHECK (rise_size > 0)
+    jeans_type JeansType NOT NULL,
+    size TEXT NOT NULL
 );
 
 -----------------------------------------
@@ -546,7 +547,7 @@ INSERT INTO jacket (id_item, jacket_type, size) VALUES (2, 'Bomber', 'S');
 
 --- JEANS
 
-INSERT INTO jeans (id_item, waist_size, inseam_size, rise_size) VALUES (4, 32, 30, 10);
+INSERT INTO jeans (id_item, jeans_type, size) VALUES (4, 'Regular', 'S');
 
 --- SNEAKER
 

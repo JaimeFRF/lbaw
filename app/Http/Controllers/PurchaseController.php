@@ -23,6 +23,10 @@ class PurchaseController extends Controller
         $user = User::find(Auth::id());
         $items = json_decode($request->input('items'), true);
         
+        if(empty($items)){
+            return redirect()->route('cart');
+        }
+
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
         
         $purchase_price = 0;
@@ -61,15 +65,12 @@ class PurchaseController extends Controller
             'success_url' => route('checkout.success', [], true)."?session_id={CHECKOUT_SESSION_ID}&cart_id=".$item['pivot']['id_cart']."&purchase_price=".$purchase_price,
             'cancel_url' => route('checkout.cancel', [], true),
         ]);
-            
-
         
         return redirect($checkout_session->url);
     }
 
     public function success(Request $request)
     {
-        //Falta mudar o status da purchase
         Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
         $sessionId = $request->get('session_id');
         $cartId = $request->get('cart_id');

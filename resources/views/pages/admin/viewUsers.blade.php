@@ -5,6 +5,8 @@
 @endsection
 
 @section('content')
+@include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
 <div class="d-flex align-items-center">
     <h2 class="flex-grow-1 text-center">All Users</h2>
     <button type="button" class="btn btn-outline-dark me-5" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>

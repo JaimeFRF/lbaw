@@ -12,6 +12,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\StaticController;
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\WishlistController;
@@ -112,7 +113,7 @@ Route::controller(ItemController::class)->group(function () {
     Route::delete('/api/item/{id}', 'delete');
     Route::get('/api/item/{id}', 'show');
     Route::get('/shop', 'shop')->name('shop');
-    Route::post('/shop/{filter}', 'shopFilter')->name('shopFilter');
+    Route::get('/shop/{filter}', 'shopFilter')->name('shopFilter');
     Route::get('/api/subcategories/{category}', 'getSubcategories');
     Route::post('add-item','addItem');
 });
@@ -124,6 +125,11 @@ Route::controller(LoginController::class)->group(function () {
     Route::post('/login', 'authenticate');
     Route::get('/logout', 'logout')->name('logout');
 });
+
+Route::get('/recoverPassword', [MailController::class, 'showRecoverPasswordForm'])->name('recover_password');
+Route::get('/resetPassword/{token}', [MailController::class, 'showResetPasswordForm'])->name('reset_password');
+Route::post('/send', [MailController::class, 'send']);
+
 
 
 // Login as admin
@@ -146,6 +152,7 @@ Route::controller(ProfileController::class)->group(function () {
     Route::post('/edit-profile/password', 'changePassword')->name('change_password');
     Route::post('/edit-profile/remove', 'removeUser')->name('remove_user');
     Route::post('/edit-profile/picture', 'changePicture')->name('update_profile_pic');
+    Route::post('new-password', 'newPassword')->name('new_password');
 });
 
 

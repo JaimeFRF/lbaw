@@ -20,25 +20,18 @@ use App\Models\Tshirt;
 
 class ItemController extends Controller
 {
-    /**
-     * Creates a new item.
-     */
+
     public function create(Request $request, $card_id)
     {
-        // Create a blank new item.
         $item = new Item();
 
-        // Set item's card.
         $item->card_id = $card_id;
 
-        // Check if the current user is authorized to create this item.
         $this->authorize('create', $item);
 
-        // Set item details.
         $item->done = false;
         $item->description = $request->input('description');
 
-        // Save the item and return it as JSON.
         $item->save();
         return response()->json($item);
     }
@@ -48,38 +41,26 @@ class ItemController extends Controller
         $items = Item::skip($offset)->take(3)->get();
         return view('partials.item-list', ['items' => $items]);
     }
-    /**
-     * Updates the state of an individual item.
-     */
+
     public function update(Request $request, $id)
     {
-        // Find the item.
         $item = Item::find($id);
 
-        // Check if the current user is authorized to update this item.
         $this->authorize('update', $item);
 
-        // Update the done property of the item.
         $item->done = $request->input('done');
 
-        // Save the item and return it as JSON.
         $item->save();
         return response()->json($item);
     }
 
-    /**
-     * Deletes a specific item.
-     */
     public function delete(Request $request, $id)
     {
-        // Find the item.
         $item = Item::find($id);
 
         // Check if the current user is authorized to delete this item.
         // $this->authorize('delete', $item);^
-        
 
-        // Delete the item and return it as JSON.
         $item->delete();
         return response()->json($item);
     }
@@ -90,6 +71,28 @@ class ItemController extends Controller
     {
         $item = Item::find($id);
         $itemReviews = $item->reviews()->get();
+        
+        $shirt = Shirt::find($id);
+        $tshirt = Tshirt::find($id);
+        $jacket = Jacket::find($id);
+        $jeans = Jeans::find($id);
+        $sneaker = Sneaker::find($id);
+        
+        $size = $shirt->size ?? $tshirt->size ?? $jacket->size ?? $jeans->size ?? $sneaker->size ?? null;
+        
+        $category = null;
+        if ($shirt) {
+            $category = 'shirt';
+        } elseif ($tshirt) {
+            $category = 'tshirt';
+        } elseif ($jacket) {
+            $category = 'jacket';
+        } elseif ($jeans) {
+            $category = 'jeans';
+        } elseif ($sneaker) {
+            $category = 'sneaker';
+        }
+
 
         if(!Auth::check()){
             $userReview = null;
@@ -115,7 +118,6 @@ class ItemController extends Controller
             $purchases = Auth::user()->purchases;
             foreach($purchases as $purchase){
                 $cart = $purchase->cart;
-                Log:info('Cart: ', ['cart' => $cart]);
                 foreach($cart->products as $cartItem){
                     if($cartItem->id == $id){
                         $userHasNotPurchasedItem = true;
@@ -125,7 +127,20 @@ class ItemController extends Controller
             }
         }
 
-        return view('pages.items.item', ['item' => $item, 'review' => $userReview, 'itemReviews' => $reviews, 'userHasNotPurchasedItem' => $userHasNotPurchasedItem]);
+
+        return view('pages.items.item', [
+            'size' => $size, 
+            'item' => $item, 
+            'review' => $userReview, 
+            'itemReviews' => $reviews, 
+            'userHasNotPurchasedItem' => $userHasNotPurchasedItem,
+            'breadcrumbs' => [
+                'Home' => route('home'),
+                'Shop' => route('shop'),
+                ucfirst($category) => route('shopFilter', ['filter' => $category])
+            ],
+            'current' => $item->name
+        ]);
     }
 
     public function search(Request $request)
@@ -135,8 +150,9 @@ class ItemController extends Controller
             ->orWhere('name', 'like', '%'.$user_input.'%')
             ->get();
     
-        return view('pages.shop', ['items' => $results]);
+        return view('pages.shop', ['items' => $results, 'breadcrumbs' => ['Home' => route('home')], 'current' => 'Search']);
     }
+
     public function filter(Request $request)
     {
         $color = $request->input('color');
@@ -208,7 +224,7 @@ class ItemController extends Controller
                 $items = Item::join($category, function($join) use ($category, $shoe_sizes, $shoe_size_string) {
                     $join->on('item.id', '=', $category . '.id_item');
                     if ($shoe_size_string !== null) {
-                        $join->whereIn($category . '.shoe_size', $shoe_sizes);
+                        $join->whereIn($category . '.size', $shoe_sizes);
                     }
                 })
                 ->where('stock', $helper, 0)
@@ -221,7 +237,7 @@ class ItemController extends Controller
                     $join->on('item.id', '=', $category . '.id_item')
                          ->where('color', '=', $color);
                     if ($shoe_size_string !== null) {
-                        $join->whereIn($category . '.shoe_size', $shoe_sizes);
+                        $join->whereIn($category . '.size', $shoe_sizes);
                     }
                 })
                 ->where('stock', $helper, 0)
@@ -272,7 +288,7 @@ class ItemController extends Controller
                 }
             }
         }
-        return view('pages.shop', ['items' => $items]);
+        return view('pages.shop', ['items' => $items, 'breadcrumbs' => ['Home' => route('home')], 'current' => ucfirst($category)]);
     }    
 
     public function clearFilters(Request $request)
@@ -285,13 +301,15 @@ class ItemController extends Controller
 
 
         $items = Item::all();
-        return view('pages.shop', ['items' => $items]);
+        return view('pages.shop', ['items' => $items, 'breadcrumbs' => ['Home' => route('home')], 'current' => 'All']);
     }
 
     public function shop() {
         $items = Item::all();
 
         return view('pages.shop', [
+            'breadcrumbs' => ['Home' => route('home')],
+            'current' => 'Shop',
             'items' => $items,
         ]);
     }
@@ -302,6 +320,7 @@ class ItemController extends Controller
 
         return view('pages.shop', [
              'items' => $items,
+             'breadcrumbs' => ['Home' => route('home')],'current' => ucfirst($filter)
         ]);
     }
 

@@ -31,11 +31,11 @@ class AdminController extends Controller
     }
     public function viewUsers(){
       $users = User::orderBy('id')->get();
-      return view('pages.admin.viewUsers',['users' => $users]);
+      return view('pages.admin.viewUsers',['users' => $users, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Users']);
     }
     public function viewAdmins(){
       $admins = Admin::orderBy('id')->get();
-      return view('pages.admin.viewAdmins',['admins' => $admins]);
+      return view('pages.admin.viewAdmins',['admins' => $admins, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Admins']);
     }
     public function viewStock() 
     {
@@ -44,7 +44,6 @@ class AdminController extends Controller
 
     public function viewItems() 
     {
-
     $items = DB::table('item')
     ->leftJoin('shirt', 'item.id', '=', 'shirt.id_item')
     ->leftJoin('tshirt', 'item.id', '=', 'tshirt.id_item')
@@ -86,9 +85,7 @@ class AdminController extends Controller
         ];
     }
 
-
-        
-    return view('pages.admin.viewItems',['items'=> $items]);
+    return view('pages.admin.viewItems',['items'=> $allItems, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Items']);
     }
 
     public function deleteUser($id, Request $request)

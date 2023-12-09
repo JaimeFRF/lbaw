@@ -50,9 +50,15 @@ class CartController extends Controller
             $cart =  Auth::user()->cart()->first();
             $items = $cart->products()->get();
             foreach ($items as $item) {
-                $item->picture = Image::where('id_item', $item->id)->first()->filepath;
+                if($item->images()->count() > 0){
+                    $item->picture = Image::where('id_item', $item->id)->first()->filepath;
+                }else{
+                    $item->picture = asset('images/default-product-image.png');
+                }
             }
             return view('pages.carts', [
+                'breadcrumbs' => ['Home' => route('home')],
+                'current' => 'Cart',
                 'items' => $items
             ]);
         }

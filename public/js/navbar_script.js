@@ -20,7 +20,6 @@ function updateNavbar() {
         return response.json();
     })
     .then(data => {
-        console.log("Item count:", data.count);
         document.getElementById("ItemCartNumber").innerText = "(" + data.count +")";
     })
     .catch(error => {

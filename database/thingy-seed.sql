@@ -139,9 +139,9 @@ CREATE TABLE jacket(
     size TEXT NOT NULL
 );
 
-CREATE TABLE sneaker(
+CREATE TABLE sneakers(
     id_item INTEGER PRIMARY KEY REFERENCES item(id) ON DELETE CASCADE,
-    sneaker_type SneakersType NOT NULL,
+    sneakers_type SneakersType NOT NULL,
     size INTEGER NOT NULL CONSTRAINT size_check CHECK (size >= 0)
 );
 
@@ -506,9 +506,9 @@ INSERT INTO jacket (id_item, jacket_type, size) VALUES (6, 'Regular', 'M');
 
 INSERT INTO jeans (id_item, jeans_type, size) VALUES (4, 'Regular', 'S');
 
---- SNEAKER
+--- sneakers
 
-INSERT INTO sneaker (id_item, sneaker_type, size) VALUES (5, 'Casual', '38');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (5, 'Casual', '38');
 
 --- CART_ITEM
 

@@ -41,7 +41,7 @@
             <button class="btn btn-warning edit-btn">Edit</button>
           </td>
           <td class="text-center">
-              <button id="delete" data-user-id={{$item->id}} class="btn btn-outline-danger btn-sm">
+              <button id="delete" data-item-id={{$item->id}} class="btn btn-outline-danger btn-sm delete-item-btn">
                   <i class="fa fa-times"></i>
                   <span>Delete</span>
               </button>
@@ -62,14 +62,22 @@
             <form id="addItemForm"enctype="multipart/form-data">
                 @csrf
                 <div class="mb-3">
+                    <small class="text-danger required-text">*</small>
                     <label for="productName" class="form-label">Product Name</label>
                     <input type="text" class="form-control" id="productName" name="name" placeholder="Enter product name" required>
                 </div>
+                
                 <div class="mb-3">
+                  <label for="description" class="form-label">Description</label>
+                  <input type="text" class="form-control" id="description" name="description" placeholder="Enter a small description">
+              </div>
+
+                <div class="mb-3">
+                    <small class="text-danger required-text">*</small>
                     <label for="category" class="form-label">Category</label>
                     <select class="form-select" id="category" name="category" aria-label="Category select" required>
                         <option value="">Select a category</option>
-                        <option value="tshirt">T-Shirt</option>
+                        <option value="tshirt">Tshirt</option>
                         <option value="shirt">Shirt</option>
                         <option value="jacket">Jacket</option>
                         <option value="jeans">Jeans</option>
@@ -77,23 +85,46 @@
                     </select>
                 </div>
                 <div class="mb-3">
+                  <small class="text-danger required-text">*</small>
                   <label for="subCategory" class="form-label">Sub-category</label>
                   <select class="form-select" id="subCategory" name="subCategory" aria-label="Sub-category select" disabled required>
                       <option value="">Select a sub-category</option>
                   </select>
               </div>
                 <div class="mb-3">
+                    <small class="text-danger required-text">*</small>
                     <label for="size" class="form-label">Size</label>
                     <input type="text" class="form-control" id="size" name="size" placeholder="Enter size" required>
                 </div>
                 <div class="mb-3">
+                    <small class="text-danger required-text">*</small>
                     <label for="unitPrice" class="form-label">Unit Price(€)</label>
                     <input type="number" class="form-control" id="unitPrice" name="price" placeholder="Enter unit price" required>
                   </div>
                 <div class="mb-3">
+                    <small class="text-danger required-text">*</small>
                     <label for="stock" class="form-label">Stock</label>
                     <input type="number" class="form-control" id="stock" name="stock" placeholder="Enter stock quantity" required>
                 </div>
+                <div class="mb-3">
+                  <label for="era" class="form-label">Era</label>
+                  <input type="text" class="form-control" id="era" name="era" placeholder="Enter era">
+              </div>
+              <div class="mb-3">
+                  <small class="text-danger required-text">*</small>
+                  <label for="color" class="form-label">Color</label>
+                  <input type="text" class="form-control" id="color" name="color" placeholder="Enter color" required>
+              </div>
+      
+              <div class="mb-3">
+                  <label for="fabric" class="form-label">Fabric</label>
+                  <input type="text" class="form-control" id="fabric" name="fabric" placeholder="Enter fabric">
+              </div>
+      
+              <div class="mb-3">
+                  <label for="brand" class="form-label">Brand</label>
+                  <input type="text" class="form-control" id="brand" name="brand" placeholder="Enter brand">
+              </div>
                 <div class="mb-3">
                   <label for="photos" class="form-label">Photos</label>
                   <input type="file" class="form-control" id="photos" name="photos[]" multiple>

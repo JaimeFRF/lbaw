@@ -8,6 +8,50 @@ document.addEventListener('DOMContentLoaded', function() {
     const manualCloseModalButton = document.getElementById('manualCloseModalButton');
     const categorySelect = document.getElementById('category');
     const subCategorySelect = document.getElementById('subCategory');
+    const deleteItemButtons = document.querySelectorAll('.delete-item-btn');
+
+    deleteItemButtons.forEach(button => {
+        button.addEventListener('click', function (event) {
+            event.preventDefault();
+            const itemId = this.getAttribute('data-item-id');
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to delete this item.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/api/item/' + itemId, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        },
+                        body: JSON.stringify({
+                            'itemId': itemId,
+                        }),
+                    })
+                    .then(response => {
+                        if (response.ok && response.status === 200) {
+                            return response.json();
+                        } else {
+                            throw new Error('Something went wrong');
+                        }
+                    })
+                    .then(data => {
+                        Swal.fire('Item Deleted', 'The item has been deleted successfully.', 'success');
+                        this.closest('tr').remove();
+                    })
+                    .catch(error => {
+                        console.error('There has been a problem with your fetch operation:', error);
+                    });
+                }
+            });
+        });
+    });
 
     
     addItemModalElement.addEventListener('hidden.bs.modal', function () {
@@ -66,14 +110,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
             }).then(response => response.json())
             .then(subCategories => {
-                console.log(subCategories);
                 subCategories.forEach(subCategory => {
-                    console.log(subCategory);
                     const option = document.createElement('option');
                     //option.value = subCategory.id; 
                     option.textContent = subCategory; 
                     subCategorySelect.appendChild(option);
-                    console.log(subCategorySelect);
                 });
 
                 if (subCategories.length > 0) {
@@ -91,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const formData = new FormData(addItemForm);
 
-        fetch('/admin-add-item', {
+        fetch('/add-item', {
             method: 'POST',
             body: formData,
             headers: {
@@ -109,8 +150,13 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             addItemForm.reset();
             addItemModal.hide();
-            Swal.fire('Item Added', `Item ${data.name} has been added successfully.`, 'success');
-            location.reload();
+            Swal.fire('Item Added', `${data.item.name} has been added successfully to your shop.`, 'success')
+            .then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+            //setTimeout(function() {location.reload();}, 2000);
         })
         .catch(error => {
             console.error('There was a problem with your fetch operation:', error);

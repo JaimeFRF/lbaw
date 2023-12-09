@@ -16,7 +16,7 @@ use App\Models\Shirt;
 use App\Models\Tshirt;
 use App\Models\Jacket;
 use App\Models\Jeans;
-use App\Models\Sneaker;
+use App\Models\sneakers;
 use App\Models\Image;
 
 

@@ -31,9 +31,9 @@
                   @csrf
                   <button type="submit" class="dropdown-item">Jeans</button>
               </form>
-              <form method="POST" action="{{route('shopFilter', ['filter' => 'sneaker'])}}">
+              <form method="POST" action="{{route('shopFilter', ['filter' => 'sneakers'])}}">
                   @csrf
-                  <button type="submit" class="dropdown-item">Sneaker</button>
+                  <button type="submit" class="dropdown-item">sneakers</button>
               </form>
             </nav>
           </div>

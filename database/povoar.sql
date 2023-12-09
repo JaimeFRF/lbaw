@@ -129,9 +129,9 @@ INSERT INTO jacket (id_item, jacket_type, size) VALUES (2, 'Bomber', 'S');
 
 INSERT INTO jeans (id_item, waist_size, inseam_size, rise_size) VALUES (4, 32, 30, 10);
 
---- SNEAKER
+--- sneakers
 
-INSERT INTO sneaker (id_item, shoe_size) VALUES (5, 38);
+INSERT INTO sneakers (id_item, shoe_size) VALUES (5, 38);
 
 --- CART_ITEM
 

@@ -15,7 +15,7 @@ use App\Models\Review;
 use App\Models\Jacket;
 use App\Models\Jeans;
 use App\Models\Shirt;
-use App\Models\Sneaker;
+use App\Models\sneakers;
 use App\Models\Tshirt;
 use Illuminate\Support\Facades\DB;
 
@@ -50,7 +50,7 @@ class AdminController extends Controller
     ->leftJoin('tshirt', 'item.id', '=', 'tshirt.id_item')
     ->leftJoin('jacket', 'item.id', '=', 'jacket.id_item')
     ->leftJoin('jeans', 'item.id', '=', 'jeans.id_item')
-    ->leftJoin('sneaker', 'item.id', '=', 'sneaker.id_item')
+    ->leftJoin('sneakers', 'item.id', '=', 'sneakers.id_item')
     ->select(
         'item.id', 'item.name', 'item.price', 'item.stock', 'item.color', 
         'item.era', 'item.fabric', 'item.description', 'item.brand',
@@ -60,11 +60,11 @@ class AdminController extends Controller
                 WHEN tshirt.id_item IS NOT NULL THEN 'Tshirt'
                 WHEN jacket.id_item IS NOT NULL THEN 'Jacket'
                 WHEN jeans.id_item IS NOT NULL THEN 'Jeans'
-                WHEN sneaker.id_item IS NOT NULL THEN 'Sneaker'
+                WHEN sneakers.id_item IS NOT NULL THEN 'Sneakers'
                 ELSE 'Unknown'
             END as category"),
-        DB::raw("COALESCE(CAST(shirt.shirt_type AS text), CAST(tshirt.tshirt_type AS text), CAST(jacket.jacket_type AS text), CAST(jeans.jeans_type AS text), CAST(sneaker.sneaker_type AS text)) as type"),
-        DB::raw("COALESCE(CAST(shirt.size AS text), CAST(tshirt.size AS text), CAST(jacket.size AS text), CAST(jeans.size AS text), CAST(sneaker.size AS text)) as size")
+        DB::raw("COALESCE(CAST(shirt.shirt_type AS text), CAST(tshirt.tshirt_type AS text), CAST(jacket.jacket_type AS text), CAST(jeans.jeans_type AS text), CAST(sneakers.sneakers_type AS text)) as type"),
+        DB::raw("COALESCE(CAST(shirt.size AS text), CAST(tshirt.size AS text), CAST(jacket.size AS text), CAST(jeans.size AS text), CAST(sneakers.size AS text)) as size")
     )
     ->get();
 

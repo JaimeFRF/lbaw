@@ -29,7 +29,7 @@
                         <option value="tshirt" {{ session('category') == 'tshirt' ? 'selected' : '' }}>T-Shirts</option>
                         <option value="jacket" {{ session('category') == 'jacket' ? 'selected' : '' }}>Jackets</option>
                         <option value="jeans" {{ session('category') == 'jeans' ? 'selected' : '' }}>Jeans</option>
-                        <option value="sneaker" {{ session('category') == 'sneaker' ? 'selected' : '' }}>Sneakers</option>
+                        <option value="sneakers" {{ session('category') == 'sneakers' ? 'selected' : '' }}>Sneakers</option>
                     </select>
 
                     

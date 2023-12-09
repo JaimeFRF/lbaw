@@ -32,17 +32,19 @@ class PurchaseController extends Controller
         $purchase_price = 0;
         $line_items = [];
         foreach($items as $item){
-            $purchase_price += $item['price'] * $item['pivot']['quantity'];
-            $line_items[] = [
-                'price_data' => [
-                    'currency' => env('CASHIER_CURRENCY'),
-                    'product_data' => [
-                        'name' => $item['name'],
+            if($item['pivot']['quantity'] > 0){
+                $purchase_price += $item['price'] * $item['pivot']['quantity'];
+                $line_items[] = [
+                    'price_data' => [
+                        'currency' => env('CASHIER_CURRENCY'),
+                        'product_data' => [
+                            'name' => $item['name'],
+                        ],
+                        'unit_amount' => $item['price'] * 100, 
                     ],
-                    'unit_amount' => $item['price'] * 100, 
-                ],
-                'quantity' => $item['pivot']['quantity'],
-            ];
+                    'quantity' => $item['pivot']['quantity'],
+                ];
+            }
         }
 
         $customer = \Stripe\Customer::create([
@@ -132,6 +134,17 @@ class PurchaseController extends Controller
     {
 
         $purchase = Purchase::find($id);
+        $cart = Cart::find($purchase->id_cart);
+
+        $items = $cart->products()->get();
+
+        foreach($items as $item){
+            $item->stock += $item->pivot->quantity;
+            $item->save();
+        }
+
+        Log::info('itemStock: ', ['itemStock' => $item->stock]);
+
         $purchase->delete();
     
         return response()->json(['success' => true]);

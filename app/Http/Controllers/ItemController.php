@@ -89,6 +89,8 @@ class ItemController extends Controller
     {
         $item = Item::find($id);
         $itemReviews = $item->reviews()->get();
+        $size = Shirt::find($id)->size ?? Jacket::find($id)->size ?? Jeans::find($id)->size ?? Sneaker::find($id)->shoe_size ?? null;
+        Log::info('Size: ', ['size' => $size]);
 
         if(!Auth::check()){
             $userReview = null;
@@ -113,9 +115,7 @@ class ItemController extends Controller
         if(Auth::check()){
             $purchases = Auth::user()->purchases;
             foreach($purchases as $purchase){
-                Log::info('Purchase: ', ['purchase' => $purchase]);
                 $cart = $purchase->cart;
-                Log:info('Cart: ', ['cart' => $cart]);
                 foreach($cart->products as $cartItem){
                     if($cartItem->id == $id){
                         $userHasNotPurchasedItem = true;
@@ -124,9 +124,9 @@ class ItemController extends Controller
                 }
             }
         }
-        Log::info('User has purchased item: ', ['userHasPurchasedItem' => $userHasNotPurchasedItem]);
 
-        return view('pages.items.item', ['item' => $item, 'review' => $userReview, 'itemReviews' => $reviews, 'userHasNotPurchasedItem' => $userHasNotPurchasedItem]);
+
+        return view('pages.items.item', ['size' => $size, 'item' => $item, 'review' => $userReview, 'itemReviews' => $reviews, 'userHasNotPurchasedItem' => $userHasNotPurchasedItem]);
     }
 
     public function search(Request $request)
@@ -281,7 +281,7 @@ class ItemController extends Controller
         }
         return view('pages.shop', ['items' => $items]);
     }    
-    
+
     public function clearFilters(Request $request)
     {
         $request->session()->put('color', "all");

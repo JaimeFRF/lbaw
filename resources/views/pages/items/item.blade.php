@@ -25,16 +25,13 @@
                     <span>Preço</span> {{$item->price}} €
                 </h4>
 
-                <div class="mt-3">
-                    <label for="size" class="text-muted">Size:</label>
-                    <select class="form-select" id="size" name="size">
-                        <option value="XS">XS</option>
-                        <option selected>S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                    </select>
-                </div>
+                <h5 class="my-4 size">
+                    <span>Size:</span> {{$size}}
+                </h5>
+
+                <h5 class="my-4 size">
+                    <span>Rating:</span> {{$item->rating}}/5
+                </h5>
 
                 <div class="mt-3  accordion">
                     <div class=" accordion-item">
@@ -78,19 +75,6 @@
                                 <?php else: ?>
                                     Not In Stock
                                 <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed rating-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                <strong>Rating</strong>
-                            </button>
-                        </h2>
-                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingTwo">
-                            <div class="accordion-body" id="itemRating">
-                                {{$item->rating}}
                             </div>
                         </div>
                     </div>
@@ -185,9 +169,9 @@
                                 <span>Add to wishlist</span>
                             </button>
                         </form>
-                        <form onclick="addItemToCart({{$item->id}})">
+                        <form onclick="addItemToCart({{$item->id}}, this.querySelector('button').getAttribute('data-stock'))">
                             @csrf
-                            <button class="btn btn-outline-primary" type="button" id="addToCart"> 
+                            <button class="btn btn-outline-primary" type="button" id="addToCart" data-stock="{{ $item->stock }}" {{ $item->stock == 0 ? 'disabled' : '' }}> 
                                 <i class="fa fa-cart-plus"></i>
                                 <span>Add to Cart</span>
                             </button>

@@ -7,6 +7,8 @@
 @section('title', 'Cart')
 
 @section('content')
+@include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
 <section class="small-container cart-page">
     <script src="{{ asset('js/script.js') }}"></script>
     <table>

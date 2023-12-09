@@ -9,6 +9,8 @@
 @endsection
 
 @section('content')
+  @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
   <section id="edit-profile">
     <script src="{{ asset('js/edit_profile.js') }}" defer></script>
     <article class="update-form">

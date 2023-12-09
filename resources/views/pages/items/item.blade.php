@@ -6,6 +6,8 @@
 @endsection
 
 @section('content')
+@include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <body data-item-id="{{$item->id}}">
@@ -15,7 +17,6 @@
         <script src="{{asset('js/item-page_script.js')}}" defer></script>
         <div class="row m-5 mt-1">
             <div class="col-md product-info">
-                <p class= "mt-1">Home / CATEGORIA DE ITEM</p>
 
                 <h2 class= "mt-2" id="productName">{{$item->name}}</h2>
 
@@ -32,7 +33,7 @@
                 <h5 class="my-4 size">
                     <span>Rating:</span> 
                     @if($item->reviews()->count() > 0)
-                        {{$item->rating}}/5
+                        {{ number_format($item->rating, 2) }}/5
                     @else
                         No reviews on this item yet
                     @endif
@@ -66,14 +67,27 @@
                             </div>
                         </div>
                     </div>
-                    <div class=" accordion-item">
-                        <h2 class="accordion-header" id="headingThree">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                <strong>Stock</strong>
+                                <strong>Era</strong>
                             </button>
                         </h2>
                         <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree">
+                            <div class="accordion-body">
+                                {{$item->era}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <strong>Stock</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour">
                             <div class="accordion-body">
                                 <?php if($item->stock > 0): ?>
                                     In Stock

@@ -5,6 +5,8 @@
 @endsection
 
 @section('content')
+@include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
 <body>
     
     <h6>F.A.Q</h6>

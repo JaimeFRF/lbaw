@@ -3,6 +3,8 @@
 <script src="{{ url('js/profile.js') }}"></script>
 
 @section('content')
+@include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
 <section class="container mt-5">
         <div class="row">
 

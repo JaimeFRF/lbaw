@@ -59,6 +59,8 @@ class CartController extends Controller
                 }
             }
             return view('pages.carts', [
+                'breadcrumbs' => ['Home' => route('home')],
+                'current' => 'Cart',
                 'items' => $items
             ]);
         }

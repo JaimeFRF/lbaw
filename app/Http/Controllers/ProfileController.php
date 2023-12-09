@@ -63,7 +63,9 @@ class ProfileController extends Controller{
         'orders' => $orders,
         'carts_orders' => $carts_orders,
         'purchases' => $purchases,
-        'carts_purchases' => $carts_purchases
+        'carts_purchases' => $carts_purchases,
+        'breadcrumbs' => ['Home' => route('home')],
+        'current' => 'Profile'
       ]);
     }
 
@@ -73,6 +75,8 @@ class ProfileController extends Controller{
       Log::info('User: ', ['user' => $user]);
   
       return view('pages.profile.edit_profile', [
+        'breadcrumbs' => ['Profile' => route('profile'), 'EditProfile' => route('edit_profile')],
+        'current' => null, 
         'user' => $user
       ]);
     }

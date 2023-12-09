@@ -6,6 +6,8 @@
 @endsection
 
 @section('content')
+  @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
   <div>
     <h2>Items List</h2>
     <table class="table table-bordered">

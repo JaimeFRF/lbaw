@@ -11,7 +11,7 @@
 
         protected $table = 'sneaker';
 
-        protected $fillable = ['id_item', 'shoe_size'];
+        protected $fillable = ['id_item', 'size'];
 
         public function item(){
             return $this->belongsTo(Item::class, 'id_item');

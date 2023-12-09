@@ -171,3 +171,4 @@ UPDATE purchase SET purchase_status = 'Packed' WHERE id = 1;
 UPDATE purchase SET purchase_status = 'Delivered' WHERE id = 1;
 UPDATE purchase SET purchase_status = 'Packed' WHERE id = 2;
 UPDATE purchase SET purchase_status = 'Sent' WHERE id = 2;
+

@@ -138,6 +138,7 @@ class ItemController extends Controller
     
         return view('pages.shop', ['items' => $results]);
     }
+
     public function filter(Request $request)
     {
         $color = $request->input('color');
@@ -203,17 +204,6 @@ class ItemController extends Controller
             }
             else{
                 $items = Item::where('color','=', $color)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string)->get();
-
-            }
-        }else{
-            if($color == "None"){
-                $items = Item::join($category, 'item.id', '=', $category . '.id_item')->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string) 
-                ->get();
-            }
-            else{
-                $items = Item::where('color','=', $color)
-                ->join($category, 'item.id', '=', $category . '.id_item')->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string) 
-                ->get();
             }
         }
         else if($category == "sneaker"){
@@ -291,7 +281,7 @@ class ItemController extends Controller
         }
         return view('pages.shop', ['items' => $items]);
     }    
-
+    
     public function clearFilters(Request $request)
     {
         $request->session()->put('color', "all");

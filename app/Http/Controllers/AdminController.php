@@ -67,25 +67,28 @@ class AdminController extends Controller
     )
     ->get();
 
-    $allItems = [];
-    foreach ($items as $item) {
-        $allItems[] = [
-            'id' => $item->id,
-            'name' => $item->name,
-            'price' => $item->price,
-            'stock' => $item->stock,
-            'color' => $item->color,
-            'era' => $item->era,
-            'fabric' => $item->fabric,
-            'description' => $item->description,
-            'brand' => $item->brand,
-            'category' => $item->category,
-            'type' => $item->type,
-            'size' => $item->size,
-        ];
-    }
+    // $allItems = [];
+    // foreach ($items as $item) {
+    //     $allItems[] = [
+    //         'id' => $item->id,
+    //         'name' => $item->name,
+    //         'price' => $item->price,
+    //         'stock' => $item->stock,
+    //         'color' => $item->color,
+    //         'era' => $item->era,
+    //         'fabric' => $item->fabric,
+    //         'description' => $item->description,
+    //         'brand' => $item->brand,
+    //         'category' => $item->category,
+    //         'type' => $item->type,
+    //         'size' => $item->size,
+    //     ];
+    // }
+    // Log::info($allItems);
+    // Log::info($items);
 
-    return view('pages.admin.viewItems',['items'=> $allItems, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Items']);
+
+    return view('pages.admin.viewItems',['items'=> $items, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Items']);
     }
 
     public function deleteUser($id, Request $request)

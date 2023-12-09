@@ -27,13 +27,10 @@ class CartController extends Controller
      */
     public function show(string $id): View
     {
-        // Get the card.
         $cart = Cart::findOrFail($id);
 
-        // Check if the current user can see (show) the card.
         $this->authorize('show', $cart);  
 
-        // Use the pages.card template to display the card.
         return view('pages.cart', [
             'cart' => $cart
         ]);
@@ -50,12 +47,6 @@ class CartController extends Controller
             return redirect('/login');
 
         } else {
-
-            // $user = Auth::user();
-            // $cart =  Auth::user()->cart()->get();
-            // Log::info('User: ', ['user' => $user]);
-            // Log::info('Cart: ', ['cart' => $cart]);
-            // $cart = Cart::find($cart[0]->id);
             $cart =  Auth::user()->cart()->first();
             Log::info('Cart: ', ['cart' => $cart]);
             $items = $cart->products()->get();
@@ -63,7 +54,6 @@ class CartController extends Controller
             foreach ($items as $item) {
                 $item->picture = Image::where('id_item', $item->id)->first()->filepath;
             }
-            //Log::info('Items: ', ['items' => $items]);
             return view('pages.carts', [
                 'items' => $items
             ]);

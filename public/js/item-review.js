@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    var deleteButtons = document.querySelectorAll('.delete-button');
+    let deleteButtons = document.querySelectorAll('.delete-button');
     let token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
     deleteButtons.forEach(function(button) {

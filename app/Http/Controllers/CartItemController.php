@@ -81,9 +81,6 @@ class CartItemController extends Controller
             return redirect()->back()->with('error', 'Item not found.');
         }
         $cart->products()->detach($productId);
-
-
-        Log::info('New cart of Items: ', ['items' => $cart->products()->get()]);
         return redirect()->back()->with('success', 'Product added to cart!');
     }
 

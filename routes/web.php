@@ -12,7 +12,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\StaticController;
 
 use App\Http\Controllers\AdminController;
-
+use App\Http\Controllers\MailController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\WishlistController;
@@ -56,9 +56,20 @@ Route::delete('/purchase/delete/{id}', [PurchaseController::class, 'cancelPurcha
 //Admin
 Route::get('/admin-home', [AdminController::class, 'viewHome'])->name('admin-home');
 Route::get('/admin-add-item', [AdminController::class, 'addItem'])->name('addItem');
-Route::get('/admin-view-users',[AdminController::class, 'viewUsers'])->name('view-users-admins');
-Route::get('/stock', [AdminController::class, 'viewStock'])->name('stock');
+Route::get('/admin-view-users',[AdminController::class, 'viewUsers'])->name('view-users');
+Route::get('/admin-view-admins',[AdminController::class, 'viewAdmins'])->name('view-admins');
+
 Route::get('/items', [AdminController::class, 'viewItems'])->name('items');
+Route::delete('admin-delete-user/{id}', [AdminController::class, 'deleteUser']);
+Route::post('admin-ban-user/{id}',[AdminController::class, 'banUser']);
+// UPDATAR COM PATH
+Route::post('/admin-update-user/{id}', [AdminController::class, 'updateUser']);
+Route::post('/admin-add-user',[AdminController::class, 'createUser']);
+Route::post('/admin-add-admin',[AdminController::class, 'addAdmin']);
+Route::post('/admin-update-admin/{id}', [AdminController::class, 'updateAdmin']);
+Route::delete('admin-delete-admin/{id}', [AdminController::class, 'deleteAdmin']);
+
+
 
 //Statics
 Route::get('/faq', [StaticController::class, 'faq'])->name('faq');
@@ -108,6 +119,7 @@ Route::controller(ItemController::class)->group(function () {
     Route::get('/api/item/{id}', 'show');
     Route::get('/shop', 'shop')->name('shop');
     Route::post('/shop/{filter}', 'shopFilter')->name('shopFilter');
+    Route::get('/api/subcategories/{category}', 'getSubcategories');
 });
 
 
@@ -118,11 +130,15 @@ Route::controller(LoginController::class)->group(function () {
     Route::get('/logout', 'logout')->name('logout');
 });
 
+Route::get('/recoverPassword', [MailController::class, 'showRecoverPasswordForm'])->name('recover_password');
+Route::get('/resetPassword/{token}', [MailController::class, 'showResetPasswordForm'])->name('reset_password');
+Route::post('/send', [MailController::class, 'send']);
+
+
 
 // Login as admin
 Route::controller(AdminLoginController::class)->group(function () {
-    Route::post('/admin-login', 'authenticate')->name('admin-login');
-    
+    Route::post('/admin-login', 'authenticate')->name('admin-login'); 
 });
 
 // Register
@@ -140,6 +156,7 @@ Route::controller(ProfileController::class)->group(function () {
     Route::post('/edit-profile/password', 'changePassword')->name('change_password');
     Route::post('/edit-profile/remove', 'removeUser')->name('remove_user');
     Route::post('/edit-profile/picture', 'changePicture')->name('update_profile_pic');
+    Route::post('new-password', 'newPassword')->name('new_password');
 });
 
 

@@ -125,5 +125,4 @@ public function countItemCart(Request $request){
     return response()->json(['count' => $nrItems]);
 }
 
-
 }

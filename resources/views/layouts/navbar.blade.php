@@ -1,7 +1,3 @@
-@extends('layouts.app')
-
-
-@section('content')
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
   <div class="container-fluid jusityf-content-between">
     <a class="navbar-brand" href="{{route('home')}}"> <span class="fs-2 ms-4">Antiquus</span> </a>
@@ -11,7 +7,6 @@
     </button>
 
     <div class="collapse navbar-collapse  " id="navbarSupportedContent">
-      <script src="{{asset('js/navbar_script.js')}}"defer></script>
       <ul class="navbar-nav ms-auto mb-lg-0 align-items-center w-30  me-4">
 
       <li>
@@ -63,20 +58,21 @@
           @endif
 
           @php
-            $n = DB::table('notification')->where('id_user', '=', Auth::id())->count();
+              $notifications = Auth::user()->notifications;
+              $notificationsCount = count($notifications);
           @endphp
 
           <a title="Notifications" class="m-3 me-4" id="notificationsDropdown" data-bs-toggle="dropdown">   
           <i class="fa fa-bell text-white fs-5 bar-icon"></i>
-          <span class="text-white">(2)</span>
+          <span class="text-white" id="notificationsCount">({{ $notificationsCount }})</span>
         </a>
 
-        <div class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="notificationsDropdown">
-          @foreach($notifications as $notification)
-              @include('partials.notification', ['notification' => $notification])
-          @endforeach
-        </div>
-          
+          <div  id="notificationsContainer" class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="notificationsDropdown">
+              @foreach($notifications as $notification)
+                  @include('partials.notification',['notification' => $notification])
+              @endforeach
+          </div>
+
           @if(!Auth::user()->isadmin)
             <a title="Cart" class="m-3 me-4" href="{{route('cart')}}">
               <i class="fa fa-shopping-cart text-white fs-5 bar-icon"></i>
@@ -102,4 +98,58 @@
     </div>
   </div>
 </nav>
-@endsection
+
+<script>
+  const pusher = new Pusher(pusherAppKey, {
+    cluster: pusherCluster,
+    encrypted: true
+  });
+
+  const channel = pusher.subscribe('lbaw2366');
+  channel.bind('new-notification', function(notification) {
+    console.log('New notification received!');
+    updateNavbarUI(notification);
+  });
+
+  function updateNavbarUI(notificationData) {
+    const notificationsContainer = document.getElementById('notificationsContainer');
+    const notificationsCountElement = document.getElementById('notificationsCount');
+
+    const currentCount = parseInt(notificationsCountElement.innerText);
+    const newCount = currentCount + 1;
+    notificationsCountElement.innerText = newCount;
+
+    const newNotificationElement = document.createElement('a');
+    newNotificationElement.classList.add('dropdown-item', 'notifi-item');
+    newNotificationElement.href = '#'; 
+
+    if (notificationData.notification_type === 'SALE') {
+      newNotificationElement.innerHTML = `
+        <img src="img/notification_icon.png" alt="img">
+        <div class="text">
+          <h4>${notificationData.item.name}</h4>
+          <p>This item is now on sale for $${notificationData.item.price}</p>
+        </div>
+      `;
+    } else if (notificationData.notification_type === 'RESTOCK') {
+      newNotificationElement.innerHTML = `
+        <img src="img/notification_icon.png" alt="img">
+        <div class="text">
+          <h4>${notificationData.item.name}</h4>
+          <p>The item "${notificationData.item.name}" is in <strong>stock</strong></p>
+        </div>
+      `;
+    } else if (notificationData.notification_type === 'ORDER_UPDATE') {
+      newNotificationElement.innerHTML = `
+        <img src="img/notification_icon.png" alt="img">
+        <div class="text">
+          <h4>Purchase ${notificationData.id_purchase} State Changed</h4>
+          <p>The state of your purchase has been updated to <strong>${notificationData.purchase.purchase_status}</strong></p>
+        </div>
+      `;
+    }
+
+    notificationsContainer.appendChild(newNotificationElement);
+  }
+
+</script>

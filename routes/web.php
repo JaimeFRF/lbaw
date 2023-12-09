@@ -42,6 +42,10 @@ Route::get('/', function () {
 });
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 
+//Notifications
+Route::get('/get-notifications',  [NotificationController::class, 'getNotifications'])->name('notifications');
+Route::post('/send-item-notification', [NotificationController::class, 'sendItemNotification']) ->name('send.item.notification');
+Route::post('/send-order-notification', [NotificationController::class, 'sendOrderNotification'])->name('send.order.notification');
 
 //Purchase
 Route::post('/checkout', [PurchaseController::class, 'checkout'])->name('checkout');
@@ -67,8 +71,6 @@ Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
 Route::post('/search', [ItemController::class, 'search'])->name('search');
 Route::post('/search/filter', [ItemController::class, 'filter'])->name('filter');
 Route::post('/search/clearFilters', [ItemController::class, 'clearFilters'])->name('clearFilters');
-
-
 
 //Wishlist
 Route::put('users/wishlist/product/{id_item}', [WishlistController::class, 'add']);
@@ -124,14 +126,12 @@ Route::controller(AdminLoginController::class)->group(function () {
 });
 
 // Register
-
 Route::controller(RegisterController::class)->group(function () {
     Route::get('/register', 'showRegistrationForm')->name('register');
     Route::post('/register', 'register');
 });
 
 // Profile
-
 Route::controller(ProfileController::class)->group(function () {
     Route::get('/profile', 'show')->name('profile');  
     Route::get('/edit-profile', 'showEditProfile')->name('edit_profile');

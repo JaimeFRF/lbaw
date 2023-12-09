@@ -113,7 +113,6 @@ class ItemController extends Controller
         if(Auth::check()){
             $purchases = Auth::user()->purchases;
             foreach($purchases as $purchase){
-                Log::info('Purchase: ', ['purchase' => $purchase]);
                 $cart = $purchase->cart;
                 Log:info('Cart: ', ['cart' => $cart]);
                 foreach($cart->products as $cartItem){
@@ -124,7 +123,6 @@ class ItemController extends Controller
                 }
             }
         }
-        Log::info('User has purchased item: ', ['userHasPurchasedItem' => $userHasNotPurchasedItem]);
 
         return view('pages.items.item', ['item' => $item, 'review' => $userReview, 'itemReviews' => $reviews, 'userHasNotPurchasedItem' => $userHasNotPurchasedItem]);
     }
@@ -146,7 +144,6 @@ class ItemController extends Controller
         if($category == "sneaker"){
             $shoe_size_string = $request->input('shoeSizes');
             $shoe_sizes = explode(',', $shoe_size_string);
-            Log::info('Shoe sizes: ', ['shoe_sizes' => $shoe_sizes]);
         }
 
         $subCategory = $request->input('subcategorySelect');
@@ -203,17 +200,6 @@ class ItemController extends Controller
             }
             else{
                 $items = Item::where('color','=', $color)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string)->get();
-
-            }
-        }else{
-            if($color == "None"){
-                $items = Item::join($category, 'item.id', '=', $category . '.id_item')->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string) 
-                ->get();
-            }
-            else{
-                $items = Item::where('color','=', $color)
-                ->join($category, 'item.id', '=', $category . '.id_item')->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string) 
-                ->get();
             }
         }
         else if($category == "sneaker"){
@@ -221,7 +207,6 @@ class ItemController extends Controller
                 $items = Item::join($category, function($join) use ($category, $shoe_sizes, $shoe_size_string) {
                     $join->on('item.id', '=', $category . '.id_item');
                     if ($shoe_size_string !== null) {
-                        Log::info('Entrei');
                         $join->whereIn($category . '.shoe_size', $shoe_sizes);
                     }
                 })
@@ -247,8 +232,6 @@ class ItemController extends Controller
         else{
             if($subCategory != "None"){
                 if($color == "None"){
-                    Log::info('Category: ', ['category' => $category]);
-                    Log::info('Subcategory: ', ['subcategory' => $subCategory]);
                     $items = Item::join($category, function($join) use ($category, $subCategory) {
                         $join->on('item.id', '=', $category . '.id_item')
                              ->where($category.'_type', '=', $subCategory);
@@ -257,7 +240,6 @@ class ItemController extends Controller
                         ->where('price', '>=', $rangeMin)
                         ->where('price', '<=', $rangeMax)
                         ->orderBy($table, $string)->get();
-                        Log::info('Items: ', ['items' => $items]);
                 }
                 else{
                     $items = Item::join($category, function($join) use ($category, $subCategory) {
@@ -329,6 +311,54 @@ class ItemController extends Controller
         
         return response()->json(array_column($result, 'unnest'));
     }
+
+    public function addItem(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'category' => 'required|string',
+            'subCategory' => 'required|string',
+            'size' => 'required|string',
+            'price' => 'required|numeric',
+            'stock' => 'required|integer',
+            'photos' => 'sometimes|array',
+            'photos.*' => 'sometimes|file|image|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+        Log::info($request);
+        /*
+        $item = new Item();
+        $item->name = $request->name;
+    
+        // Now create a new category record (e.g., Jeans)
+        $categoryModelName = "App\\Models\\" . $request->input('category'); // Construct the model name
+        if (!class_exists($categoryModelName)) {
+            return response()->json(['message' => 'Invalid category'], 422);
+        }
+    
+        $category = new $categoryModelName();
+        $category->item_id = $item->id;
+        $category->size = $request->input('size');
+        $category->type = $request->input('subCategory');
+
+        // Handle file uploads if photos are included
+        if ($request->has('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                // Save each photo and associate it with the item
+                // You might want to store the file path in the database, or use a service like Laravel's File Storage
+            }
+        }
+
+        //$item->save();
+
+        return response()->json(['message' => 'Item added successfully', 'item' => $item]);
+        */
+    }
+
     
     
 }

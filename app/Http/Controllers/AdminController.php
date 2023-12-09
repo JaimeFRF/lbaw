@@ -45,43 +45,32 @@ class AdminController extends Controller
     public function viewItems() 
     {
 
-    $items = [];
+    $items = DB::table('item')
+    ->leftJoin('shirt', 'item.id', '=', 'shirt.id_item')
+    ->leftJoin('tshirt', 'item.id', '=', 'tshirt.id_item')
+    ->leftJoin('jacket', 'item.id', '=', 'jacket.id_item')
+    ->leftJoin('jeans', 'item.id', '=', 'jeans.id_item')
+    ->leftJoin('sneaker', 'item.id', '=', 'sneaker.id_item')
+    ->select(
+        'item.id', 'item.name', 'item.price', 'item.stock', 'item.color', 
+        'item.era', 'item.fabric', 'item.description', 'item.brand',
+        DB::raw("
+            CASE
+                WHEN shirt.id_item IS NOT NULL THEN 'Shirt'
+                WHEN tshirt.id_item IS NOT NULL THEN 'Tshirt'
+                WHEN jacket.id_item IS NOT NULL THEN 'Jacket'
+                WHEN jeans.id_item IS NOT NULL THEN 'Jeans'
+                WHEN sneaker.id_item IS NOT NULL THEN 'Sneaker'
+                ELSE 'Unknown'
+            END as category"),
+        DB::raw("COALESCE(CAST(shirt.shirt_type AS text), CAST(tshirt.tshirt_type AS text), CAST(jacket.jacket_type AS text), CAST(jeans.jeans_type AS text), CAST(sneaker.sneaker_type AS text)) as type"),
+        DB::raw("COALESCE(CAST(shirt.size AS text), CAST(tshirt.size AS text), CAST(jacket.size AS text), CAST(jeans.size AS text), CAST(sneaker.size AS text)) as size")
+    )
+    ->get();
 
-    $allItems = DB::table('item')
-        ->select('id', 'name', 'price', 'stock', 'color', 'era', 'fabric', 'description', 'brand')
-        ->get();
-
-    foreach ($allItems as $item) {
-        $shirtDetails = DB::table('shirt')
-            ->select('shirt_type', 'size')
-            ->where('id_item', $item->id)
-            ->first();
-
-        $tshirtDetails = DB::table('tshirt')
-            ->select('tshirt_type', 'size')
-            ->where('id_item', $item->id)
-            ->first();
-
-        $jacketDetails = DB::table('jacket')
-            ->select('jacket_type', 'size')
-            ->where('id_item', $item->id)
-            ->first();
-
-        if ($shirtDetails) {
-            $category = 'Shirt';
-            $details = $shirtDetails;
-        } elseif ($tshirtDetails) {
-            $category = 'Tshirt';
-            $details = $tshirtDetails;
-        } elseif ($jacketDetails) {
-            $category = 'Jacket';
-            $details = $jacketDetails;
-        } else {
-            $category = 'Unknown'; 
-            $details = null;
-        }
-
-        $items[] = [
+    $allItems = [];
+    foreach ($items as $item) {
+        $allItems[] = [
             'id' => $item->id,
             'name' => $item->name,
             'price' => $item->price,
@@ -91,12 +80,14 @@ class AdminController extends Controller
             'fabric' => $item->fabric,
             'description' => $item->description,
             'brand' => $item->brand,
-            'category' => $category,
-            'details' => $details,
+            'category' => $item->category,
+            'type' => $item->type,
+            'size' => $item->size,
         ];
     }
+
+
         
-    Log::info($items);
     return view('pages.admin.viewItems',['items'=> $items]);
     }
 

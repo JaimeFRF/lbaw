@@ -71,9 +71,7 @@ class ProfileController extends Controller{
 
     public function showEditProfile() {
       $user = User::find(Auth::id());
-      
-      Log::info('User: ', ['user' => $user]);
-  
+        
       return view('pages.profile.edit_profile', [
         'user' => $user
       ]);
@@ -111,7 +109,6 @@ class ProfileController extends Controller{
         $user->name = $new_name;
         $user->save();
   
-        Log::info('new_name: ', ['new_name' => $new_name]);
   
         return view('pages.profile.edit_profile', ['user' => $user, 'successName' => 'Name changed successfully']);
       }else{
@@ -170,7 +167,6 @@ class ProfileController extends Controller{
           }
   
           $path = $file->storeAs('images', $filename, 'public');
-          Log::info('path: ', ['path' => $path]);
   
           $existingImage = Image::where('id_user', $user_id)->first();
   

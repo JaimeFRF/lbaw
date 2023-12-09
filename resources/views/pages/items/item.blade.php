@@ -30,7 +30,12 @@
                 </h5>
 
                 <h5 class="my-4 size">
-                    <span>Rating:</span> {{$item->rating}}/5
+                    <span>Rating:</span> 
+                    @if($item->reviews()->count() > 0)
+                        {{$item->rating}}/5
+                    @else
+                        No reviews on this item yet
+                    @endif
                 </h5>
 
                 <div class="mt-3  accordion">

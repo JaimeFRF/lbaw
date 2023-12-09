@@ -73,8 +73,6 @@ class ReviewController extends Controller
     }
 
     public function editReview($id, Request $request){
-        Log::info('entrei');
-
 
         if(!Auth::check())
             return response()->json(['error' => 'Unauthenticated.'], 401);

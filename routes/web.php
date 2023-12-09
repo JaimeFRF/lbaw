@@ -115,6 +115,7 @@ Route::controller(ItemController::class)->group(function () {
     Route::get('/shop', 'shop')->name('shop');
     Route::get('/shop/{filter}', 'shopFilter')->name('shopFilter');
     Route::get('/api/subcategories/{category}', 'getSubcategories');
+    Route::post('add-item','addItem');
 });
 
 

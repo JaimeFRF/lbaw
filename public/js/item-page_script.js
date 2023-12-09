@@ -24,10 +24,7 @@ function addItemToCart(product, stock) {
         return response.json();
     })
     .then(data => {
-        console.log("RES:", data);
-        // Decrement the stock value
         stock--;
-        // Update the stock attribute of the button
         document.getElementById('addToCart').setAttribute('data-stock', stock);
     })
     .catch(error => {

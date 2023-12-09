@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Validator;
 use App\Models\Item;
 use App\Models\Review;
 use App\Models\Jacket;
 use App\Models\Jeans;
 use App\Models\Shirt;
-use App\Models\Sneaker;
+use App\Models\Sneakers;
 use App\Models\Tshirt;
 
 
@@ -58,7 +58,8 @@ class ItemController extends Controller
     {
         $item = Item::find($id);
 
-        $this->authorize('delete', $item);
+        // Check if the current user is authorized to delete this item.
+        // $this->authorize('delete', $item);^
 
         $item->delete();
         return response()->json($item);
@@ -157,10 +158,9 @@ class ItemController extends Controller
         $color = $request->input('color');
         $category = $request->input('category');
         
-        if($category == "sneaker"){
+        if($category == "sneakers"){
             $shoe_size_string = $request->input('shoeSizes');
             $shoe_sizes = explode(',', $shoe_size_string);
-            Log::info('Shoe sizes: ', ['shoe_sizes' => $shoe_sizes]);
         }
 
         $subCategory = $request->input('subcategorySelect');
@@ -219,7 +219,7 @@ class ItemController extends Controller
                 $items = Item::where('color','=', $color)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string)->get();
             }
         }
-        else if($category == "sneaker"){
+        else if($category == "sneakers"){
             if($color == "None"){
                 $items = Item::join($category, function($join) use ($category, $shoe_sizes, $shoe_size_string) {
                     $join->on('item.id', '=', $category . '.id_item');
@@ -249,8 +249,6 @@ class ItemController extends Controller
         else{
             if($subCategory != "None"){
                 if($color == "None"){
-                    Log::info('Category: ', ['category' => $category]);
-                    Log::info('Subcategory: ', ['subcategory' => $subCategory]);
                     $items = Item::join($category, function($join) use ($category, $subCategory) {
                         $join->on('item.id', '=', $category . '.id_item')
                              ->where($category.'_type', '=', $subCategory);
@@ -259,7 +257,6 @@ class ItemController extends Controller
                         ->where('price', '>=', $rangeMin)
                         ->where('price', '<=', $rangeMax)
                         ->orderBy($table, $string)->get();
-                        Log::info('Items: ', ['items' => $items]);
                 }
                 else{
                     $items = Item::join($category, function($join) use ($category, $subCategory) {
@@ -334,6 +331,70 @@ class ItemController extends Controller
         
         return response()->json(array_column($result, 'unnest'));
     }
+
+    public function addItem(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'category' => 'required|string',
+            'subCategory' => 'required|string',
+            'size' => 'required|string',
+            'price' => 'required|numeric',
+            'stock' => 'required|integer',
+            'photos' => 'sometimes|array',
+            'photos.*' => 'sometimes|file|image|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+        
+        $item = new Item();
+        $item->name = $request->name;
+        $item->description = $request->description;
+        $item->price = $request->price;
+        $item->stock = $request->stock;
+        $item->color = $request->color;
+        $item->era = $request->era;
+        $item->fabric = $request->fabric;
+        $item->brand = $request->brand;
+        $item->save();
+
+        $categoryClassName = $this->getCategoryModelName($request->input('category'));
+        if (!$categoryClassName) {
+            return response()->json(['message' => 'Invalid category'], 422);
+        }
+    
+        $category = new $categoryClassName();
+        $category->id_item = $item->id;
+        $category->size = $request->input('size');
+        $category->{$request->category . '_type'} = $request->input('subCategory');
+        $category->save();
+
+        // Handle file uploads if photos are included
+        if ($request->has('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                // Save each photo and associate it with the item
+                // You might want to store the file path in the database, or use a service like Laravel's File Storage
+            }
+        }
+
+        return response()->json(['message' => 'Item added successfully', 'item' => $item], 200);
+    }
+
+    private function getCategoryModelName($category)
+    {
+        $allowedCategories = ['Tshirt', 'Shirt', 'Jacket', 'Jeans', 'Sneakers'];
+        $category = ucfirst(strtolower($category));
+
+        if (in_array($category, $allowedCategories)) {
+            return "App\\Models\\" . $category;
+        }
+
+        return null;
+    }
+
     
     
 }

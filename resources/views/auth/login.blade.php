@@ -79,6 +79,12 @@
                         @endif
                     </div>
 
+                    <div class="form-group d-flex justify-content-between align-items-center mt-2">
+                        <label>
+                            <input class="m-1" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+                        </label>
+                    </div>
+
                     <div class="form-group d-flex justify-content-center mt-3">
                         <button class="btn btn-primary w-50 m-2" type="submit">Login</button>
                     </div>

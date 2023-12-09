@@ -1,4 +1,5 @@
 /* --------------------------------------------- ADMIN ADD ITEM ------------------------------------------------------------*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@400;700&display=swap');
 
 h2{
     font-family: 'Playfair Display', serif;
@@ -10,6 +11,8 @@ h2{
 
 body{
     background-color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
 }
 
 .add {

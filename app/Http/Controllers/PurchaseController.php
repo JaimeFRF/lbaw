@@ -85,7 +85,6 @@ class PurchaseController extends Controller
                 throw new NotFoundHttpException;
             }
         } catch (\Exception $e) {
-            Log::info($e->getMessage());
 
             throw new NotFoundHttpException();
         }

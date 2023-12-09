@@ -12,6 +12,8 @@ CREATE TYPE JacketType as ENUM ('Regular', 'Baseball', 'Bomber');
 
 CREATE TYPE JeansType as ENUM ('Regular', 'Skinny', 'Baggy');
 
+CREATE TYPE SneakersType as ENUM ('Leather', 'Casual');
+
 CREATE TYPE PaymentMethod as ENUM ('Transfer', 'Paypal');
 
 CREATE TYPE PurchaseStatus as ENUM ('Paid', 'Packed', 'Sent', 'Delivered');
@@ -137,9 +139,10 @@ CREATE TABLE jacket(
     size TEXT NOT NULL
 );
 
-CREATE TABLE sneaker(
+CREATE TABLE sneakers(
     id_item INTEGER PRIMARY KEY REFERENCES item(id) ON DELETE CASCADE,
-    size INTEGER NOT NULL CONSTRAINT shoe_size_check CHECK (size >= 0)
+    sneakers_type SneakersType NOT NULL,
+    size INTEGER NOT NULL CONSTRAINT size_check CHECK (size >= 0)
 );
 
 CREATE TABLE jeans(
@@ -419,7 +422,7 @@ INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('
 INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Classic Flannel Shirt', 45.00, 15, 'Red', '70s', 'Cotton', 'Red flannel shirt with classic look.');
 INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage High-waist Jeans', 65.00, 20, 'Blue', '80s', 'Denim', 'High-waisted jeans with a vintage style.');
 INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Retro Sneakers', 50.00, 40, 'Multi', '90s', 'Canvas', 'Colorful sneakers with a retro look.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage leather Jacket', 109.99, 0, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Leather Jacket', 109.99, 0, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
 
 --- USER
 
@@ -496,14 +499,16 @@ INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (1, 'Regular', 'L');
 --- JACKET
 
 INSERT INTO jacket (id_item, jacket_type, size) VALUES (2, 'Bomber', 'S');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (6, 'Regular', 'M');
+
 
 --- JEANS
 
 INSERT INTO jeans (id_item, jeans_type, size) VALUES (4, 'Regular', 'S');
 
---- SNEAKER
+--- sneakers
 
-INSERT INTO sneaker (id_item, size) VALUES (5, 38);
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (5, 'Casual', '38');
 
 --- CART_ITEM
 

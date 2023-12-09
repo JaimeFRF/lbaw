@@ -1,4 +1,9 @@
-function addItemToCart(product) {
+function addItemToCart(product, stock) {
+    if (stock <= 0) {
+        alert('This item is out of stock');
+        return;
+    }
+
     const value = document.getElementById("ItemCartNumber").innerText;
     let match = value.match(/\d+/);
     let number = parseInt(match[0], 10);
@@ -20,11 +25,12 @@ function addItemToCart(product) {
     })
     .then(data => {
         console.log("RES:", data);
+        // Decrement the stock value
+        stock--;
+        // Update the stock attribute of the button
+        document.getElementById('addToCart').setAttribute('data-stock', stock);
     })
     .catch(error => {
         console.error('There has been a problem with your fetch operation:', error);
-})
+    })
 };
-
-
-

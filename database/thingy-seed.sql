@@ -139,7 +139,7 @@ CREATE TABLE jacket(
 
 CREATE TABLE sneaker(
     id_item INTEGER PRIMARY KEY REFERENCES item(id) ON DELETE CASCADE,
-    shoe_size INTEGER NOT NULL CONSTRAINT shoe_size_check CHECK (shoe_size >= 0)
+    size INTEGER NOT NULL CONSTRAINT shoe_size_check CHECK (size >= 0)
 );
 
 CREATE TABLE jeans(
@@ -503,7 +503,7 @@ INSERT INTO jeans (id_item, jeans_type, size) VALUES (4, 'Regular', 'S');
 
 --- SNEAKER
 
-INSERT INTO sneaker (id_item, shoe_size) VALUES (5, 38);
+INSERT INTO sneaker (id_item, size) VALUES (5, 38);
 
 --- CART_ITEM
 

@@ -5,6 +5,7 @@
 @endsection
 
 @section('content')
+
     <script>
         window.totalItems = {{ $totalItems }};
     </script>

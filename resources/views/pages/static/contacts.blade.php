@@ -5,6 +5,8 @@
 @endsection
 
 @section('content')
+    @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-9">

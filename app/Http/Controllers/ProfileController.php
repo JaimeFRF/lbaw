@@ -24,8 +24,7 @@ class ProfileController extends Controller{
    * @method Displays the edit profile form
    * @param id Id of the User whose profile will be edited
    */
-    public function show()
-    {
+    public function show(){
       $user = User::find(Auth::id());
 
       $image = Image::where('id_user', $user->id)->first();
@@ -68,7 +67,6 @@ class ProfileController extends Controller{
       ]);
     }
 
-
     public function showEditProfile() {
       $user = User::find(Auth::id());
       
@@ -78,7 +76,6 @@ class ProfileController extends Controller{
         'user' => $user
       ]);
     }
-  
   
     public function changeUsername(Request $request) {
       if (Auth::check()) {
@@ -102,7 +99,7 @@ class ProfileController extends Controller{
       } else {
           return response()->json(['message' => 'User not authenticated']);
       }
-  }
+    }
   
     public function changeName(Request $request){
       if(Auth::check()) {
@@ -186,6 +183,31 @@ class ProfileController extends Controller{
         
         }
         return redirect()->route('profile')->with('success', 'Profile picture updated successfully.');
+      }
+    }
+
+    public function newPassword(){
+      $email = request()->input('email');
+      $new_password = request()->input('password');
+      $new_password_confirmation = request()->input('password-confirmation');
+  
+      $user = User::where('email', $email)->first();
+      
+      if($new_password === $new_password_confirmation) {
+          $user->password = Hash::make($new_password);
+          $user->save();
+  
+          $credentials = ['email' => $email, 'password' => $new_password];
+  
+          if (Auth::attempt($credentials)) {
+              return redirect()->intended('/home');
+          } else {
+              return back()->withErrors([
+                  'email' => 'The provided credentials do not match our records.',
+              ])->onlyInput('email');
+          }
+      } else {
+          return redirect()->back()->withErrors(['password' => 'The passwords do not match']);
       }
     }
 }

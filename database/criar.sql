@@ -299,7 +299,6 @@ CREATE TRIGGER wishlist_stock_notification
     EXECUTE FUNCTION notify_wishlist_stock();
 
 -- TRIGGER 5: Notify When a Purchase Status Changes
-
 CREATE OR REPLACE FUNCTION notify_purchase_status_change()
 RETURNS TRIGGER AS $BODY$
 BEGIN

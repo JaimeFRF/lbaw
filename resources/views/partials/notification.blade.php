@@ -7,7 +7,7 @@
     @endif
    <div class="text">
       <h4>{{$notification->item->name}}</h4>
-      <p>This item is now on sale for ${{ $notification->item->price }}</p>
+      <p>{{ $notification->description }}</p>
     </div>
  
     @elseif($notification->notification_type === 'RESTOCK')
@@ -18,14 +18,14 @@
       @endif
     <div class="text">
       <h4>{{$notification->item->name}}</h4>
-      <p>The item "{{ $notification->item->name }}" is in <strong>stock</strong></p>
+      <p>{{ $notification->description }}</p>
     </div>
 
     @elseif($notification->notification_type === 'ORDER_UPDATE')
-    <img src="img/notification_icon.png" alt="img">
+    <img   src="{{ asset('images/shop.png') }}" alt="img">
     <div class="text">
-      <h4>Purchase{{ $notification->id_purchase}} State Changed</h4>
-      <p>The state of your purchase has been updated to <strong>{{ $notification->purchase->purchase_status }}</strong></p>
+      <h4>Purchase ({{ $notification->id_purchase}}) State Changed</h4>
+      <p>{{ $notification->description }}</p>
     </div>
     @endif
 </a>

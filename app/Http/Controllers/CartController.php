@@ -16,7 +16,7 @@ use App\Models\Shirt;
 use App\Models\Tshirt;
 use App\Models\Jacket;
 use App\Models\Jeans;
-use App\Models\Sneaker;
+use App\Models\sneakers;
 use App\Models\Image;
 
 
@@ -48,9 +48,7 @@ class CartController extends Controller
 
         } else {
             $cart =  Auth::user()->cart()->first();
-            Log::info('Cart: ', ['cart' => $cart]);
             $items = $cart->products()->get();
-            Log::info('Items: ', ['items' => $items]);
             foreach ($items as $item) {
                 if($item->images()->count() > 0){
                     $item->picture = Image::where('id_item', $item->id)->first()->filepath;

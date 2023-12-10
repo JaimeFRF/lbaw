@@ -64,7 +64,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     })
     .then(data => {
-        console.log(data);
         const row = document.querySelector(`tr[data-user-id="${userId}"]`);
         row.cells[1].innerText = data.updatedUserData.name;  
         row.cells[2].innerText = data.updatedUserData.username;  

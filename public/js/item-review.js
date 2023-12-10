@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (reviewText.trim() !== '') {
                 sendRatingToServer(rating, itemId, reviewText);
             } else {
-                console.log('Review text is empty. Ignoring the request.');
             }
         });
     });

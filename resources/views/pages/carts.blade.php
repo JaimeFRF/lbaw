@@ -31,8 +31,19 @@
         </tr>
         <tr>
             <td class="fw-bold">Total</td>
-            <td id="total-price" class="fw-bold">{{ number_format($items->sum(function($item) { return $item->price * $item->pivot->quantity; }), 2) }}€</td>
+            <td id="total-price" class="fw-bold">
+                @php
+                    $total = 0;
+                    foreach($items as $item) {
+                        $quantity = $item->pivot->quantity ?? $item['quantity'];
+                        $price = $item->price ?? $item['price'];
+                        $total += $price * $quantity;
+                    }
+                @endphp
+                {{ number_format($total, 2) }}€
+            </td>
         </tr>
+        
         </table>
     </div>
     <div class="cart-buttons d-flex justify-content-around">

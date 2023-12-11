@@ -20,20 +20,17 @@
 
                 <h2 class= "mt-2" id="productName">{{$item->name}}</h2>
 
-                <small class="text-muted">Article: 01234</small>
+                <h4 class="my-4 price"> {{$item->price}} €</h4>
 
-                <h4 class="my-4 price">
-                    <span>Preço</span> {{$item->price}} €
-                </h4>
-
-                <h5 class="my-4 size">
-                    <span>Size:</span> {{$size}}
-                </h5>
+                <h5 class="my-4">
+                    <span class="size-label">Size:</span>
+                    <span class="size-value">{{$size}}</span>
+                </h5>                
 
                 <h5 class="my-4 size">
-                    <span>Rating:</span> 
                     @if($item->reviews()->count() > 0)
-                        {{ number_format($item->rating, 2) }}/5
+                    <span id="star-rating"></span> 
+                    <span id="numeric-rating">{{ number_format($item->rating, 2) }}/5</span>
                     @else
                         No reviews on this item yet
                     @endif
@@ -201,3 +198,5 @@
         </div>
     </section>
 @endsection
+
+

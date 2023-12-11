@@ -4,7 +4,6 @@ window.onload = function() {
 };
 
 function updateNavbar() {
-    // Example: Fetch and update the cart item count
     
     fetch('/api/cart/count', {
         method: 'GET',

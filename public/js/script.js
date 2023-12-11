@@ -38,7 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 let items = JSON.parse(document.getElementById('items').value);
                 let item = items.find(item => item.id == itemId);
-                item.pivot.quantity += newQuantity;
+                if (item.pivot && item.pivot.quantity != null) {
+                    item.pivot.quantity += newQuantity;
+                } else if (item.quantity != null) {
+                    item.quantity += newQuantity;
+                }
                 quantityElement.innerText = data.newQuantity;
                 if (data.newQuantity == 0) {
                     const productRow = cartItem.closest('tr'); // Assuming each cart item is in its own table row

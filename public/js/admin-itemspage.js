@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function (event) {
             event.preventDefault();
             const itemId = this.getAttribute('data-item-id');
+            console.log(itemId)
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -96,6 +97,53 @@ document.addEventListener('DOMContentLoaded', function() {
             editItemModal.show();
         });
     });
+
+    const updateItemButton = document.querySelector('.update-item-btn')
+
+    updateItemButton.addEventListener('click', function (event) {
+        
+        event.preventDefault();
+
+        const itemId = document.getElementById('editItemId').value;
+        console.log(itemId)
+        const formData = new FormData(editItemForm);
+        formData.append('id_item', itemId);
+
+        fetch(`/admin-update-item/${itemId}`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+        })
+        .then(data => {
+            const row = document.querySelector(`tr[data-item-id="${itemId}"]`);
+            row.cells[1].innerText = data.updatedItemData.name;
+            row.cells[2].innerText = data.updatedItemData.category;
+            row.cells[3].innerText = data.updatedItemData.subCategory;
+            row.cells[4].innerText = data.updatedItemData.size;
+            row.cells[5].innerText = data.updatedItemData.price;
+            row.cells[6].innerText = data.updatedItemData.stock;
+            editItemModal.hide();
+            Swal.fire({
+                icon: 'success',
+                title: 'Item Updated',
+                text: 'The item has been updated successfully!',
+            });
+        })
+        .catch(error => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+        
+    });
+
 
     categorySelect.addEventListener('change', function() {
         const selectedCategory = this.value;

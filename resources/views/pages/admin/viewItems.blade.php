@@ -27,7 +27,7 @@
     </thead>
     <tbody>
       @foreach ($items as $item)
-        <tr>
+        <tr data-item-id={{$item->id}}>
           <td class="text-center">{{$item->id}}</td>
           {{-- <td><img src='path_to_image1'></td> --}}
           <td class="text-center">{{$item->name}}</td>
@@ -190,6 +190,7 @@
               </form>
           </div>
           <div class="modal-footer">
+            {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalButton">Close</button> --}}  
               <button form="editItemForm" class="btn btn-primary update-item-btn">Update Item</button>
           </div>
       </div>

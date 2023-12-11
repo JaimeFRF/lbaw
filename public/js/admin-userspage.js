@@ -43,9 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     updateButton.addEventListener('click', function(event) {
+        
         event.preventDefault();
 
         const userId = document.getElementById('editUserId').value;
+        console.log(userId)
         const formData = new FormData(editUserForm);
         formData.append('id_user', userId);
 

@@ -53,7 +53,6 @@ Route::get('/admin-home', [AdminController::class, 'viewHome'])->name('admin-hom
 Route::get('/admin-add-item', [AdminController::class, 'addItem'])->name('addItem');
 Route::get('/admin-view-users',[AdminController::class, 'viewUsers'])->name('view-users');
 Route::get('/admin-view-admins',[AdminController::class, 'viewAdmins'])->name('view-admins');
-
 Route::get('/items', [AdminController::class, 'viewItems'])->name('items');
 Route::delete('admin-delete-user/{id}', [AdminController::class, 'deleteUser']);
 Route::post('admin-ban-user/{id}',[AdminController::class, 'banUser']);
@@ -63,6 +62,7 @@ Route::post('/admin-add-user',[AdminController::class, 'createUser']);
 Route::post('/admin-add-admin',[AdminController::class, 'addAdmin']);
 Route::post('/admin-update-admin/{id}', [AdminController::class, 'updateAdmin']);
 Route::delete('admin-delete-admin/{id}', [AdminController::class, 'deleteAdmin']);
+Route::post('/admin-update-item/{id}', [AdminController::class, 'updateItem']);
 
 
 

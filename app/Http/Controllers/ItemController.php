@@ -62,6 +62,7 @@ class ItemController extends Controller
         // $this->authorize('delete', $item);^
 
         $item->delete();
+
         return response()->json($item);
     }
     

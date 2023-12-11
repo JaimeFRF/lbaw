@@ -147,6 +147,93 @@ class AdminController extends Controller
     ], 200);
 }
 
+public function updateItem(Request $request, $id)
+{
+    $item = Item::findOrFail($id);
+
+
+    if (!$item) {
+        return response()->json(['message' => 'Item not found, wrong id'], 404);
+    }
+
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'price' => 'required|numeric',
+        'stock' => 'required|integer',
+        'color' => 'nullable|string|max:255',
+        'era' => 'nullable|string|max:255',
+        'fabric' => 'nullable|string|max:255',
+        'description' => 'nullable|string|max:255',
+        'brand' => 'nullable|string|max:255',
+        'subcategory' => 'nullable|string|max:255',
+    ]);
+    
+    // Update item attributes
+    $item->fill($request->only([
+        'name', 'price', 'stock', 'color', 'era', 'fabric', 'description', 'brand', 'subcategory'
+    ]));
+    
+    
+    // Specific attributes for different item types
+    switch ($request->category) {
+        case 'Shirt':
+            $item->shirt()->update([
+                'shirt_type' => $request->type,
+                'size' => $request->size,
+            ]);
+            break;
+        case 'Tshirt':
+            $item->tshirt()->update([
+                'tshirt_type' => $request->type,
+                'size' => $request->size,
+            ]);
+            break;
+        case 'Jacket':
+            $item->jacket()->update([
+                'jacket_type' => $request->type,
+                'size' => $request->size,
+            ]);
+            break;
+        case 'Jeans':
+            $item->jeans()->update([
+                'jeans_type' => $request->type,
+                'size' => $request->size,
+            ]);
+            break;
+        case 'Sneakers':
+            $item->sneakers()->update([
+                'sneakers_type' => $request->type,
+                'size' => $request->size,
+            ]);
+            break;
+        default:
+            // Handle the 'Unknown' category or any other category
+            break;
+    }
+    
+    $item->save();
+    
+    return response()->json([
+        'message' => 'Item info updated',
+        'updatedItemData' => [
+            'name' => $item->name,
+            'price' => $item->price,
+            'stock' => $item->stock,
+            'color' => $item->color,
+            'era' => $item->era,
+            'fabric' => $item->fabric,
+            'description' => $item->description,
+            'brand' => $item->brand,
+            'category' => $request->category,
+            'type' => $request->type,
+            'size' => $request->size,
+            'subcategory' => $request->subcategory,
+        ]
+    ], 200);
+    
+}
+
+
 
     public function createUser(Request $request){
       $temporaryPassword = Str::random(10);

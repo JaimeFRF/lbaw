@@ -52,10 +52,15 @@
             <div class="cart-buttons d-flex justify-content-around">
                 <!-- You can add hidden input for the items -->
                 <input type="hidden" id="items" name="items" value="{{ json_encode($items) }}">
-
-                <button type="submit" class="btn btn-success m-2 w-100">
-                    Checkout
-                </button>
+                @if (Auth::check())
+                    <button type="submit" class="btn btn-success m-2 w-100" {{ count($items) == 0 ? 'disabled' : '' }}>
+                        Checkout
+                    </button>    
+                @else
+                    <button type="submit" class="btn btn-success m-2 w-100" id="checkoutButton" {{ count($items) == 0 ? 'disabled' : '' }}>
+                        Checkout
+                    </button>
+                @endif
             </div>
         </form>
         <button type="submit" class="btn btn-outline-danger m-2 w-100">
@@ -63,6 +68,8 @@
         </button>
     </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 @endsection
 

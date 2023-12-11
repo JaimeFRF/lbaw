@@ -14,6 +14,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 document.addEventListener('DOMContentLoaded', function() {
+
+    const checkoutButton = document.getElementById('checkoutButton');
+
+    checkoutButton.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: 'Sign Up or Log In',
+            text: 'You need to sign up or log in to complete the checkout.',
+            icon: 'info',
+            confirmButtonText: 'Go to Login',
+            showCancelButton: true,
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/login'; 
+            }
+        });
+    });
+
     document.body.addEventListener('click', function(e) {
         if (e.target.matches('.quantity-btn')) {
             const button = e.target;
@@ -56,6 +76,8 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+
 });
 
 

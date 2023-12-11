@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -32,7 +32,7 @@ class ProfileController extends Controller{
       if ($image && $image->filepath) {
           $profile_picture = $image->filepath;
         } else {
-          $profile_picture = 'images/default-product-image.png';
+          $profile_picture = 'images/default-person.png';
       }  
 
 
@@ -154,10 +154,11 @@ class ProfileController extends Controller{
       if(Auth::check()){
         $user_id = Auth::user()->id;
         $request->validate([
-          'imageInput' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+          'imageInput' => 'required|image|mimes:jpeg,png,jpg',
         ]);
   
         if ($request->hasFile('imageInput')) {
+          Log::Info("entrei");
           $file = $request->file('imageInput');
           $extension = $file->getClientOriginalExtension();
           

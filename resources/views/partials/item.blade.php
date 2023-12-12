@@ -8,7 +8,6 @@
         @endif
 
         <h4>{{ $item->name }}</h4>
-        {{-- <p>{{ $item->description }}</p> --}}
         <span>${{ $item->price }}</span>
     </div>
 </a>

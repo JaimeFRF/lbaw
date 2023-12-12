@@ -72,13 +72,11 @@
                   @include('partials.notification',['notification' => $notification])
               @endforeach
           </div>
-
-          @if(!Auth::user()->isadmin)
-            <a title="Cart" class="m-3 me-4" href="{{route('cart')}}">
-              <i class="fa fa-shopping-cart text-white fs-5 bar-icon"></i>
-              <span id="ItemCartNumber" class="text-white"></span>
-            </a> 
-          @endif
+          
+          <a title="Cart" class="m-3 me-4" href="{{route('cart')}}">
+            <i class="fa fa-shopping-cart text-white fs-5 bar-icon"></i>
+            <span id="ItemCartNumber" class="text-white"></span>
+          </a> 
 
           <a title="Profile" class="m-3 me-4" href="{{route('profile')}}">
             <i class="fa fa-user text-white fs-5 bar-icon"></i>
@@ -89,6 +87,11 @@
           </a> 
 
         @else
+          <a title="Cart" class="m-4 me-4" href="{{route('cart')}}">
+            <i class="fa fa-shopping-cart text-white fs-5 bar-icon"></i>
+            <span id="ItemCartNumber" class="text-white"></span>
+          </a> 
+
           <a title="Login" class="btn btn-primary m-3" href="{{route('login')}}"> 
             <i class="fa fa-sign-in-alt"></i>
             <span>Login</span>

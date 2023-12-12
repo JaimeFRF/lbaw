@@ -25,7 +25,7 @@
                         <option value="T-Shirt">T-Shirt</option>
                         <option value="Jacket">Jacket</option>
                         <option value="Jeans">Jeans</option>
-                        <option value="Sneaker">Sneaker</option>
+                        <option value="sneakers">sneakers</option>
                     </select>
                 </div>
 

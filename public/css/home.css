@@ -105,7 +105,9 @@
 
 .product {
     width: 200px; /* Set a fixed width for each product item */
-    margin: 20px; /* Add margin around each product item */
+    margin: 20px 30px 20px 30px; /* Add margin around each product item */
+    text-align: center;
+
 }
 
 .product img {
@@ -133,7 +135,7 @@
     top: 50%;
 }
 
-.prev-arrow,
+/* .prev-arrow,
 .next-arrow {
     position: absolute;
     top: 50%;
@@ -143,7 +145,7 @@
     border: 1px solid #ccc;
     padding: 10px;
     cursor: pointer;
-}
+} */
 
 .product-row {
     display: flex;
@@ -151,3 +153,4 @@
     flex-wrap: wrap; /* Add this line */
 
 }
+

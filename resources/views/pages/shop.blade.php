@@ -11,14 +11,20 @@
 
 
 @section('content')
+
     <script>
         window.currentSessionCategory = '{{ session('category') }}';
     </script>
+    
     <div class="shop">
         <div class="row">
+
             <div class="col-md-3">
+            @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
 
             <form class="row card-body d-flex align-items-center justify-content-between" method="POST" action="{{route('filter')}}" id="filter" >                    
+
                     @csrf
                     <input type="hidden" id="shoeSizes" name="shoeSizes">
 
@@ -29,7 +35,7 @@
                         <option value="tshirt" {{ session('category') == 'tshirt' ? 'selected' : '' }}>T-Shirts</option>
                         <option value="jacket" {{ session('category') == 'jacket' ? 'selected' : '' }}>Jackets</option>
                         <option value="jeans" {{ session('category') == 'jeans' ? 'selected' : '' }}>Jeans</option>
-                        <option value="sneaker" {{ session('category') == 'sneaker' ? 'selected' : '' }}>Sneakers</option>
+                        <option value="sneakers" {{ session('category') == 'sneakers' ? 'selected' : '' }}>Sneakers</option>
                     </select>
 
                     

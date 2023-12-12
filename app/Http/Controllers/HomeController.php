@@ -21,7 +21,6 @@ class HomeController extends Controller
         $request->session()->put('price', "null");
         $request->session()->put('inStock', true); 
 
-        Log::info('Purchase: ', ['purchases' => $purchases]);
 
         return view('pages.home', [
             'items' => $items,

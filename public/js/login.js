@@ -1,13 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordField = document.getElementById('password');
-
-    togglePassword.addEventListener('click', function(e) {
-        // Toggle the type attribute between 'text' and 'password'
-        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordField.setAttribute('type', type);
-
-        // Toggle the button text/content
-        togglePassword.getAttribute('class') === 'bi bi-eye-slash' ? togglePassword.setAttribute('class', 'bi bi-eye') : togglePassword.setAttribute('class', 'bi bi-eye-slash');
+    document.querySelectorAll('.toggle-password').forEach(toggleIcon => {
+        toggleIcon.addEventListener('click', event => {
+            const passwordField = event.currentTarget.closest('.input-group').querySelector('input[name="password"]');
+            if (!passwordField) return;
+            passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+            const icon = event.currentTarget.querySelector('i');
+            if (icon) {
+                if (passwordField.type === 'password') {
+                    icon.classList.remove('bi-eye');
+                    icon.classList.add('bi-eye-slash');
+                } else {
+                    icon.classList.remove('bi-eye-slash');
+                    icon.classList.add('bi-eye');
+                }
+            }
+        });
     });
 });

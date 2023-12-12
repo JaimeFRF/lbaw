@@ -36,7 +36,7 @@
 .password-field {
   display: flex;
   align-items: center;
-}
+} 
 
 .password-field .form-control {
   flex-grow: 1;

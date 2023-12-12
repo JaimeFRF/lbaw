@@ -11,6 +11,14 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Models\Review;
+use App\Models\Jacket;
+use App\Models\Jeans;
+use App\Models\Shirt;
+use App\Models\sneakers;
+use App\Models\Tshirt;
+use Illuminate\Support\Facades\DB;
+
 
 
 class AdminController extends Controller
@@ -23,11 +31,11 @@ class AdminController extends Controller
     }
     public function viewUsers(){
       $users = User::orderBy('id')->get();
-      return view('pages.admin.viewUsers',['users' => $users]);
+      return view('pages.admin.viewUsers',['users' => $users, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Users']);
     }
     public function viewAdmins(){
       $admins = Admin::orderBy('id')->get();
-      return view('pages.admin.viewAdmins',['admins' => $admins]);
+      return view('pages.admin.viewAdmins',['admins' => $admins, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Admins']);
     }
     public function viewStock() 
     {
@@ -36,8 +44,51 @@ class AdminController extends Controller
 
     public function viewItems() 
     {
-      $items = Item::all();      
-      return view('pages.admin.viewItems',['items'=> $items]);
+    $items = DB::table('item')
+    ->leftJoin('shirt', 'item.id', '=', 'shirt.id_item')
+    ->leftJoin('tshirt', 'item.id', '=', 'tshirt.id_item')
+    ->leftJoin('jacket', 'item.id', '=', 'jacket.id_item')
+    ->leftJoin('jeans', 'item.id', '=', 'jeans.id_item')
+    ->leftJoin('sneakers', 'item.id', '=', 'sneakers.id_item')
+    ->select(
+        'item.id', 'item.name', 'item.price', 'item.stock', 'item.color', 
+        'item.era', 'item.fabric', 'item.description', 'item.brand',
+        DB::raw("
+            CASE
+                WHEN shirt.id_item IS NOT NULL THEN 'Shirt'
+                WHEN tshirt.id_item IS NOT NULL THEN 'Tshirt'
+                WHEN jacket.id_item IS NOT NULL THEN 'Jacket'
+                WHEN jeans.id_item IS NOT NULL THEN 'Jeans'
+                WHEN sneakers.id_item IS NOT NULL THEN 'Sneakers'
+                ELSE 'Unknown'
+            END as category"),
+        DB::raw("COALESCE(CAST(shirt.shirt_type AS text), CAST(tshirt.tshirt_type AS text), CAST(jacket.jacket_type AS text), CAST(jeans.jeans_type AS text), CAST(sneakers.sneakers_type AS text)) as type"),
+        DB::raw("COALESCE(CAST(shirt.size AS text), CAST(tshirt.size AS text), CAST(jacket.size AS text), CAST(jeans.size AS text), CAST(sneakers.size AS text)) as size")
+    )
+    ->get();
+
+    // $allItems = [];
+    // foreach ($items as $item) {
+    //     $allItems[] = [
+    //         'id' => $item->id,
+    //         'name' => $item->name,
+    //         'price' => $item->price,
+    //         'stock' => $item->stock,
+    //         'color' => $item->color,
+    //         'era' => $item->era,
+    //         'fabric' => $item->fabric,
+    //         'description' => $item->description,
+    //         'brand' => $item->brand,
+    //         'category' => $item->category,
+    //         'type' => $item->type,
+    //         'size' => $item->size,
+    //     ];
+    // }
+    // Log::info($allItems);
+    // Log::info($items);
+
+
+    return view('pages.admin.viewItems',['items'=> $items, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Items']);
     }
 
     public function deleteUser($id, Request $request)

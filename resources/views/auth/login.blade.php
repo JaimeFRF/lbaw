@@ -18,7 +18,7 @@
                 <div class="user-login-fields">
                     <div class="form-group d-flex flex-column mt-3">
                         <label for="email"><h6>Email</h6></label>
-                        <input class="form-control" id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
+                        <input class="form-control"type="email" name="email" value="{{ old('email') }}" required autofocus>
                         @if ($errors->has('email'))
                             <span class="error">
                                 {{ $errors->first('email') }}
@@ -28,10 +28,12 @@
 
                     <div class="form-group d-flex flex-column mt-3" id="pwd">
                         <label for="password"><h6>Password</h6></label>
-                        <input class="form-control" id="password" type="password" name="password" required>
-                        <span title="Show password">
-                            <i class="bi bi-eye-slash" id="togglePassword"></i>
-                        </span>
+                        <div class="input-group">
+                            <input class="form-control" type="password" name="password" required>
+                            <span title="Show password" class="toggle-password input-group-text">
+                                <i class="bi bi-eye-slash" id="togglePassword"></i>
+                            </span>
+                        </div>
                         @if ($errors->has('password'))
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                         @endif
@@ -60,7 +62,7 @@
                 <div class="user-login-fields">
                     <div class="form-group d-flex flex-column mt-3">
                         <label for="email"><h6>Email</h6></label>
-                        <input class="form-control" id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
+                        <input class="form-control" type="email" name="email" value="{{ old('email') }}" required autofocus>
                         @if ($errors->has('email'))
                             <span class="error">
                                 {{ $errors->first('email') }}
@@ -70,13 +72,21 @@
 
                     <div class="form-group d-flex flex-column mt-3" id="pwd">
                         <label for="password"><h6>Password</h6></label>
-                        <input class="form-control" id="password" type="password" name="password" required>
-                        <span title="Show password">
-                            <i class="bi bi-eye-slash" id="togglePassword"></i>
-                        </span>
+                        <div class="input-group">
+                            <input class="form-control" type="password" name="password" required>
+                            <span title="Show password" class="toggle-password input-group-text">
+                                <i class="bi bi-eye-slash" id="togglePassword"></i>
+                            </span>
+                        </div>
                         @if ($errors->has('password'))
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                         @endif
+                    </div>
+
+                    <div class="form-group d-flex justify-content-between align-items-center mt-2">
+                        <label>
+                            <input class="m-1" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+                        </label>
                     </div>
 
                     <div class="form-group d-flex justify-content-center mt-3">
@@ -109,6 +119,8 @@
             });
         });
     </script>
+          <script src="{{asset('js/login.js')}}"defer></script>
+
         
 
 @endsection

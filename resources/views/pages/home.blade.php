@@ -5,10 +5,12 @@
 @endsection
 
 @section('content')
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
     <script>
         window.totalItems = {{ $totalItems }};
     </script>
-    <script src="js/item-list.js" data-total-items="{{ $totalItems }}"></script>
     <section class="hero-section">
         <div class="hero-image">
             <!-- Vintage image goes here -->
@@ -27,22 +29,43 @@
     </section>
 
  
-    <section class="product-section">
-        <h3>Some of our products</h3>
-
-        <div class="product-container">
-
-            <button class="prev-arrow">&#8249;</button>
-
-            <div class="product-row" id="productRow">
-                @include('partials.item-list', ['items' => $items->take(3)])
-            </div>
-
-
-            <button class="next-arrow">&#8250;</button>
-
+    <section class="swiper-container">
+        <div class="swiper-wrapper" style="margin-top: 2rem; ">
+            @foreach($items->chunk(3) as $chunk)
+                <div class="swiper-slide" style=" display: flex; align-items: center; justify-content: center; flex-wrap: wrap;">
+                    @include('partials.item-list', ['items' => $chunk])
+                </div>
+            @endforeach
         </div>
+        <!-- Add Pagination -->
+        <!-- <div class="swiper-pagination" ></div> -->
+        <!-- Add Navigation -->
+        <!-- <div class="swiper-button-next" style="position: absolute; top: 90%; right:15%"></div>
+        <div class="swiper-button-prev" style="position: absolute; top: 90%; left: 15%"></div> -->
     </section>
+    <div class="swiper-scrollbar" style=" width: 300px; display: flex; position: absolute; left: 50%; transform: translateX(-50%);"></div>
+
+
+
+    <script>
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 1,
+            spaceBetween: 10,
+            loop: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            // pagination: {
+            //     el: '.swiper-pagination',
+            //     clickable: true,
+            // },
+            scrollbar: {
+                el: '.swiper-scrollbar',
+            }
+        });
+    </script>
+
 
 @endsection
 

@@ -6,13 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Validator;
 use App\Models\Item;
 use App\Models\Review;
 use App\Models\Jacket;
 use App\Models\Jeans;
 use App\Models\Shirt;
-use App\Models\Sneaker;
+use App\Models\Sneakers;
 use App\Models\Tshirt;
 
 
@@ -20,25 +20,18 @@ use App\Models\Tshirt;
 
 class ItemController extends Controller
 {
-    /**
-     * Creates a new item.
-     */
+
     public function create(Request $request, $card_id)
     {
-        // Create a blank new item.
         $item = new Item();
 
-        // Set item's card.
         $item->card_id = $card_id;
 
-        // Check if the current user is authorized to create this item.
         $this->authorize('create', $item);
 
-        // Set item details.
         $item->done = false;
         $item->description = $request->input('description');
 
-        // Save the item and return it as JSON.
         $item->save();
         return response()->json($item);
     }
@@ -48,37 +41,26 @@ class ItemController extends Controller
         $items = Item::skip($offset)->take(3)->get();
         return view('partials.item-list', ['items' => $items]);
     }
-    /**
-     * Updates the state of an individual item.
-     */
+
     public function update(Request $request, $id)
     {
-        // Find the item.
         $item = Item::find($id);
 
-        // Check if the current user is authorized to update this item.
         $this->authorize('update', $item);
 
-        // Update the done property of the item.
         $item->done = $request->input('done');
 
-        // Save the item and return it as JSON.
         $item->save();
         return response()->json($item);
     }
 
-    /**
-     * Deletes a specific item.
-     */
     public function delete(Request $request, $id)
     {
-        // Find the item.
         $item = Item::find($id);
 
         // Check if the current user is authorized to delete this item.
-        $this->authorize('delete', $item);
+        // $this->authorize('delete', $item);^
 
-        // Delete the item and return it as JSON.
         $item->delete();
         return response()->json($item);
     }
@@ -89,6 +71,28 @@ class ItemController extends Controller
     {
         $item = Item::find($id);
         $itemReviews = $item->reviews()->get();
+        
+        $shirt = Shirt::find($id);
+        $tshirt = Tshirt::find($id);
+        $jacket = Jacket::find($id);
+        $jeans = Jeans::find($id);
+        $sneakers = Sneakers::find($id);
+        
+        $size = $shirt->size ?? $tshirt->size ?? $jacket->size ?? $jeans->size ?? $sneakers->size ?? null;
+        
+        $category = null;
+        if ($shirt) {
+            $category = 'shirt';
+        } elseif ($tshirt) {
+            $category = 'tshirt';
+        } elseif ($jacket) {
+            $category = 'jacket';
+        } elseif ($jeans) {
+            $category = 'jeans';
+        } elseif ($sneakers) {
+            $category = 'sneakers';
+        }
+
 
         if(!Auth::check()){
             $userReview = null;
@@ -113,9 +117,7 @@ class ItemController extends Controller
         if(Auth::check()){
             $purchases = Auth::user()->purchases;
             foreach($purchases as $purchase){
-                Log::info('Purchase: ', ['purchase' => $purchase]);
                 $cart = $purchase->cart;
-                Log:info('Cart: ', ['cart' => $cart]);
                 foreach($cart->products as $cartItem){
                     if($cartItem->id == $id){
                         $userHasNotPurchasedItem = true;
@@ -124,9 +126,21 @@ class ItemController extends Controller
                 }
             }
         }
-        Log::info('User has purchased item: ', ['userHasPurchasedItem' => $userHasNotPurchasedItem]);
 
-        return view('pages.items.item', ['item' => $item, 'review' => $userReview, 'itemReviews' => $reviews, 'userHasNotPurchasedItem' => $userHasNotPurchasedItem]);
+
+        return view('pages.items.item', [
+            'size' => $size, 
+            'item' => $item, 
+            'review' => $userReview, 
+            'itemReviews' => $reviews, 
+            'userHasNotPurchasedItem' => $userHasNotPurchasedItem,
+            'breadcrumbs' => [
+                'Home' => route('home'),
+                'Shop' => route('shop'),
+                ucfirst($category) => route('shopFilter', ['filter' => $category])
+            ],
+            'current' => $item->name
+        ]);
     }
 
     public function search(Request $request)
@@ -136,7 +150,7 @@ class ItemController extends Controller
             ->orWhere('name', 'like', '%'.$user_input.'%')
             ->get();
     
-        return view('pages.shop', ['items' => $results]);
+        return view('pages.shop', ['items' => $results, 'breadcrumbs' => ['Home' => route('home')], 'current' => 'Search']);
     }
 
     public function filter(Request $request)
@@ -144,10 +158,9 @@ class ItemController extends Controller
         $color = $request->input('color');
         $category = $request->input('category');
         
-        if($category == "sneaker"){
+        if($category == "sneakers"){
             $shoe_size_string = $request->input('shoeSizes');
             $shoe_sizes = explode(',', $shoe_size_string);
-            Log::info('Shoe sizes: ', ['shoe_sizes' => $shoe_sizes]);
         }
 
         $subCategory = $request->input('subcategorySelect');
@@ -206,13 +219,12 @@ class ItemController extends Controller
                 $items = Item::where('color','=', $color)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string)->get();
             }
         }
-        else if($category == "sneaker"){
+        else if($category == "sneakers"){
             if($color == "None"){
                 $items = Item::join($category, function($join) use ($category, $shoe_sizes, $shoe_size_string) {
                     $join->on('item.id', '=', $category . '.id_item');
                     if ($shoe_size_string !== null) {
-                        Log::info('Entrei');
-                        $join->whereIn($category . '.shoe_size', $shoe_sizes);
+                        $join->whereIn($category . '.size', $shoe_sizes);
                     }
                 })
                 ->where('stock', $helper, 0)
@@ -225,7 +237,7 @@ class ItemController extends Controller
                     $join->on('item.id', '=', $category . '.id_item')
                          ->where('color', '=', $color);
                     if ($shoe_size_string !== null) {
-                        $join->whereIn($category . '.shoe_size', $shoe_sizes);
+                        $join->whereIn($category . '.size', $shoe_sizes);
                     }
                 })
                 ->where('stock', $helper, 0)
@@ -237,8 +249,6 @@ class ItemController extends Controller
         else{
             if($subCategory != "None"){
                 if($color == "None"){
-                    Log::info('Category: ', ['category' => $category]);
-                    Log::info('Subcategory: ', ['subcategory' => $subCategory]);
                     $items = Item::join($category, function($join) use ($category, $subCategory) {
                         $join->on('item.id', '=', $category . '.id_item')
                              ->where($category.'_type', '=', $subCategory);
@@ -247,7 +257,6 @@ class ItemController extends Controller
                         ->where('price', '>=', $rangeMin)
                         ->where('price', '<=', $rangeMax)
                         ->orderBy($table, $string)->get();
-                        Log::info('Items: ', ['items' => $items]);
                 }
                 else{
                     $items = Item::join($category, function($join) use ($category, $subCategory) {
@@ -279,9 +288,9 @@ class ItemController extends Controller
                 }
             }
         }
-        return view('pages.shop', ['items' => $items]);
+        return view('pages.shop', ['items' => $items, 'breadcrumbs' => ['Home' => route('home')], 'current' => ucfirst($category)]);
     }    
-    
+
     public function clearFilters(Request $request)
     {
         $request->session()->put('color', "all");
@@ -292,13 +301,15 @@ class ItemController extends Controller
 
 
         $items = Item::all();
-        return view('pages.shop', ['items' => $items]);
+        return view('pages.shop', ['items' => $items, 'breadcrumbs' => ['Home' => route('home')], 'current' => 'All']);
     }
 
     public function shop() {
         $items = Item::all();
 
         return view('pages.shop', [
+            'breadcrumbs' => ['Home' => route('home')],
+            'current' => 'Shop',
             'items' => $items,
         ]);
     }
@@ -309,6 +320,7 @@ class ItemController extends Controller
 
         return view('pages.shop', [
              'items' => $items,
+             'breadcrumbs' => ['Home' => route('home')],'current' => ucfirst($filter)
         ]);
     }
 
@@ -319,6 +331,70 @@ class ItemController extends Controller
         
         return response()->json(array_column($result, 'unnest'));
     }
+
+    public function addItem(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'category' => 'required|string',
+            'subCategory' => 'required|string',
+            'size' => 'required|string',
+            'price' => 'required|numeric',
+            'stock' => 'required|integer',
+            'photos' => 'sometimes|array',
+            'photos.*' => 'sometimes|file|image|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+        
+        $item = new Item();
+        $item->name = $request->name;
+        $item->description = $request->description;
+        $item->price = $request->price;
+        $item->stock = $request->stock;
+        $item->color = $request->color;
+        $item->era = $request->era;
+        $item->fabric = $request->fabric;
+        $item->brand = $request->brand;
+        $item->save();
+
+        $categoryClassName = $this->getCategoryModelName($request->input('category'));
+        if (!$categoryClassName) {
+            return response()->json(['message' => 'Invalid category'], 422);
+        }
+    
+        $category = new $categoryClassName();
+        $category->id_item = $item->id;
+        $category->size = $request->input('size');
+        $category->{$request->category . '_type'} = $request->input('subCategory');
+        $category->save();
+
+        // Handle file uploads if photos are included
+        if ($request->has('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                // Save each photo and associate it with the item
+                // You might want to store the file path in the database, or use a service like Laravel's File Storage
+            }
+        }
+
+        return response()->json(['message' => 'Item added successfully', 'item' => $item], 200);
+    }
+
+    private function getCategoryModelName($category)
+    {
+        $allowedCategories = ['Tshirt', 'Shirt', 'Jacket', 'Jeans', 'Sneakers'];
+        $category = ucfirst(strtolower($category));
+
+        if (in_array($category, $allowedCategories)) {
+            return "App\\Models\\" . $category;
+        }
+
+        return null;
+    }
+
     
     
 }

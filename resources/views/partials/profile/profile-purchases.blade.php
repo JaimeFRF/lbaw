@@ -22,5 +22,8 @@
             <button class="btn btn-outline-dark btn-sm">Details</button>
         </div>
     </div>
-    <hr class="my-3">
+    @if ($i < count($purchases) - 1)
+        <hr class="my-3">
+    @endif
+
 @endfor

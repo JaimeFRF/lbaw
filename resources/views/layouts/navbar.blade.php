@@ -7,6 +7,7 @@
     </button>
 
     <div class="collapse navbar-collapse  " id="navbarSupportedContent">
+      <script src="{{asset('js/navbar_script.js')}}"defer></script>
       <ul class="navbar-nav ms-auto mb-lg-0 align-items-center w-30  me-4">
 
       <li>
@@ -128,7 +129,7 @@
         <img src="img/notification_icon.png" alt="img">
         <div class="text">
           <h4>${notificationData.item.name}</h4>
-          <p>This item is now on sale for $${notificationData.item.price}</p>
+          <p>${notificationData.description}</p>
         </div>
       `;
     } else if (notificationData.notification_type === 'RESTOCK') {
@@ -136,7 +137,7 @@
         <img src="img/notification_icon.png" alt="img">
         <div class="text">
           <h4>${notificationData.item.name}</h4>
-          <p>The item "${notificationData.item.name}" is in <strong>stock</strong></p>
+          <p>${notificationData.description}</p>
         </div>
       `;
     } else if (notificationData.notification_type === 'ORDER_UPDATE') {
@@ -144,7 +145,7 @@
         <img src="img/notification_icon.png" alt="img">
         <div class="text">
           <h4>Purchase ${notificationData.id_purchase} State Changed</h4>
-          <p>The state of your purchase has been updated to <strong>${notificationData.purchase.purchase_status}</strong></p>
+          <p>${notificationData.description}</p>
         </div>
       `;
     }

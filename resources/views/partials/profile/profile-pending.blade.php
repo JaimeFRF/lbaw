@@ -24,5 +24,8 @@
             </div>
         </div>
     </div>
-    <hr class="my-3">
+    @if ($i < count($orders) - 1)
+        <hr class="my-3">
+    @endif
+
 @endfor

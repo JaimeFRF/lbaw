@@ -91,15 +91,12 @@ function addEventListeners() {
     if (this.status != 200) window.location = '/';
     let item = JSON.parse(this.responseText);
   
-    // Create the new item
     let new_item = createItem(item);
   
-    // Insert the new item
     let card = document.querySelector('article.card[data-id="' + item.card_id + '"]');
     let form = card.querySelector('form.new_item');
     form.previousElementSibling.append(new_item);
   
-    // Reset the new item form
     form.querySelector('[type=text]').value="";
   }
   
@@ -121,19 +118,15 @@ function addEventListeners() {
     if (this.status != 200) window.location = '/';
     let card = JSON.parse(this.responseText);
   
-    // Create the new card
     let new_card = createCard(card);
   
-    // Reset the new card input
     let form = document.querySelector('article.card form.new_card');
     form.querySelector('[type=text]').value="";
   
-    // Insert the new card
     let article = form.parentElement;
     let section = article.parentElement;
     section.insertBefore(new_card, article);
   
-    // Focus on adding an item to the new card
     new_card.querySelector('[type=text]').focus();
   }
   

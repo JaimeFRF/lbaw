@@ -63,7 +63,7 @@ Route::post('/admin-add-user',[AdminController::class, 'createUser']);
 Route::post('/admin-add-admin',[AdminController::class, 'addAdmin']);
 Route::post('/admin-update-admin/{id}', [AdminController::class, 'updateAdmin']);
 Route::delete('admin-delete-admin/{id}', [AdminController::class, 'deleteAdmin']);
-
+Route::get('/orders', [AdminController::class, 'viewOrders'])->name('orders');
 
 
 //Statics

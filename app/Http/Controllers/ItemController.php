@@ -76,9 +76,9 @@ class ItemController extends Controller
         $tshirt = Tshirt::find($id);
         $jacket = Jacket::find($id);
         $jeans = Jeans::find($id);
-        $sneaker = Sneaker::find($id);
+        $sneakers = Sneakers::find($id);
         
-        $size = $shirt->size ?? $tshirt->size ?? $jacket->size ?? $jeans->size ?? $sneaker->size ?? null;
+        $size = $shirt->size ?? $tshirt->size ?? $jacket->size ?? $jeans->size ?? $sneakers->size ?? null;
         
         $category = null;
         if ($shirt) {
@@ -89,8 +89,8 @@ class ItemController extends Controller
             $category = 'jacket';
         } elseif ($jeans) {
             $category = 'jeans';
-        } elseif ($sneaker) {
-            $category = 'sneaker';
+        } elseif ($sneakers) {
+            $category = 'sneakers';
         }
 
 

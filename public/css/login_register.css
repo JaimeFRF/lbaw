@@ -17,20 +17,13 @@
   font-weight: bold;
 }
 
-#togglePassword {
+/* #togglePassword {
   margin-left: 590px;
   cursor: pointer;
-}
+} */
 
-#pwd {
-  position:relative;
-}
-
-#pwd i {
-  position:absolute;
-  left:0;
-  top:29px;
-  padding:10px 10px;
+#togglePassword:hover {
+  cursor: pointer;
 }
 
 .login-tab {
@@ -38,4 +31,13 @@
 }
 .login-tab.active {
   border-bottom: 2px solid #007bff; /* Highlight the active tab */
+}
+
+.password-field {
+  display: flex;
+  align-items: center;
+}
+
+.password-field .form-control {
+  flex-grow: 1;
 }

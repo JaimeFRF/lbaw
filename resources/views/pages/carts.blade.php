@@ -31,8 +31,19 @@
         </tr>
         <tr>
             <td class="fw-bold">Total</td>
-            <td id="total-price" class="fw-bold">{{ number_format($items->sum(function($item) { return $item->price * $item->pivot->quantity; }), 2) }}€</td>
+            <td id="total-price" class="fw-bold">
+                @php
+                    $total = 0;
+                    foreach($items as $item) {
+                        $quantity = $item->pivot->quantity ?? $item['quantity'];
+                        $price = $item->price ?? $item['price'];
+                        $total += $price * $quantity;
+                    }
+                @endphp
+                {{ number_format($total, 2) }}€
+            </td>
         </tr>
+        
         </table>
     </div>
     <div class="cart-buttons d-flex justify-content-around">
@@ -41,10 +52,15 @@
             <div class="cart-buttons d-flex justify-content-around">
                 <!-- You can add hidden input for the items -->
                 <input type="hidden" id="items" name="items" value="{{ json_encode($items) }}">
-
-                <button type="submit" class="btn btn-success m-2 w-100">
-                    Checkout
-                </button>
+                @if (Auth::check())
+                    <button type="submit" class="btn btn-success m-2 w-100" {{ count($items) == 0 ? 'disabled' : '' }}>
+                        Checkout
+                    </button>    
+                @else
+                    <button type="submit" class="btn btn-success m-2 w-100" id="checkoutButton" {{ count($items) == 0 ? 'disabled' : '' }}>
+                        Checkout
+                    </button>
+                @endif
             </div>
         </form>
         <button type="submit" class="btn btn-outline-danger m-2 w-100">
@@ -52,6 +68,8 @@
         </button>
     </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 @endsection
 

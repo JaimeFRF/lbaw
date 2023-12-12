@@ -28,10 +28,12 @@
 
                     <div class="form-group d-flex flex-column mt-3" id="pwd">
                         <label for="password"><h6>Password</h6></label>
-                        <input class="form-control" id="password" type="password" name="password" required>
-                        <span title="Show password">
-                            <i class="bi bi-eye-slash" id="togglePassword"></i>
-                        </span>
+                        <div class="input-group">
+                            <input class="form-control" id="password" type="password" name="password" required>
+                            <span title="Show password" class="toggle-password input-group-text">
+                                <i class="bi bi-eye-slash" id="togglePassword"></i>
+                            </span>
+                        </div>
                         @if ($errors->has('password'))
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                         @endif
@@ -115,6 +117,8 @@
             });
         });
     </script>
+          <script src="{{asset('js/login.js')}}"defer></script>
+
         
 
 @endsection

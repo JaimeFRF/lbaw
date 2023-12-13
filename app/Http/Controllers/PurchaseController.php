@@ -148,7 +148,6 @@ class PurchaseController extends Controller
     }
 
     public function updateOrder(Request $request){
-        Log::info($request);
         $orderId = $request->input('order_id');
         $amount = $request->input('amount');
         $status = $request->input('status');

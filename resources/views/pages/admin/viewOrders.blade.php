@@ -43,46 +43,6 @@
     </table>
 </div>
 
-{{-- <div class="modal fade" id="editOrderModal" tabindex="-1" aria-labelledby="editOrderModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editOrderModalLabel">Edit Order</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editOrderForm">
-                    @csrf
-                    <input type="hidden" id="editOrderId" name="order_id">
-                    <div class="mb-3">
-                        <label for="editCustomerName" class="form-label">Customer Name</label>
-                        <input type="text" class="form-control" id="editCustomerName" name="customer_name" disabled>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editOrderAmount" class="form-label">Amount</label>
-                        <input type="number" class="form-control" id="editOrderAmount" name="amount" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="orderStatus" class="form-label">Status</label>
-                        <select class="form-select" id="orderStatus" name="status" required>
-                            <option value="Processing">Processing</option>
-                            <option value="Packed">Packed</option>
-                            <option value="Sent">Sent</option>
-                            <option value="Delivered">Delivered</option>                        
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="editOrderAddress" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="editOrderAddress" name="address" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" form="editOrderForm" class="btn btn-primary update-order-btn">Update Order</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
 
 <!-- Detailed Order Modal -->
 <div class="modal fade" id="detailedOrderModal" tabindex="-1" aria-labelledby="detailedOrderModalLabel" aria-hidden="true">

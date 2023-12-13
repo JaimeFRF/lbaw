@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             const row = document.querySelector(`tr[data-user-id="${adminId}"]`);
-            console.log(data);
             row.cells[1].innerText = data.updatedAdminData.username;  
             row.cells[2].innerText = data.updatedAdminData.email;  
             row.cells[3].innerText = data.updatedAdminData.phone; 

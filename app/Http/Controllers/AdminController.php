@@ -43,9 +43,7 @@ class AdminController extends Controller
     public function viewOrders(Request $request)
     {
         $orders = Purchase::get();
-        Log::info($orders);
         $ordersInfo = array();
-        // get id_Location from $orders
         foreach($orders as $order){
             $idLocation = $order->id_location;
             $location = Location::where('id', $idLocation)->get()->first();
@@ -54,7 +52,6 @@ class AdminController extends Controller
             } else {
                 $order->location = null; 
             }
-            Log::info($orders);
         }
         return view('pages.admin.viewOrders',['orders' => $orders, 'breadcrumbs' => ['Admin Home' => route('admin-home')], 'current' => 'Orders']);
     }
@@ -83,27 +80,6 @@ class AdminController extends Controller
         DB::raw("COALESCE(CAST(shirt.size AS text), CAST(tshirt.size AS text), CAST(jacket.size AS text), CAST(jeans.size AS text), CAST(sneakers.size AS text)) as size")
     )
     ->get();
-
-    // $allItems = [];
-    // foreach ($items as $item) {
-    //     $allItems[] = [
-    //         'id' => $item->id,
-    //         'name' => $item->name,
-    //         'price' => $item->price,
-    //         'stock' => $item->stock,
-    //         'color' => $item->color,
-    //         'era' => $item->era,
-    //         'fabric' => $item->fabric,
-    //         'description' => $item->description,
-    //         'brand' => $item->brand,
-    //         'category' => $item->category,
-    //         'type' => $item->type,
-    //         'size' => $item->size,
-    //     ];
-    // }
-    // Log::info($allItems);
-    // Log::info($items);
-
 
     return view('pages.admin.viewItems',['items'=> $items, 'breadcrumbs' => ['Admin Home' => route('admin-home')], 'current' => 'Items']);
     }

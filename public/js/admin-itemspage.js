@@ -18,10 +18,6 @@ document.addEventListener('DOMContentLoaded', function() {
         editItemForm.reset();
     });
     
-    manualCloseModalButton.addEventListener('click', function() {
-        editItemModal.hide();
-    });
-
     deleteItemButtons.forEach(button => {
         button.addEventListener('click', function (event) {
             event.preventDefault();

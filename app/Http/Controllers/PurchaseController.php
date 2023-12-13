@@ -142,12 +142,61 @@ class PurchaseController extends Controller
             $item->save();
         }
 
-        Log::info('itemStock: ', ['itemStock' => $item->stock]);
-
         $purchase->delete();
     
         return response()->json(['success' => true]);
     }
 
+    public function updateOrder(Request $request){
+        Log::info($request);
+        $orderId = $request->input('order_id');
+        $amount = $request->input('amount');
+        $status = $request->input('status');
+        $deliveryDate = $request->input('deliveryDate');
+        $address = $request->input('address');
+        $city = $request->input('city');
+        $country = $request->input('country');
+        $postalCode = $request->input('postalCode');
+        $purchase = Purchase::find($orderId);
+
+        if ($purchase) {
+            $purchase->price = $amount;
+            $purchase->purchase_status = $status;
+            $purchase->delivery_date = $deliveryDate;
+            
+            $existingLocation = Location::where('address', $address)
+                      ->where('city', $city)
+                      ->where('country', $country)
+                      ->where('postal_code', $postalCode)
+                      ->first();
+
+            if (!$existingLocation) {
+                $newLocationId =Location::insertGetId([
+                    'address' => $address,
+                    'city' => $city,
+                    'country' => $country,
+                    'postal_code' => $postalCode
+                ]);
+                $purchase->id_location = $newLocationId;
+            }
+    
+            $purchase->save();
+    
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+    }
+
+    public function getOrderAddressInfo(Request $request, $orderId){
+        $purchase = Purchase::find($orderId);
+
+        if ($purchase) {
+            $location = Location::find($purchase->id_location);
+            return response()->json(['success' => true, 'location' => $location]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+    }
 
 }

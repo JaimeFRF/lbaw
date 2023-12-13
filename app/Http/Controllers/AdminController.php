@@ -18,6 +18,7 @@ use App\Models\Shirt;
 use App\Models\sneakers;
 use App\Models\Tshirt;
 use App\Models\Purchase;
+use App\Models\Location;
 use Illuminate\Support\Facades\DB;
 
 
@@ -32,21 +33,30 @@ class AdminController extends Controller
     }
     public function viewUsers(){
       $users = User::orderBy('id')->get();
-      return view('pages.admin.viewUsers',['users' => $users, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Users']);
+      return view('pages.admin.viewUsers',['users' => $users, 'breadcrumbs' => ['Admin Home' => route('admin-home')], 'current' => 'Users']);
     }
     public function viewAdmins(){
       $admins = Admin::orderBy('id')->get();
-      return view('pages.admin.viewAdmins',['admins' => $admins, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Admins']);
-    }
-    public function viewStock() 
-    {
-      return view('pages.admin.viewItemsStock');
+      return view('pages.admin.viewAdmins',['admins' => $admins, 'breadcrumbs' => ['Admin Home' => route('admin-home')], 'current' => 'Admins']);
     }
 
     public function viewOrders(Request $request)
     {
         $orders = Purchase::get();
-        return view('pages.admin.viewOrders',['orders' => $orders, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Orders']);
+        Log::info($orders);
+        $ordersInfo = array();
+        // get id_Location from $orders
+        foreach($orders as $order){
+            $idLocation = $order->id_location;
+            $location = Location::where('id', $idLocation)->get()->first();
+            if ($location) {
+                $order->location = $location; 
+            } else {
+                $order->location = null; 
+            }
+            Log::info($orders);
+        }
+        return view('pages.admin.viewOrders',['orders' => $orders, 'breadcrumbs' => ['Admin Home' => route('admin-home')], 'current' => 'Orders']);
     }
 
     public function viewItems() 
@@ -95,7 +105,7 @@ class AdminController extends Controller
     // Log::info($items);
 
 
-    return view('pages.admin.viewItems',['items'=> $items, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Items']);
+    return view('pages.admin.viewItems',['items'=> $items, 'breadcrumbs' => ['Admin Home' => route('admin-home')], 'current' => 'Items']);
     }
 
     public function deleteUser($id, Request $request)

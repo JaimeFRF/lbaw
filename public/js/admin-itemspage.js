@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function (event) {
             event.preventDefault();
             const itemId = this.getAttribute('data-item-id');
-            console.log(itemId)
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -84,7 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('editSize').value = itemSize;
             document.getElementById('editUnitPrice').value = itemPrice;
             document.getElementById('editStock').value = itemStock;
-            console.log(itemStock)
             
             // Set the correct category in the dropdown
             document.querySelectorAll('#editCategory option').forEach(option => {
@@ -106,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
 
         const itemId = document.getElementById('editItemId').value;
-        console.log(itemId)
         const formData = new FormData(editItemForm);
         formData.append('id_item', itemId);
 
@@ -133,7 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
             row.cells[5].innerText = data.updatedItemData.price;
             row.cells[6].innerText = data.updatedItemData.stock;
             
-            console.log(data.updatedItemData.newStock)
 
             editItemModal.hide();
             Swal.fire({

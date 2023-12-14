@@ -54,14 +54,15 @@ class ItemController extends Controller
         return response()->json($item);
     }
 
-    public function delete(Request $request, $id)
+    public function removeStock(Request $request, $id)
     {
         $item = Item::find($id);
 
         // Check if the current user is authorized to delete this item.
         // $this->authorize('delete', $item);^
 
-        $item->delete();
+        $item->stock = 0;
+        $item->save();
 
         return response()->json($item);
     }

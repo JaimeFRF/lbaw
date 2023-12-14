@@ -43,7 +43,7 @@
           <td class="text-center">
               <button id="delete" data-item-id={{$item->id}} class="btn btn-outline-danger btn-sm delete-item-btn">
                   <i class="fa fa-times"></i>
-                  <span>Delete</span>
+                  <span>Remove Stock</span>
               </button>
           </td>
         </tr>

@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
             Swal.fire({
                 title: 'Are you sure?',
-                text: 'You are about to delete this item.',
+                text: 'You are about to remove all stock from this item.',
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: 'Yes, delete it!',
+                confirmButtonText: 'Yes, remove it!',
                 cancelButtonText: 'Cancel',
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     })
                     .then(data => {
-                        Swal.fire('Item Deleted', 'The item has been deleted successfully.', 'success');
+                        Swal.fire('Stock Removed', "The item's stock has been removed successfully.", 'success');
                         this.closest('tr').remove();
                     })
                     .catch(error => {
@@ -84,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('editSize').value = itemSize;
             document.getElementById('editUnitPrice').value = itemPrice;
             document.getElementById('editStock').value = itemStock;
+            console.log(itemStock)
             
             // Set the correct category in the dropdown
             document.querySelectorAll('#editCategory option').forEach(option => {
@@ -131,6 +132,9 @@ document.addEventListener('DOMContentLoaded', function() {
             row.cells[4].innerText = data.updatedItemData.size;
             row.cells[5].innerText = data.updatedItemData.price;
             row.cells[6].innerText = data.updatedItemData.stock;
+            
+            console.log(data.updatedItemData.newStock)
+
             editItemModal.hide();
             Swal.fire({
                 icon: 'success',

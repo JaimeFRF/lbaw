@@ -173,6 +173,8 @@ public function updateItem(Request $request, $id)
         'name', 'price', 'stock', 'color', 'era', 'fabric', 'description', 'brand', 'subcategory'
     ]));
     
+
+    $item->stock = $request->stock;
     
     // Specific attributes for different item types
     switch ($request->category) {

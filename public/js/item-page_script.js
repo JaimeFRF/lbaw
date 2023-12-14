@@ -1,3 +1,26 @@
+document.addEventListener('DOMContentLoaded', function() {
+    function createStarRating(rating) {
+        let ratingHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            if (i <= rating) {
+                ratingHtml += '<i class="bi bi-star-fill"></i>'; 
+            } else if (i === Math.ceil(rating) && !Number.isInteger(rating)) {
+                ratingHtml += '<i class="bi bi-star-half"></i>'; 
+            } else {
+                ratingHtml += '<i class="bi bi-star"></i>'; 
+            }
+        }
+        return ratingHtml;
+    }
+
+    const numericRatingElement = document.getElementById('numeric-rating');
+    if (numericRatingElement) {
+        const numericRating = parseFloat(numericRatingElement.textContent);
+        document.getElementById('star-rating').innerHTML = createStarRating(numericRating);
+    }
+});
+
+
 function addItemToCart(product, stock) {
     if (stock <= 0) {
         alert('This item is out of stock');

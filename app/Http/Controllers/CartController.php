@@ -26,9 +26,7 @@ class CartController extends Controller
      * Show the card for a given id.
      */
     public function show(string $id): View
-    {
-        
-        
+    {        
         $cart = Cart::findOrFail($id);
 
         Log::info($cart);
@@ -61,12 +59,13 @@ class CartController extends Controller
                 }
             }
             unset($cartItem);
-            Log::info("items", $cart);
             $items = $cart;
             Session::put('cart', $cart);
         }
         else {
             $cart =  Auth::user()->cart()->first();
+            $this->authorize('show', $cart);
+            
             $items = $cart->products()->get();
             foreach ($items as $item) {
                 if($item->images()->count() > 0){
@@ -75,7 +74,6 @@ class CartController extends Controller
                     $item->picture = asset('images/default-product-image.png');
                 }
             }
-            Log::info($items);
         }
 
         return view('pages.carts', [

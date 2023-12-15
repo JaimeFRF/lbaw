@@ -1,5 +1,5 @@
 function updateRatingOnWebpage(newRating) {
-    var itemRatingElement = document.getElementById('itemRating');
+    var itemRatingElement = document.getElementById('numeric-rating');
     if (itemRatingElement) {
         itemRatingElement.textContent = newRating;
     }

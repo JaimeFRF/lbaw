@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Image;
 use App\Models\Wishlist;
 use App\Models\User;
+use App\Models\Admin;
 use App\Models\Item;
 use App\Models\Cart;
 use App\Models\Purchase;
@@ -25,7 +26,9 @@ class ProfileController extends Controller{
    * @param id Id of the User whose profile will be edited
    */
     public function show(){
+      
       $user = User::find(Auth::id());
+      $this->authorize('show', $user);
 
       $image = Image::where('id_user', $user->id)->first();
 
@@ -71,7 +74,8 @@ class ProfileController extends Controller{
 
     public function showEditProfile() {
       $user = User::find(Auth::id());
-        
+      $this->authorize('show', $user);
+
       return view('pages.profile.edit_profile', [
         'breadcrumbs' => ['Profile' => route('profile'), 'EditProfile' => route('edit_profile')],
         'current' => null, 

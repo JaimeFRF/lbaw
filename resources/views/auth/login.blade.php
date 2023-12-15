@@ -87,6 +87,7 @@
                         <label>
                             <input class="m-1" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
                         </label>
+                        <a class="btn p-0 btn-link mt-8 text-decoration-underline mb-2 ml-2" href="{{route('recover_password')}}">Forgot your password?</a>
                     </div>
 
                     <div class="form-group d-flex justify-content-center mt-3">

@@ -56,9 +56,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-                <button type="button" class="btn btn-secondary" id="manualCloseModalButton" aria-label="Close">
-                    <i class="fas fa-times"></i>
-                </button>
+                <button type="button" class="btn-close" id="manualCloseModalButton" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <form id="editUserForm">

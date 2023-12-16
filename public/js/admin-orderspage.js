@@ -1,79 +1,75 @@
 document.addEventListener('DOMContentLoaded', function() {
     const deleteOrderButtons = document.querySelectorAll('[id="delete"]');
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const editOrderButtons = document.querySelectorAll('.edit-btn'); 
-    const updateOrderButton = document.querySelector('.update-order-btn');
-    const editOrderForm = document.getElementById('editOrderForm');
-    const editOrderModalElement = document.getElementById('editOrderModal'); 
-    const editOrderModal = new bootstrap.Modal(editOrderModalElement);
-    const addOrderForm = document.getElementById('addOrderForm');
-    const addOrderModalElement = document.getElementById('addOrderModal'); 
-    const addOrderModal = new bootstrap.Modal(addOrderModalElement);
+    const updateOrderButton = document.getElementById('updateOrderButton');
+    const detailedOrderModalElement = document.getElementById('detailedOrderModal');
+    const detailedOrderModal = new bootstrap.Modal(detailedOrderModalElement);
+    const detailedOrderForm = document.getElementById('detailedOrderForm');
+    const orderRows = document.querySelectorAll('.order-row');
+    // const editOrderButtons = document.querySelectorAll('.edit-btn'); 
+    // const editOrderForm = document.getElementById('editOrderForm');
+    // const editOrderModalElement = document.getElementById('editOrderModal'); 
+    // const editOrderModal = new bootstrap.Modal(editOrderModalElement);
+    // const addOrderForm = document.getElementById('addOrderForm');
+    // const addOrderModalElement = document.getElementById('addOrderModal'); 
+    // const addOrderModal = new bootstrap.Modal(addOrderModalElement);
 
-    addOrderModalElement.addEventListener('hidden.bs.modal', function () {
-        addOrderForm.reset();
+    orderRows.forEach(row => {
+        row.addEventListener('click', function() {
+            const orderId = this.getAttribute('data-order-id');
+            const customerName = this.cells[1].innerText;
+            const orderAmountWithCurrency = this.cells[2].innerText; // e.g., "123€"
+            const orderAmount = orderAmountWithCurrency.replace(/[^\d.-]/g, '');
+            const deliveryDate = this.cells[4].innerText;
+            const orderStatus = this.cells[5].innerText;
+            fetch(`/admin-get-order-address-info/${orderId}`, {
+                method: 'GET',
+                headers: {'X-CSRF-TOKEN': token}
+            }).then(response => {
+                if (response.ok && response.status === 200) {
+                    return response.json();
+            } else {
+                throw new Error('Something went wrong');
+            }
+            })
+            .then(data => {
+                    const orderAddress = data.location.address;
+                    const orderCity = data.location.city;
+                    const orderCountry = data.location.country;
+                    const orderPostalCode = data.location.postal_code;
+                    document.getElementById('detailedOrderId').value = orderId;
+                    document.getElementById('detailedCustomerName').value = customerName;
+                    document.getElementById('detailedOrderAmount').value = orderAmount;
+                    document.getElementById('detailedOrderDeliveryDate').value = deliveryDate;
+                    document.getElementById('detailedOrderStatus').value = orderStatus;
+                    document.getElementById('detailedOrderAddress').value = orderAddress;
+                    document.getElementById('detailedOrderCity').value = orderCity;
+                    document.getElementById('detailedOrderCountry').value = orderCountry;
+                    document.getElementById('detailedOrderPostalCode').value = orderPostalCode;
+                    detailedOrderModal.show();
+            })
+            .catch(error => console.error('There has been a problem with your fetch operation:', error));
+        });
     });
     
-    editOrderModalElement.addEventListener('hidden.bs.modal', function () {
-        editOrderForm.reset();
-    }); 
-
-    addOrderForm.addEventListener('submit', function (event) {
+    detailedOrderForm.addEventListener('submit', function(event) {
         event.preventDefault();
-        const formData = new FormData(addOrderForm);
-        fetch('/admin-add-order', {
-            method: 'POST',
-            body: formData,
-            headers: {'X-CSRF-TOKEN': token},
-        })
-        .then(response => response.ok && response.status === 200 ? response.json() : Promise.reject('Something went wrong'))
-        .then(data => {
-            addOrderForm.reset();
-            addOrderModal.hide();
-            Swal.fire('Order Added', `Order has been added successfully.`, 'success');
-            location.reload();
-        })
-        .catch(error => console.error('There has been a problem with your fetch operation:', error));
-    });
+        const formData = new FormData(detailedOrderForm);
 
-    document.querySelector('.table').addEventListener('click', function(event) {
-        if (event.target && event.target.matches('.edit-btn')) {
-            const button = event.target;
-            const row = button.closest('tr');
-            const orderId = row.getAttribute('data-order-id');
-            const customerName = row.cells[1].innerText; 
-            const orderAmount = row.cells[2].innerText; 
-
-            document.getElementById('editOrderId').value = orderId;
-            document.getElementById('editCustomerName').value = customerName;
-            document.getElementById('editOrderAmount').value = orderAmount;
-
-            editOrderModal.show();
-        }
-    });
-
-    updateOrderButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        const orderId = document.getElementById('editOrderId').value;
-        const formData = new FormData(editOrderForm);
-        formData.append('order_id', orderId);
-        fetch(`/admin-update-order/${orderId}`, {
+        fetch(`/admin-update-order`, {
             method: 'POST',
             body: formData,
             headers: {'X-CSRF-TOKEN': token}
         })
-        .then(response => response.ok && response.status === 200 ? response.json() : Promise.reject('Something went wrong'))
         .then(data => {
-            const row = document.querySelector(`tr[data-order-id="${orderId}"]`);
-            row.cells[1].innerText = data.updatedOrderData.customerName;
-            row.cells[2].innerText = data.updatedOrderData.price;
-            row.cells[3].innerText = data.updatedOrderData.purchaseDate;
-            editOrderModal.hide();
-            Swal.fire('Order Updated', 'The order has been updated successfully!', 'success');
-        })
+            if (data.status == 200) {
+            Swal.fire('Order updated', `Order ${data.id} has been updated successfully.`, 'success');
+            detailedOrderModal.hide();
+        } else {
+            console.log('Update failed: ' + data.message);
+        }})
         .catch(error => console.error('There has been a problem with your fetch operation:', error));
     });
-
 
     deleteOrderButtons.forEach(button => {
         button.addEventListener('click', function (event) {
@@ -107,3 +103,5 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+

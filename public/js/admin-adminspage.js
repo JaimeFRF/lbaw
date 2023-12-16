@@ -62,16 +62,16 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             const row = document.querySelector(`tr[data-user-id="${adminId}"]`);
-            row.cells[1].innerText = data.updatedAdminData.name;  
-            row.cells[2].innerText = data.updatedAdminData.username;  
-            row.cells[3].innerText = data.updatedAdminData.email;  
-            row.cells[4].innerText = data.updatedAdminData.phone; 
+            console.log(data);
+            row.cells[1].innerText = data.updatedAdminData.username;  
+            row.cells[2].innerText = data.updatedAdminData.email;  
+            row.cells[3].innerText = data.updatedAdminData.phone; 
 
             editAdminModal.hide();
             Swal.fire({
                 icon: 'success',
-                title: 'User Updated',
-                text: 'The user has been updated successfully!',
+                title: 'Admin Updated',
+                text: 'The admin has been updated successfully!',
             });
         })
         .catch(error => {

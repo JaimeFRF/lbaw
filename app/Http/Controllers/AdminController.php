@@ -17,6 +17,7 @@ use App\Models\Jeans;
 use App\Models\Shirt;
 use App\Models\sneakers;
 use App\Models\Tshirt;
+use App\Models\Purchase;
 use Illuminate\Support\Facades\DB;
 
 
@@ -40,6 +41,12 @@ class AdminController extends Controller
     public function viewStock() 
     {
       return view('pages.admin.viewItemsStock');
+    }
+
+    public function viewOrders(Request $request)
+    {
+        $orders = Purchase::get();
+        return view('pages.admin.viewOrders',['orders' => $orders, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Orders']);
     }
 
     public function viewItems() 
@@ -112,12 +119,9 @@ class AdminController extends Controller
       return response()->json(['message' => 'User banned'], 200);
     }
 
-    public function upgradeAdmin($id, Request $request){
-      
-    }
 
     public function updateUser(Request $request, $id)
-{
+    {
     $user = User::findOrFail($id);
 
     if (!$user) {

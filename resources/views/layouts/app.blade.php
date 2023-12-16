@@ -22,7 +22,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-    
+        <link href="{{ url('css/contextual_help.css') }}" rel="stylesheet">
+
         <script type="text/javascript" src={{ url('js/app.js') }} defer> </script>
         <link rel="icon" type="image/x-icon" href="/favicon.ico">
 

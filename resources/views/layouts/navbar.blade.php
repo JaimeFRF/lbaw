@@ -48,7 +48,7 @@
             @csrf
             <input class="form-control me-2" type="search" name="search" placeholder="Search for a specific product..." onmouseover="getContextualHelp('search', 'search-help').show()" onmouseout="getContextualHelp('search', 'search-help').hide()">
           </form>
-          <div id="search-help" class="help-message">Your password should be at least 10 characters long.</div>
+          <div id="search-help" class="help-message">Search for a product name or description</div>
 
         </li>
 

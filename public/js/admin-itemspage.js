@@ -1,15 +1,23 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const editItemModalElement = document.getElementById('editItemModal'); // DOM element
-    const editItemModal = new bootstrap.Modal(editItemModalElement); // Bootstrap modal object
+    const editItemModalElement = document.getElementById('editItemModal'); 
+    const editItemModal = new bootstrap.Modal(editItemModalElement);
+    const addItemModalElement = document.getElementById('addItemModal'); 
+    const addItemModal = new bootstrap.Modal(addItemModalElement); 
     const editItemForm = document.getElementById('editItemForm');
-    const addItemModalElement = document.getElementById('addItemModal'); // DOM element
-    const addItemModal = new bootstrap.Modal(addItemModalElement); // Bootstrap modal object
     const addItemForm = document.getElementById('addItemForm');
     const manualCloseModalButton = document.getElementById('manualCloseModalButton');
     const categorySelect = document.getElementById('category');
     const subCategorySelect = document.getElementById('subCategory');
     const deleteItemButtons = document.querySelectorAll('.delete-item-btn');
 
+    addItemModalElement.addEventListener('hidden.bs.modal', function () {
+        addItemForm.reset();
+    });
+    
+    editItemModalElement.addEventListener('hidden.bs.modal', function () {
+        editItemForm.reset();
+    });
+    
     deleteItemButtons.forEach(button => {
         button.addEventListener('click', function (event) {
             event.preventDefault();
@@ -53,24 +61,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    
-    addItemModalElement.addEventListener('hidden.bs.modal', function () {
-        addItemForm.reset();
-    });
-    
-    editItemModalElement.addEventListener('hidden.bs.modal', function () {
-        editItemForm.reset();
-    });
-    
-    manualCloseModalButton.addEventListener('click', function() {
-        editItemModal.hide();
-    });
+
 
     document.querySelectorAll('.edit-btn').forEach(button => {
         button.addEventListener('click', function () {
             const row = this.closest('tr');
-            const itemId = row.getAttribute('data-item-id'); // Ensure each row has a 'data-item-id' attribute
-            const itemName = row.cells[1].innerText; // Adjust cell indices based on your table structure
+            const itemId = row.getAttribute('data-item-id'); 
+            const itemName = row.cells[1].innerText; 
             const itemCategory = row.cells[2].innerText;
             const itemSubCategory = row.cells[3].innerText;
             const itemSize = row.cells[4].innerText;
@@ -84,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('editUnitPrice').value = itemPrice;
             document.getElementById('editStock').value = itemStock;
             
-            // Set the correct category in the dropdown
             document.querySelectorAll('#editCategory option').forEach(option => {
                 if (option.value.toLowerCase() === itemCategory.toLowerCase().replace(/\s+/g, '')) {
                     option.selected = true;
@@ -147,8 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     categorySelect.addEventListener('change', function() {
         const selectedCategory = this.value;
-        subCategorySelect.innerHTML = '<option value="">Select a sub-category</option>'; // Reset sub-category dropdown
-        subCategorySelect.disabled = true; // Keep disabled until data is loaded
+        subCategorySelect.innerHTML = '<option value="">Select a sub-category</option>'; 
+        subCategorySelect.disabled = true; 
 
         if (selectedCategory) {
             fetch(`/api/subcategories/${selectedCategory}`, {
@@ -160,7 +156,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(subCategories => {
                 subCategories.forEach(subCategory => {
                     const option = document.createElement('option');
-                    //option.value = subCategory.id; 
                     option.textContent = subCategory; 
                     subCategorySelect.appendChild(option);
                 });

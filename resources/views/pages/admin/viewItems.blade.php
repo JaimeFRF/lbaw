@@ -6,6 +6,8 @@
 @endsection
 
 @section('content')
+@include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
 <div class="d-flex align-items-center">
     <h2 class="flex-grow-1 text-center">All Items</h2>
     <button type="button" class="btn btn-outline-dark me-5" data-bs-toggle="modal" data-bs-target="#addItemModal">Add Item</button>
@@ -37,9 +39,7 @@
           <td class="text-center">{{$item->size}}</td>            
           <td class="text-center">{{$item->price}}€</td>
           <td class="text-center">{{$item->stock}}</td>
-          <td class="text-center">
-            <button class="btn btn-warning edit-btn">Edit</button>
-          </td>
+          <td class="text-center"><button class="edit-btn btn btn-warning" data-bs-toggle="modal" data-bs-target="#editItemModal">Edit</button></td>
           <td class="text-center">
               <button id="delete" data-item-id={{$item->id}} class="btn btn-outline-danger btn-sm delete-item-btn">
                   <i class="fa fa-times"></i>
@@ -145,9 +145,7 @@
       <div class="modal-content">
           <div class="modal-header">
               <h5 class="modal-title" id="editItemModalLabel">Edit Item</h5>
-              <button type="button" class="btn btn-secondary" id="manualCloseModalButton" aria-label="Close">
-                  <i class="fas fa-times"></i>
-              </button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
               <form id="editItemForm">
@@ -199,11 +197,10 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" defer></script>
 <script src="{{ asset('js/admin-itemspage.js') }}"></script>
 @endsection
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 @endsection
    

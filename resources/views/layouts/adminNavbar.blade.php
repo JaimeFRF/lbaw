@@ -9,6 +9,11 @@
       <!-- User features -->
       <div class="navbar-nav text-white d-flex flex-row">   
     
+        <a title="Orders" class="m-3 me-4" href="{{ route('orders') }}">
+          <i class="fas fa-clipboard text-white fs-5 bar-icon"></i>
+          <span class="text-white">Orders</span>
+        </a> 
+        
         <a title="Items" class="m-3 me-4" href="{{ route('items') }}">
             <i class="fa fa-th text-white fs-5 bar-icon"></i>
             <span class="text-white">Items</span>

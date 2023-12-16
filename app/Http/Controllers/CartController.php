@@ -31,7 +31,6 @@ class CartController extends Controller
         
         $cart = Cart::findOrFail($id);
 
-        Log::info($cart);
 
         //$this->authorize('show', $cart);  
 
@@ -61,7 +60,6 @@ class CartController extends Controller
                 }
             }
             unset($cartItem);
-            Log::info("items", $cart);
             $items = $cart;
             Session::put('cart', $cart);
         }
@@ -75,7 +73,6 @@ class CartController extends Controller
                     $item->picture = asset('images/default-product-image.png');
                 }
             }
-            Log::info($items);
         }
 
         return view('pages.carts', [

@@ -47,7 +47,8 @@ Route::post('/checkout', [PurchaseController::class, 'checkout'])->name('checkou
 Route::get('/success', [PurchaseController::class, 'success'])->name('checkout.success');
 Route::get('/cancel', [PurchaseController::class, 'cancel'])->name('checkout.cancel');
 Route::delete('/purchase/delete/{id}', [PurchaseController::class, 'cancelPurchase']);
-
+Route::post('/admin-update-order', [PurchaseController::class, 'updateOrder']);
+Route::get('/admin-get-order-address-info/{orderId}', [PurchaseController::class , 'getOrderAddressInfo']);
 //Admin
 Route::get('/admin-home', [AdminController::class, 'viewHome'])->name('admin-home');
 Route::get('/admin-add-item', [AdminController::class, 'addItem'])->name('addItem');
@@ -56,13 +57,13 @@ Route::get('/admin-view-admins',[AdminController::class, 'viewAdmins'])->name('v
 Route::get('/items', [AdminController::class, 'viewItems'])->name('items');
 Route::delete('admin-delete-user/{id}', [AdminController::class, 'deleteUser']);
 Route::post('admin-ban-user/{id}',[AdminController::class, 'banUser']);
-// UPDATAR COM PATH
 Route::post('/admin-update-user/{id}', [AdminController::class, 'updateUser']);
 Route::post('/admin-add-user',[AdminController::class, 'createUser']);
 Route::post('/admin-add-admin',[AdminController::class, 'addAdmin']);
 Route::post('/admin-update-admin/{id}', [AdminController::class, 'updateAdmin']);
 Route::delete('admin-delete-admin/{id}', [AdminController::class, 'deleteAdmin']);
 Route::post('/admin-update-item/{id}', [AdminController::class, 'updateItem']);
+Route::get('/orders', [AdminController::class, 'viewOrders'])->name('orders');
 
 
 

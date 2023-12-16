@@ -3,6 +3,8 @@
 @section('css')
     <link href="{{ url('css/shop.css') }}" rel="stylesheet">
     <link href="{{ url('css/home.css') }}" rel="stylesheet">
+    <link href="{{ url('css/contextual_help.css') }}" rel="stylesheet">
+
 @endsection
 
 @section('scripts')

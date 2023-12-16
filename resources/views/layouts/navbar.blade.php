@@ -1,3 +1,7 @@
+@section('css')
+    <link href="{{ url('css/contextual_help.css') }}" rel="stylesheet">
+@endsection
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
   <div class="container-fluid jusityf-content-between">
     <a class="navbar-brand" href="{{route('home')}}"> <span class="fs-2 ms-4">Antiquus</span> </a>
@@ -42,10 +46,14 @@
           <!-- Search bar -->
           <form class="d-flex" method = "POST" action = "{{route('search')}}">
             @csrf
-            <input class="form-control me-2" type="search" name="search" placeholder="Search for a specific product...">
+            <input class="form-control me-2" type="search" name="search" placeholder="Search for a specific product..." onmouseover="getContextualHelp('search', 'search-help').show()" onmouseout="getContextualHelp('search', 'search-help').hide()">
           </form>
+          <div id="search-help" class="help-message">Your password should be at least 10 characters long.</div>
+
         </li>
+
       </ul>
+
 
       <!-- User features -->
       <div class="navbar-nav d-flex flex-row">
@@ -111,3 +119,5 @@
     </div>
   </div>
 </nav>
+
+<script src="{{asset('js/contextual-help.js')}}"defer></script>

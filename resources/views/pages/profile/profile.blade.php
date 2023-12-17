@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="{{ url('js/profile.js') }}"></script>
 
 @section('content')

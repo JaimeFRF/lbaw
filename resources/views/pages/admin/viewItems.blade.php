@@ -6,7 +6,9 @@
 @endsection
 
 @section('content')
+
 <div class="d-flex align-items-center">
+  @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
     <h2 class="flex-grow-1 text-center">All Items</h2>
     <button type="button" class="btn btn-outline-dark me-5" data-bs-toggle="modal" data-bs-target="#addItemModal">Add Item</button>
 </div>
@@ -27,7 +29,7 @@
     </thead>
     <tbody>
       @foreach ($items as $item)
-        <tr>
+        <tr data-item-id={{$item->id}}>
           <td class="text-center">{{$item->id}}</td>
           {{-- <td><img src='path_to_image1'></td> --}}
           <td class="text-center">{{$item->name}}</td>
@@ -37,13 +39,11 @@
           <td class="text-center">{{$item->size}}</td>            
           <td class="text-center">{{$item->price}}€</td>
           <td class="text-center">{{$item->stock}}</td>
-          <td class="text-center">
-            <button class="btn btn-warning edit-btn">Edit</button>
-          </td>
+          <td class="text-center"><button class="edit-btn btn btn-warning" data-bs-toggle="modal" data-bs-target="#editItemModal">Edit</button></td>
           <td class="text-center">
               <button id="delete" data-item-id={{$item->id}} class="btn btn-outline-danger btn-sm delete-item-btn">
                   <i class="fa fa-times"></i>
-                  <span>Delete</span>
+                  <span>Remove Stock</span>
               </button>
           </td>
         </tr>
@@ -145,9 +145,7 @@
       <div class="modal-content">
           <div class="modal-header">
               <h5 class="modal-title" id="editItemModalLabel">Edit Item</h5>
-              <button type="button" class="btn btn-secondary" id="manualCloseModalButton" aria-label="Close">
-                  <i class="fas fa-times"></i>
-              </button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
               <form id="editItemForm">
@@ -190,6 +188,7 @@
               </form>
           </div>
           <div class="modal-footer">
+            {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalButton">Close</button> --}}  
               <button form="editItemForm" class="btn btn-primary update-item-btn">Update Item</button>
           </div>
       </div>
@@ -198,11 +197,10 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" defer></script>
 <script src="{{ asset('js/admin-itemspage.js') }}"></script>
 @endsection
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 @endsection
    

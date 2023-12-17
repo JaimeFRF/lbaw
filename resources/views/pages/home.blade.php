@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('css')
-<link href="{{ url('css/home.css') }}" rel="stylesheet">
+    <link href="{{ url('css/home.css') }}" rel="stylesheet">
+    <link href="{{ url('css/contextual_help.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -56,10 +57,6 @@
                 nextEl: '.swiper-button-next',
                 prevEl: '.swiper-button-prev',
             },
-            // pagination: {
-            //     el: '.swiper-pagination',
-            //     clickable: true,
-            // },
             scrollbar: {
                 el: '.swiper-scrollbar',
             }

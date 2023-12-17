@@ -2,7 +2,7 @@
   <ol class="breadcrumb">
 
     @foreach($breadcrumbs as $name => $path)
-      <li class="breadcrumb-item"><a href="{{$path}}">{{$name}}</a></li>
+      <li class="breadcrumb-item" style="font-weight: bold; text-decoration: underline"><a href="{{$path}}">{{$name}}</a></li>
     @endforeach
 
     @if($current != null)

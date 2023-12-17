@@ -10,7 +10,9 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Image;
 use App\Models\Wishlist;
+use App\Models\Location;
 use App\Models\User;
+use App\Models\Admin;
 use App\Models\Item;
 use App\Models\Cart;
 use App\Models\Purchase;
@@ -25,7 +27,9 @@ class ProfileController extends Controller{
    * @param id Id of the User whose profile will be edited
    */
     public function show(){
+      
       $user = User::find(Auth::id());
+      $this->authorize('show', $user);
 
       $image = Image::where('id_user', $user->id)->first();
 
@@ -45,16 +49,21 @@ class ProfileController extends Controller{
       }
 
       $carts_orders = [];
+      $locations_orders = [];
       $orders = Purchase::where('id_user', $user->id)->where('purchase_status', '!=', 'Delivered')->get();
       foreach($orders as $order){
         $carts_orders[] = Cart::find($order->id_cart);
+        $locations_orders[] = Location::find($order->id_location);
       }
 
       $carts_purchases = [];
+      $purchases_locations = [];
       $purchases = Purchase::where('id_user', $user->id)->where('purchase_status', '=', 'Delivered')->get();
       foreach($purchases as $purchase){
         $carts_purchases[] = Cart::find($purchase->id_cart);
+        $purchases_locations[] = Location::find($purchase->id_location);
       }
+
 
       return view('pages.profile.profile', [
         'user' => $user,
@@ -62,8 +71,10 @@ class ProfileController extends Controller{
         'profile_picture' => $profile_picture,
         'orders' => $orders,
         'carts_orders' => $carts_orders,
+        'locations_orders' => $locations_orders,
         'purchases' => $purchases,
         'carts_purchases' => $carts_purchases,
+        'purchases_locations' => $purchases_locations,
         'breadcrumbs' => ['Home' => route('home')],
         'current' => 'Profile'
       ]);
@@ -71,7 +82,8 @@ class ProfileController extends Controller{
 
     public function showEditProfile() {
       $user = User::find(Auth::id());
-        
+      $this->authorize('show', $user);
+
       return view('pages.profile.edit_profile', [
         'breadcrumbs' => ['Profile' => route('profile'), 'EditProfile' => route('edit_profile')],
         'current' => null, 
@@ -158,7 +170,6 @@ class ProfileController extends Controller{
         ]);
   
         if ($request->hasFile('imageInput')) {
-          Log::Info("entrei");
           $file = $request->file('imageInput');
           $extension = $file->getClientOriginalExtension();
           

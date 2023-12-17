@@ -54,14 +54,16 @@ class ItemController extends Controller
         return response()->json($item);
     }
 
-    public function delete(Request $request, $id)
+    public function removeStock(Request $request, $id)
     {
         $item = Item::find($id);
 
         // Check if the current user is authorized to delete this item.
         // $this->authorize('delete', $item);^
 
-        $item->delete();
+        $item->stock = 0;
+        $item->save();
+
         return response()->json($item);
     }
     
@@ -148,7 +150,8 @@ class ItemController extends Controller
         $user_input = $request->input('search');    
         $results = Item::whereRaw("tsvectors @@ plainto_tsquery('english', ?)", [$user_input])
             ->orWhere('name', 'like', '%'.$user_input.'%')
-            ->get();
+            ->paginate(1);
+        $results->appends(['search' => $user_input]);
     
         return view('pages.shop', ['items' => $results, 'breadcrumbs' => ['Home' => route('home')], 'current' => 'Search']);
     }
@@ -213,10 +216,10 @@ class ItemController extends Controller
     
         if($category == "all"){
             if($color == "None"){
-                $items = Item::orderBy($table, $string)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->get();
+                $items = Item::orderBy($table, $string)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->paginate(1);
             }
             else{
-                $items = Item::where('color','=', $color)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string)->get();
+                $items = Item::where('color','=', $color)->where('stock', $helper, 0)->where('price', '>=', $rangeMin)->where('price', '<=', $rangeMax)->orderBy($table, $string)->paginate(1);
             }
         }
         else if($category == "sneakers"){
@@ -230,7 +233,7 @@ class ItemController extends Controller
                 ->where('stock', $helper, 0)
                 ->where('price', '>=', $rangeMin)
                 ->where('price', '<=', $rangeMax)
-                ->orderBy($table, $string)->get();
+                ->orderBy($table, $string)->paginate(1);
             }
             else{
                 $items = Item::join($category, function($join) use ($category, $shoe_sizes, $color, $shoe_size_string) {
@@ -243,7 +246,7 @@ class ItemController extends Controller
                 ->where('stock', $helper, 0)
                 ->where('price', '>=', $rangeMin)
                 ->where('price', '<=', $rangeMax)
-                ->orderBy($table, $string)->get();
+                ->orderBy($table, $string)->paginate(1);
             }
         }
         else{
@@ -256,7 +259,7 @@ class ItemController extends Controller
                         ->where('stock', $helper, 0)
                         ->where('price', '>=', $rangeMin)
                         ->where('price', '<=', $rangeMax)
-                        ->orderBy($table, $string)->get();
+                        ->orderBy($table, $string)->paginate(1);
                 }
                 else{
                     $items = Item::join($category, function($join) use ($category, $subCategory) {
@@ -267,7 +270,7 @@ class ItemController extends Controller
                         ->where('price', '>=', $rangeMin)
                         ->where('price', '<=', $rangeMax)
                         ->where('color', '=', $color) 
-                        ->orderBy($table, $string)->get();
+                        ->orderBy($table, $string)->paginate(1);
                 }   
             }
             else{
@@ -276,7 +279,7 @@ class ItemController extends Controller
                         ->where('stock', $helper, 0)
                         ->where('price', '>=', $rangeMin)
                         ->where('price', '<=', $rangeMax)
-                        ->orderBy($table, $string)->get();
+                        ->orderBy($table, $string)->paginate(1);
                 }
                 else{
                     $items = Item::join($category, 'item.id', '=', $category . '.id_item')
@@ -284,10 +287,21 @@ class ItemController extends Controller
                         ->where('price', '>=', $rangeMin)
                         ->where('price', '<=', $rangeMax)
                         ->where('color', '=', $color) 
-                        ->orderBy($table, $string)->get();
+                        ->orderBy($table, $string)->paginate(1);
                 }
             }
         }
+
+        $items->appends([
+            'color' => $color,
+            'category' => $category,
+            'shoeSizes' => $request->input('shoeSizes'),
+            'subcategorySelect' => $subCategory,
+            'orderBy' => $orderBy,
+            'inStock' => $inStock,
+            'price' => $price,
+        ]);
+
         return view('pages.shop', ['items' => $items, 'breadcrumbs' => ['Home' => route('home')], 'current' => ucfirst($category)]);
     }    
 
@@ -299,13 +313,12 @@ class ItemController extends Controller
         $request->session()->put('price', "null");
         $request->session()->put('inStock', true); 
 
-
-        $items = Item::all();
+        $items = Item::paginate(1);
         return view('pages.shop', ['items' => $items, 'breadcrumbs' => ['Home' => route('home')], 'current' => 'All']);
     }
 
     public function shop() {
-        $items = Item::all();
+        $items = Item::paginate(1); 
 
         return view('pages.shop', [
             'breadcrumbs' => ['Home' => route('home')],
@@ -316,7 +329,7 @@ class ItemController extends Controller
 
     public function shopFilter(Request $request, $filter) {
         $request->session()->put('category', $filter);
-        $items = Item::join($filter, 'item.id', '=', $filter . '.id_item')->get();
+        $items = Item::join($filter, 'item.id', '=', $filter . '.id_item')->paginate(1);
 
         return view('pages.shop', [
              'items' => $items,

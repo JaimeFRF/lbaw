@@ -26,6 +26,8 @@ class CartItemController extends Controller
     if (Auth::check()) {
         // cart for authenticated users
         $cart = Auth::user()->cart()->first();
+        $this->authorize('addItem', $cart);
+
         $items = $cart->products()->get();
         $item = Item::find($itemId);
 
@@ -123,29 +125,29 @@ class CartItemController extends Controller
 
     public function removeFromCart(Request $request,$productId)
     {
-    $cart = Auth::user()->cart()->first();
+        $cart = Auth::user()->cart()->first();
 
-    if (!$cart) {
-        return redirect()->back()->with('error', 'Cart not found.');
-    }
+        if (!$cart) {
+            return redirect()->back()->with('error', 'Cart not found.');
+        }
 
-    $item = $cart->products()->find($productId);
+        $item = $cart->products()->find($productId);
 
-    if (!$item) {
-        return redirect()->back()->with('error', 'Item not found in cart.');
-    }
+        if (!$item) {
+            return redirect()->back()->with('error', 'Item not found in cart.');
+        }
 
-    // Decrement the quantity
-    $currentQuantity = $item->pivot->quantity;
-    if ($currentQuantity > 1) {
-        // If more than one, just decrement
-        $cart->products()->updateExistingPivot($productId, ['quantity' => $currentQuantity - 1]);
-    } else {
-        // If only one, remove the item completely
-        $cart->products()->detach($productId);
-    }
+        // Decrement the quantity
+        $currentQuantity = $item->pivot->quantity;
+        if ($currentQuantity > 1) {
+            // If more than one, just decrement
+            $cart->products()->updateExistingPivot($productId, ['quantity' => $currentQuantity - 1]);
+        } else {
+            // If only one, remove the item completely
+            $cart->products()->detach($productId);
+        }
 
-    return redirect()->back()->with('success', 'Item updated in cart.');
+        return redirect()->back()->with('success', 'Item updated in cart.');
     }
 
 public function countItemCart(Request $request){

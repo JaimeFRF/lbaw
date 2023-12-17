@@ -62,16 +62,15 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             const row = document.querySelector(`tr[data-user-id="${adminId}"]`);
-            row.cells[1].innerText = data.updatedAdminData.name;  
-            row.cells[2].innerText = data.updatedAdminData.username;  
-            row.cells[3].innerText = data.updatedAdminData.email;  
-            row.cells[4].innerText = data.updatedAdminData.phone; 
+            row.cells[1].innerText = data.updatedAdminData.username;  
+            row.cells[2].innerText = data.updatedAdminData.email;  
+            row.cells[3].innerText = data.updatedAdminData.phone; 
 
             editAdminModal.hide();
             Swal.fire({
                 icon: 'success',
-                title: 'User Updated',
-                text: 'The user has been updated successfully!',
+                title: 'Admin Updated',
+                text: 'The admin has been updated successfully!',
             });
         })
         .catch(error => {
@@ -87,13 +86,11 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function () {
             const row = this.closest('tr');
             const adminId = row.getAttribute('data-user-id');
-            const adminName = row.cells[1].innerText;
-            const adminUsername = row.cells[2].innerText;
-            const adminEmail = row.cells[3].innerText;
-            const adminPhone = row.cells[4].innerText;
+            const adminUsername = row.cells[1].innerText;
+            const adminEmail = row.cells[2].innerText;
+            const adminPhone = row.cells[3].innerText;
 
             document.getElementById('editAdminId').value = adminId;
-            document.getElementById('editAdminName').value = adminName;
             document.getElementById('editAdminUsername').value = adminUsername;
             document.getElementById('editAdminEmail').value = adminEmail;
             document.getElementById('editAdminPhone').value = adminPhone;

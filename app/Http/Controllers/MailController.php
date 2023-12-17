@@ -40,7 +40,7 @@ class MailController extends Controller
                 'token' => $token,
             ];
             Log::info($request->type);
-            $templateName = $request->type == 1 ? 'setPassword' : 'example';
+            $templateName = $request->type == 1 ? 'setPassword' : 'recoverPassword';
             try {
                 Mail::to($request->email)->send(new MailModel($mailData, $templateName));                
                 $status = 'Success!';

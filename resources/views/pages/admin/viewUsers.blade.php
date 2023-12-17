@@ -2,6 +2,8 @@
 
 @section('css')
 <link href="{{ url('css/admin.css') }}" rel="stylesheet">
+<link href="{{ url('css/contextual_help.css') }}" rel="stylesheet">
+
 @endsection
 
 @section('content')
@@ -10,7 +12,8 @@
     @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
     <h2 class="flex-grow-1 text-center">All Users</h2>
     <div class="flex-grow-1 me-3">
-        <input class="form-control me-2" type="search" id="userSearchInput" placeholder="Search Users" aria-label="Search">
+        <input class="form-control me-2" type="search" name="userSearchInput" id="userSearchInput" placeholder="Search Users" aria-label="Search" onmouseover="getContextualHelp('userSearchInput', 'search-help').show()" onmouseout="getContextualHelp('userSearchInput', 'search-help').hide()">
+        <div id="search-help" class="help-message">Search using either username, email or phone number</div>
     </div>
     <button type="button" class="btn btn-outline-dark me-5" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
 </div>
@@ -132,6 +135,8 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" defer></script>
 <script src="{{ asset('js/admin-userspage.js') }}"></script>
+<script src="{{asset('js/contextual-help.js')}}"defer></script>
+
 @endsection
 
 @section('scripts')

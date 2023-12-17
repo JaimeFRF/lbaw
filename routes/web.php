@@ -64,6 +64,8 @@ Route::post('/admin-update-admin/{id}', [AdminController::class, 'updateAdmin'])
 Route::delete('admin-delete-admin/{id}', [AdminController::class, 'deleteAdmin']);
 Route::post('/admin-update-item/{id}', [AdminController::class, 'updateItem']);
 Route::get('/orders', [AdminController::class, 'viewOrders'])->name('orders');
+Route::get('/search-users', [AdminController::class, 'search']);
+Route::get('/get-all-users',[AdminController::class, 'getAllUsers']);
 
 
 

@@ -1,15 +1,16 @@
 <a class="dropdown-item notifi-item" href="#">
-   @if($notification->notification_type === 'SALE')
+    <button class="btn btn-outline-danger btn-sm" type="button" style="max-height: 30px; position: absolute; left:90%" onclick="removeNotification({{ $notification->id }})"><i class="fa fa-times"></i></button>  
+    @if($notification->notification_type === 'SALE')
     @if($notification->item && $notification->item->images->isNotEmpty() && $notification->item->images->first()->filepath)
         <img src="{{ asset($notification->item->images->first()->filepath) }}">
     @else
         <img src="{{ asset('images/default-product-image.png') }}">
     @endif
-   <div class="text">
+    <div class="text">
       <h4>{{$notification->item->name}}</h4>
       <p>{{ $notification->description}}</p>
     </div>
- 
+
     @elseif($notification->notification_type === 'RESTOCK')
       @if($notification->item && $notification->item->images->isNotEmpty() && $notification->item->images->first()->filepath)
           <img src="{{ asset($notification->item->images->first()->filepath) }}">

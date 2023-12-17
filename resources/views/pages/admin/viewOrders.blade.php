@@ -16,7 +16,7 @@
         <thead>
             <tr>
                 <th class="text-center">ID</th>
-                <th class="text-center">Name</th>
+                <th class="text-center">Username</th>
                 <th class="text-center">Price</th>
                 <th class="text-center">Purchase Date</th>
                 <th class="text-center">Delivery Date</th>
@@ -27,7 +27,7 @@
             @foreach ($orders as $order)
                 <tr class="order-row" data-order-id={{$order->id}}>
                     <td class="text-center">{{$order->id}}</td>
-                    <td class="text-center">John Doe</td>
+                    <td class="text-center">{{$order->user->username}}</td>
                     <td class="text-center">{{$order->price}}€</td>
                     <td class="text-center">{{$order->purchase_date}}</td>
                     <td class="text-center">{{$order->delivery_date}}</td>

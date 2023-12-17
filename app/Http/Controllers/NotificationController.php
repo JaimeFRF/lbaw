@@ -77,4 +77,12 @@ class NotificationController extends Controller
     
         return response()->json(['message' => 'Order update notification sent successfully']);
     }
+
+    public function deleteNotification($id)
+    {
+        $notification = Notification::find($id);
+        $notification->delete();
+        return response()->json(['message' => 'Notification deleted successfully']);
+    }
+    
 }

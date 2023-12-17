@@ -75,9 +75,9 @@ Route::get('/about', [StaticController::class, 'about'])->name('about');
 
 // Items on home-page
 Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
-Route::post('/search', [ItemController::class, 'search'])->name('search');
-Route::post('/search/filter', [ItemController::class, 'filter'])->name('filter');
-Route::post('/search/clearFilters', [ItemController::class, 'clearFilters'])->name('clearFilters');
+Route::get('/clearFilters', [ItemController::class, 'clearFilters'])->name('clearFilters');
+Route::get('/search', [ItemController::class, 'search'])->name('search');
+Route::get('/search/filter', [ItemController::class, 'filter'])->name('filter');
 
 //Wishlist
 Route::put('users/wishlist/product/{id_item}', [WishlistController::class, 'add']);

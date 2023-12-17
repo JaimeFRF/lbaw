@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     var deleteButtons = document.querySelectorAll('#cancel-button');
+    let detailsButtons = document.querySelectorAll('#detailsButton');
 
     deleteButtons.forEach(function(button) {
         button.addEventListener('click', function(e) {
@@ -19,4 +20,35 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
+
+    detailsButtons.forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+    
+            let orderNumber = this.getAttribute('data-order-number');
+            let date = this.getAttribute('data-date');
+            let value = this.getAttribute('data-value');
+            let status = this.getAttribute('data-status');
+            let address = this.getAttribute('data-address');
+            let city = this.getAttribute('data-city');
+            let country = this.getAttribute('data-country');
+            let postalCode = this.getAttribute('data-postalCode');
+            let items = JSON.parse(this.getAttribute('data-items'));
+
+            Swal.fire({
+                title: 'Details for Order ' + orderNumber,
+                html: 'Date: ' + date + '<br>' + 
+                'Value: ' + value + '<br>' + 
+                'Status: ' + status + '<br>' +
+                'Address: ' + address + '<br>' +
+                'City: ' + city + '<br>' +
+                'Country: ' + country + '<br>' +
+                'Postal Code: ' + postalCode + '<br>' +
+                'Items: ' + items.map(item => item.name + ' (' + item.quantity + ')').join(', '),
+                icon: 'info',
+                confirmButtonText: 'Close',
+            });
+        });
+    });
 });
+

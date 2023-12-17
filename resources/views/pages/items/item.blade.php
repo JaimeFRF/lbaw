@@ -6,7 +6,9 @@
 @endsection
 
 @section('content')
-@include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+    @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -151,29 +153,23 @@
 
             <div class="col-md m-1">
                 <div class="d-flex flex-column align-items-center">
-                    <div id="carouselExampleIndicators" class="carousel slide carousel-no-zoom" data-ride="carousel" style="width: 90%; height: 90%; margin: auto;">
-                            <div class="carousel-inner">
+
+                    <div class="swiper-container" style="width: 600px; height: 600px; overflow: hidden;">
+                        <div class="swiper-wrapper">
                             @if($item->images()->get()->isEmpty())
-                                <div class="carousel-item active">
+                                <div class="swiper-slide">
                                     <img src="{{ asset('images/default-product-image.png') }}" class="d-block carImg">
                                 </div>
                             @else
                                 @foreach($item->images()->get() as $image)
-                                    <div class="carousel-item {{$loop->first ? 'active' : ''}}">
+                                    <div class="swiper-slide">
                                         <img src="{{ asset($image->filepath) }}" class="d-block carImg">
                                     </div>
                                 @endforeach
                             @endif
-                            </div>
-                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
                         </div>
+                    </div>
+
 
                     <div class="d-flex justify-content-between mt-3">
                         <script src="{{asset('js/item-page_script.js')}}" defer></script>
@@ -197,6 +193,22 @@
             </div>
         </div>
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var mySwiper = new Swiper('.swiper-container', {
+                // Optional: Add other Swiper options here
+                loop: true, // Enable continuous loop
+                navigation: {
+                    nextEl: '.carousel-control-next',
+                    prevEl: '.carousel-control-prev',
+                },
+                autoplay: {
+                    delay: 5000, // Set the autoplay delay in milliseconds (e.g., 5000 for 5 seconds)
+                },
+            });
+        });
+    </script>
+
 @endsection
 
 

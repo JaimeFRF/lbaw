@@ -1,3 +1,7 @@
+@section('css')
+    <link href="{{ url('css/contextual_help.css') }}" rel="stylesheet">
+@endsection
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
   <div class="container-fluid jusityf-content-between">
     <a class="navbar-brand" href="{{route('home')}}"> <span class="fs-2 ms-4">Antiquus</span> </a>
@@ -15,37 +19,40 @@
               Categories
             </button>
             <nav class="dropdown-menu">
-              <form method="POST" action="{{route('shopFilter', ['filter' => 'shirt'])}}">
+              <form method="GET" action="{{route('shopFilter', ['filter' => 'shirt'])}}">
                   @csrf
                   <button type="submit" class="dropdown-item">Shirt</button>
               </form>
-              <form method="POST" action="{{route('shopFilter', ['filter' => 'tshirt'])}}">
+              <form method="GET" action="{{route('shopFilter', ['filter' => 'tshirt'])}}">
                   @csrf
                   <button type="submit" class="dropdown-item">T-Shirt</button>
               </form>
-              <form method="POST" action="{{route('shopFilter', ['filter' => 'jacket'])}}">
+              <form method="GET" action="{{route('shopFilter', ['filter' => 'jacket'])}}">
                   @csrf
                   <button type="submit" class="dropdown-item">Jacket</button>
               </form>
-              <form method="POST" action="{{route('shopFilter', ['filter' => 'jeans'])}}">
+              <form method="GET" action="{{route('shopFilter', ['filter' => 'jeans'])}}">
                   @csrf
                   <button type="submit" class="dropdown-item">Jeans</button>
               </form>
-              <form method="POST" action="{{route('shopFilter', ['filter' => 'sneakers'])}}">
+              <form method="GET" action="{{route('shopFilter', ['filter' => 'sneakers'])}}">
                   @csrf
                   <button type="submit" class="dropdown-item">sneakers</button>
               </form>
             </nav>
           </div>
         </li>
+
         <li class="w-100">
-          <!-- Search bar -->
-          <form class="d-flex" method = "POST" action = "{{route('search')}}">
+          <form class="d-flex" method = "GET" action = "{{route('search')}}">
             @csrf
-            <input class="form-control me-2" type="search" name="search" placeholder="Search for a specific product...">
+            <input class="form-control me-2" type="search" name="search" placeholder="Search for a specific product..." onmouseover="getContextualHelp('search', 'search-help').show()" onmouseout="getContextualHelp('search', 'search-help').hide()">
           </form>
+          <div id="search-help" class="help-message">Search for a product name or description</div>
         </li>
+
       </ul>
+
 
       <!-- User features -->
       <div class="navbar-nav d-flex flex-row">
@@ -111,3 +118,5 @@
     </div>
   </div>
 </nav>
+
+<script src="{{asset('js/contextual-help.js')}}"defer></script>

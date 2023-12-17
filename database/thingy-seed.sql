@@ -89,7 +89,7 @@ CREATE TABLE purchase(
     delivery_date DATE NOT NULL CONSTRAINT delivery_date_check CHECK (delivery_date >= purchase_date),
     purchase_status PurchaseStatus NOT NULL,
     payment_method PaymentMethod NOT NULL,
-    id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+    id_user INTEGER REFERENCES users(id) ON DELETE SET NULL,
     id_location INTEGER NOT NULL REFERENCES location(id),
     id_cart INTEGER NOT NULL REFERENCES cart(id)
 );

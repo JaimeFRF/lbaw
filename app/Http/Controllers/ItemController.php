@@ -54,16 +54,14 @@ class ItemController extends Controller
         return response()->json($item);
     }
 
-    public function removeStock(Request $request, $id)
+    public function delete(Request $request, $id)
     {
         $item = Item::find($id);
 
         // Check if the current user is authorized to delete this item.
         // $this->authorize('delete', $item);^
 
-        $item->stock = 0;
-        $item->save();
-
+        $item->delete();
         return response()->json($item);
     }
     
@@ -98,22 +96,19 @@ class ItemController extends Controller
 
         if(!Auth::check()){
             $userReview = null;
+            $reviews = Review::where('id_item', $id)->get();
         }else{
             $userReview = Review::where('id_item', $id)->where('id_user', Auth::id())->get()->first();
-        }
-        $otherReviews = Review::where('id_item', $id)->where('id_user', '<>', Auth::id())->get();
-
-
-        if(($userReview === null) && ($otherReviews !== null)){
-            $reviews = $otherReviews;
-        }else if($userReview !== null && ($otherReviews === null)){
-            $reviews = $userReview;
-        }
-        else if($userReview === null && ($otherReviews === null)){
-            $reviews = [];
-        }else{
+            $otherReviews = Review::where('id_item', $id)
+            ->where(function ($query) {
+                $query->where('id_user', '<>', Auth::id())
+                      ->orWhereNull('id_user');
+            })
+            ->get();           
             $reviews = collect([$userReview])->concat($otherReviews);
         }
+
+
 
         $userHasNotPurchasedItem = false;
         if(Auth::check()){

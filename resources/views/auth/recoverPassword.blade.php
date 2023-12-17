@@ -13,6 +13,7 @@
             </div>
             <form method="POST" action="/send">
                 @csrf
+                <input type="hidden" name="type" value="0"> 
                 <div class="form-group d-flex flex-column mt-3" id="username">
                     <label for="username"><h6>Username</h6></label>
                     <input class="form-control" id="username" type="text" name="username" placeholder="Username" required>

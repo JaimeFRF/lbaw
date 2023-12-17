@@ -30,15 +30,39 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .then(data => {
+            Swal.fire({
+                title: 'User Added',
+                text: `User ${data.user.username} has been added successfully.`,
+                icon: 'success'
+            }).then((result) => {
+                if (result.value) {
+                    fetch('/send-email-set-password', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            'username': data.user.username,
+                            'email': data.user.email,
+                            'type': 1,
+                        }),
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                            'Content-Type': 'application/json',
+                        },
+                    }).then(response => {
+                        if (response.ok && response.status === 200) {
+                            return response.json();
+                        } else {
+                            throw new Error('Something went wrong');
+                        }
+                    }).then(emailResponseData => {
+                        location.reload();
+                    }).catch(error => {
+                        console.error('There has been a problem with your fetch operation:', error);
+                    });
+                }
+            });
             addUserForm.reset();
             addUserModal.hide();
-            Swal.fire('User Added', `User ${data.username} has been added successfully.`, 'success');
-            location.reload();
-
-        })
-        .catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
+    });
     });
 
 

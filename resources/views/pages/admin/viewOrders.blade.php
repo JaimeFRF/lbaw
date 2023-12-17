@@ -112,50 +112,6 @@
     </div>
 </div>
 
-
-
-{{-- 
-<div class="modal fade" id="addOrderModal" tabindex="-1" aria-labelledby="addOrderModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addOrderModalLabel">Add Order</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>          
-            </div>
-            <div class="modal-body">
-                <form id="addOrderForm">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="customerName" class="form-label">Customer Name</label>
-                        <input type="text" class="form-control" id="customerName" name="customer_name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="orderAmount" class="form-label">Price</label>
-                        <input type="number" class="form-control" id="orderAmount" name="amount" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="orderStatus" class="form-label">Status</label>
-                        <select class="form-select" id="orderStatus" name="status" required>
-                            <option value="Processing">Processing</option>
-                            <option value="Packed">Packed</option>
-                            <option value="Sent">Sent</option>
-                            <option value="Delivered">Delivered</option>                        
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="orderAddress" class="form-label">Address</label>
-                        <input type="text" class="form-control" id="orderAddress" name="address" required>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="submit" form="addOrderForm" class="btn btn-primary">Add Order</button>
-            </div>
-        </div>
-    </div>
-</div> --}}
-
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" defer></script>
 <script src="{{ asset('js/admin-orderspage.js') }}" defer></script>

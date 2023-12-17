@@ -5,10 +5,13 @@
 @endsection
 
 @section('content')
-@include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
 
 <div class="d-flex align-items-center">
+    @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
     <h2 class="flex-grow-1 text-center">All Users</h2>
+    <div class="flex-grow-1 me-3">
+        <input class="form-control me-2" type="search" id="userSearchInput" placeholder="Search Users" aria-label="Search">
+    </div>
     <button type="button" class="btn btn-outline-dark me-5" data-bs-toggle="modal" data-bs-target="#addUserModal">Add User</button>
 </div>
 <div>
@@ -24,7 +27,7 @@
                 <th class="text-center"  colspan="3">Actions</th> 
             </tr>
         </thead>
-        <tbody>
+        <tbody class="tbody">
           @foreach ($users as $user)
               <tr data-user-id={{$user->id}}>
                   <td class="text-center">{{$user->id}}</td>

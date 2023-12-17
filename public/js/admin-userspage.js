@@ -85,7 +85,60 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-    
+document.getElementById('userSearchInput').addEventListener('input', function() {
+    let searchQuery = this.value;
+    console.log(searchQuery);
+    if (searchQuery.length > 0  ) {
+        fetch(`/search-users?query=${encodeURIComponent(searchQuery)}`)
+            .then(response => response.json())
+            .then(users => {
+                const tableBody = document.querySelector('.tbody');
+                tableBody.innerHTML = ''; 
+
+                if (users.length === 0) {
+                    tableBody.innerHTML = '<tr><td colspan="6" class="text-center">No users found</td></tr>';
+                } else {
+                    users.forEach(user => {
+                        const row = `
+                            <tr data-user-id=${user.id}>
+                                <td class="text-center">${user.id}</td>
+                                <td class="text-center">${user.name}</td>
+                                <td class="text-center">${user.username}</td>
+                                <td class="text-center">${user.email}</td>
+                                <td class="text-center">${user.phone}</td>
+                                <td id="status" class="text-center">${user.is_banned ? "Banned" : "Active"}</td>
+                                <!-- Add other cells for actions like edit, delete, etc. -->
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+                }
+            }).catch(error => console.error('Error:', error));
+    }
+    else {
+        fetch(`/get-all-users`)
+            .then(response => response.json())
+            .then(users => {
+                const tableBody = document.querySelector('.tbody');
+                tableBody.innerHTML = '';     
+                users.forEach(user => { 
+                    const row = `
+                        <tr data-user-id=${user.id}>
+                            <td class="text-center">${user.id}</td>
+                            <td class="text-center">${user.name}</td>
+                            <td class="text-center">${user.username}</td>
+                            <td class="text-center">${user.email}</td>
+                            <td class="text-center">${user.phone}</td>
+                            <td id="status" class="text-center">${user.is_banned ? "Banned" : "Active"}</td>
+                            <!-- Add other cells for actions like edit, delete, etc. -->
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
     
     manualCloseModalButton.addEventListener('click', function() {
         editUserModal.hide();

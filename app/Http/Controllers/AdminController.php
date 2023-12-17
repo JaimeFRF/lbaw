@@ -38,22 +38,41 @@ class AdminController extends Controller
 
         return view('pages.admin.addItem');
     }
+
+    public function getAllUsers(){
+
+        $admin = Auth::guard('admin')->user();
+        $this->authorize('view', $admin);
+
+        return User::orderBy('id')->get();
+    }
+
     public function viewUsers(){
-      $users = User::orderBy('id')->get();
+        
+        $users = $this->getAllUsers(); 
 
-      $admin = Auth::guard('admin')->user();
-      $this->authorize('view', $admin);
-
-      return view('pages.admin.viewUsers',['users' => $users, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Users']);
+        return view('pages.admin.viewUsers',['users' => $users, 'breadcrumbs' => ['Admin Home' => route('admin-home')], 'current' => 'Users']);
     }
+
+    public function getAllAdmins(){
+
+        $admin = Auth::guard('admin')->user();
+        $this->authorize('view', $admin);
+
+        return Admin::orderBy('id')->get();
+    }
+
     public function viewAdmins(){
-      $admins = Admin::orderBy('id')->get();
-
-      $admin = Auth::guard('admin')->user();
-      $this->authorize('view', $admin);
-
-      return view('pages.admin.viewAdmins',['admins' => $admins, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Admins']);
+        
+        $admins = $this->getAllAdmins();
+    
+        return view('pages.admin.viewAdmins', [
+            'admins' => $admins, 
+            'breadcrumbs' => ['AdminHome' => route('admin-home')], 
+            'current' => 'Admins'
+        ]);
     }
+    
 
     public function viewOrders(Request $request)
     {
@@ -348,4 +367,14 @@ public function updateItem(Request $request, $id)
         return response()->json(['message' => 'Admin deleted'], 200);
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        
+        $users = User::where('name', 'LIKE', "%{$query}%")
+                     ->orWhere('email', 'LIKE', "%{$query}%")
+                     ->get();
+    
+        return response()->json($users);
+    }
 }

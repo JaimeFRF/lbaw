@@ -11,8 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (var i = 0; i < checkboxes.length; i++) {
             values.push(checkboxes[i].value);
         }
-        console.log(values);
-        document.getElementById('shoeSizes').value = values.join(','); // Set the shoeSizes input field value
+        document.getElementById('shoeSizes').value = values.join(','); 
     }
 
     document.getElementById('filter').addEventListener('submit', getCheckedValues);
@@ -20,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function populateSubcategory(category) {
 
-        if (category === 'sneaker') {
+        if (category === 'sneakers') {
             subcategorySelect.style.display = 'none';
 
             subcategoryDiv.innerHTML = '';
@@ -56,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
             defaultOption.text = 'Choose a subcategory...';
             subcategorySelect.appendChild(defaultOption);
 
-            if (category !== 'all' && category !== 'None'  && category !== 'sneaker') {
+            if (category !== 'all' && category !== 'None'  && category !== 'sneakers') {
                 fetch('/api/subcategories/' + category)
                     .then(response => response.json())
                     .then(data => {

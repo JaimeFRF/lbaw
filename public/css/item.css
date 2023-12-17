@@ -1,9 +1,27 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+
+h4 {
+    font-family: 'Roboto', sans-serif; 
+    font-weight: 700; 
+    font-size: 1.5em; 
+}
 .rating {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: row-reverse;
 }
+
+.size #numeric-rating {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px; /* Set a fixed pixel size for more control */
+    font-weight: 400; /* Normal weight */
+    vertical-align: middle; /* Align vertically with the stars */
+    margin-left: 5px; /* Adjust spacing as needed */
+    display: inline-block; /* Treat as block-level element for better control */
+    line-height: 1; /* Adjust line height to align better */
+}
+
 
 .rating input {
     display: none;

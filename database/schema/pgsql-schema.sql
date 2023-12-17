@@ -588,10 +588,10 @@ CREATE TABLE lbaw2366.shirt (
 
 
 --
--- Name: sneaker; Type: TABLE; Schema: lbaw2366; Owner: -
+-- Name: sneakers; Type: TABLE; Schema: lbaw2366; Owner: -
 --
 
-CREATE TABLE lbaw2366.sneaker (
+CREATE TABLE lbaw2366.sneakers (
     id_item integer NOT NULL,
     shoe_size integer NOT NULL,
     CONSTRAINT shoe_size_check CHECK ((shoe_size >= 0))
@@ -825,11 +825,11 @@ ALTER TABLE ONLY lbaw2366.shirt
 
 
 --
--- Name: sneaker sneaker_pkey; Type: CONSTRAINT; Schema: lbaw2366; Owner: -
+-- Name: sneakers sneakers_pkey; Type: CONSTRAINT; Schema: lbaw2366; Owner: -
 --
 
-ALTER TABLE ONLY lbaw2366.sneaker
-    ADD CONSTRAINT sneaker_pkey PRIMARY KEY (id_item);
+ALTER TABLE ONLY lbaw2366.sneakers
+    ADD CONSTRAINT sneakers_pkey PRIMARY KEY (id_item);
 
 
 --
@@ -1079,11 +1079,11 @@ ALTER TABLE ONLY lbaw2366.shirt
 
 
 --
--- Name: sneaker sneaker_id_item_fkey; Type: FK CONSTRAINT; Schema: lbaw2366; Owner: -
+-- Name: sneakers sneakers_id_item_fkey; Type: FK CONSTRAINT; Schema: lbaw2366; Owner: -
 --
 
-ALTER TABLE ONLY lbaw2366.sneaker
-    ADD CONSTRAINT sneaker_id_item_fkey FOREIGN KEY (id_item) REFERENCES lbaw2366.item(id) ON DELETE CASCADE;
+ALTER TABLE ONLY lbaw2366.sneakers
+    ADD CONSTRAINT sneakers_id_item_fkey FOREIGN KEY (id_item) REFERENCES lbaw2366.item(id) ON DELETE CASCADE;
 
 
 --

@@ -28,6 +28,7 @@ class User extends Authenticatable
         'email',
         'username',
         'password',
+        'is_banned',
         'id_cart',
         //'id_location',
     ];

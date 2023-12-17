@@ -3,6 +3,7 @@
 @section('css')
     <link href="{{ url('css/shop.css') }}" rel="stylesheet">
     <link href="{{ url('css/home.css') }}" rel="stylesheet">
+
 @endsection
 
 @section('scripts')
@@ -11,14 +12,20 @@
 
 
 @section('content')
+
     <script>
         window.currentSessionCategory = '{{ session('category') }}';
     </script>
+    
     <div class="shop">
         <div class="row">
-            <div class="col-md-3">
 
-            <form class="row card-body d-flex align-items-center justify-content-between" method="POST" action="{{route('filter')}}" id="filter" >                    
+            <div class="col-md-3">
+            @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
+
+            <form class="row card-body d-flex align-items-center justify-content-between" method="GET" action="{{route('filter')}}" id="filter" >                    
+
                     @csrf
                     <input type="hidden" id="shoeSizes" name="shoeSizes">
 
@@ -29,7 +36,7 @@
                         <option value="tshirt" {{ session('category') == 'tshirt' ? 'selected' : '' }}>T-Shirts</option>
                         <option value="jacket" {{ session('category') == 'jacket' ? 'selected' : '' }}>Jackets</option>
                         <option value="jeans" {{ session('category') == 'jeans' ? 'selected' : '' }}>Jeans</option>
-                        <option value="sneaker" {{ session('category') == 'sneaker' ? 'selected' : '' }}>Sneakers</option>
+                        <option value="sneakers" {{ session('category') == 'sneakers' ? 'selected' : '' }}>Sneakers</option>
                     </select>
 
                     
@@ -89,7 +96,7 @@
 
                 </form>
 
-                <form class="row card-body d-flex align-items-center justify-content-between" method="POST" action="{{route('clearFilters')}}" id="filter" >                    
+                <form class="row card-body d-flex align-items-center justify-content-between" method="GET" action="{{route('clearFilters')}}" id="filter" >                    
                     @csrf
 
                     <button id="clearButton" class="btn btn-secondary">
@@ -100,9 +107,9 @@
             </div>
 
             <!-- Product Section (Right) -->
-            <div class="col-md-9">
+            <div class="col-md-9" id="parent-div">
                 <li class="w-100 mx auto">
-                    <form class="d-flex" method = "POST" action = "{{route('search')}}">
+                    <form class="d-flex" method = "GET" action = "{{route('search')}}">
                         @csrf
                         <input class="form-control me-2" type="search" name="search" placeholder="Search for a specific product...">
                     </form>
@@ -114,7 +121,12 @@
                         @include('partials.item-list', ['items' => $items])
                     </div>
                 </div>
+
+                <div class="pagination-container">
+                    {{ $items->links('partials.common.navigation') }}
+                </div>
             </div>
+
         </div>
     </div>
     <script src="{{ url('js/shop.js') }}" defer></script>

@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
 @section('css')
-<link href="{{ url('css/login_register.css') }}" rel="stylesheet">
+    <link href="{{ url('css/login_register.css') }}" rel="stylesheet">
+    <link href="{{ url('css/contextual_help.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -18,24 +19,30 @@
                 <div class="user-login-fields">
                     <div class="form-group d-flex flex-column mt-3">
                         <label for="email"><h6>Email</h6></label>
-                        <input class="form-control" id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
+                        <input class="form-control"type="email" name="email" value="{{ old('email') }}" required autofocus onmouseover="getContextualHelp('password', 'email-help').show()" onmouseout="getContextualHelp('password', 'email-help').hide()">
                         @if ($errors->has('email'))
                             <span class="error">
                                 {{ $errors->first('email') }}
                             </span>
                         @endif
                     </div>
+                    <div id="email-help" class="help-message">Choose the email you want associate with your account.</div>
+
 
                     <div class="form-group d-flex flex-column mt-3" id="pwd">
                         <label for="password"><h6>Password</h6></label>
-                        <input class="form-control" id="password" type="password" name="password" required>
-                        <span title="Show password">
+                        <div class="input-group">
+                            <input class="form-control" type="password" name="password" required onmouseover="getContextualHelp('password', 'password-help').show()" onmouseout="getContextualHelp('password', 'password-help').hide()">
+                            <span title="Show password" class="toggle-password input-group-text">
                             <i class="bi bi-eye-slash" id="togglePassword"></i>
-                        </span>
+                            </span>
+                        </div>
                         @if ($errors->has('password'))
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                         @endif
                     </div>
+                    <div id="password-help" class="help-message">Your password should be at least 10 characters long.</div>
+
 
                     <div class="form-group d-flex justify-content-between align-items-center mt-2">
                         <label>
@@ -60,7 +67,7 @@
                 <div class="user-login-fields">
                     <div class="form-group d-flex flex-column mt-3">
                         <label for="email"><h6>Email</h6></label>
-                        <input class="form-control" id="email" type="email" name="email" value="{{ old('email') }}" required autofocus>
+                        <input class="form-control" type="email" name="email" value="{{ old('email') }}" required autofocus>
                         @if ($errors->has('email'))
                             <span class="error">
                                 {{ $errors->first('email') }}
@@ -70,13 +77,22 @@
 
                     <div class="form-group d-flex flex-column mt-3" id="pwd">
                         <label for="password"><h6>Password</h6></label>
-                        <input class="form-control" id="password" type="password" name="password" required>
-                        <span title="Show password">
-                            <i class="bi bi-eye-slash" id="togglePassword"></i>
-                        </span>
+                        <div class="input-group">
+                            <input class="form-control" type="password" name="password" required>
+                            <span title="Show password" class="toggle-password input-group-text">
+                                <i class="bi bi-eye-slash" id="togglePassword"></i>
+                            </span>
+                        </div>
                         @if ($errors->has('password'))
                             <span class="text-danger">{{ $errors->first('password') }}</span>
                         @endif
+                    </div>
+
+                    <div class="form-group d-flex justify-content-between align-items-center mt-2">
+                        <label>
+                            <input class="m-1" type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
+                        </label>
+                        <a class="btn p-0 btn-link mt-8 text-decoration-underline mb-2 ml-2" href="{{route('recover_password')}}">Forgot your password?</a>
                     </div>
 
                     <div class="form-group d-flex justify-content-center mt-3">
@@ -108,7 +124,11 @@
                 userTab.classList.remove('active');
             });
         });
+
     </script>
+    <script src="{{asset('js/login.js')}}"defer></script>
+    <script src="{{asset('js/contextual-help.js')}}"defer></script>
+
         
 
 @endsection

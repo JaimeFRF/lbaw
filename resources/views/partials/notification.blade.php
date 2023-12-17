@@ -7,7 +7,7 @@
     @endif
    <div class="text">
       <h4>{{$notification->item->name}}</h4>
-      <p>{{ $notification->description }}</p>
+      <p>{{ $notification->description}}</p>
     </div>
  
     @elseif($notification->notification_type === 'RESTOCK')
@@ -18,7 +18,7 @@
       @endif
     <div class="text">
       <h4>{{$notification->item->name}}</h4>
-      <p>{{ $notification->description }}</p>
+      <p>{{ $notification->description}}</p>
     </div>
 
     @elseif ($notification->notification_type == 'PRICE_CHANGE')

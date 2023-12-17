@@ -1,4 +1,5 @@
 /* --------------------------------------------- ADMIN ADD ITEM ------------------------------------------------------------*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@400;700&display=swap');
 
 h2{
     font-family: 'Playfair Display', serif;
@@ -10,6 +11,8 @@ h2{
 
 body{
     background-color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
 }
 
 .add {
@@ -59,5 +62,10 @@ body{
 .custom-dark-blue:hover, .custom-dark-blue:active {
     background-color: #003366; 
     border-color: #003366;
+}
+
+.table tbody tr:hover {
+    cursor: pointer; 
+    background-color: #d9d9d9; 
 }
 

@@ -1,10 +1,8 @@
 window.onload = function() {
-    // Code to update the navbar goes here
     updateNavbar();
 };
 
 function updateNavbar() {
-    // Example: Fetch and update the cart item count
     
     fetch('/api/cart/count', {
         method: 'GET',
@@ -20,7 +18,6 @@ function updateNavbar() {
         return response.json();
     })
     .then(data => {
-        console.log("Item count:", data.count);
         document.getElementById("ItemCartNumber").innerText = "(" + data.count +")";
     })
     .catch(error => {

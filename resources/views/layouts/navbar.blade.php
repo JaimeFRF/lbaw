@@ -128,7 +128,7 @@
         <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
         <div class="text">
           <h4>${notificationData.item.name}</h4>
-          <p>${notification->description }</p>
+          <p>${notificationData->description }</p>
         </div>
       `;
     } else if (notificationData.notification_type === 'RESTOCK') {
@@ -136,7 +136,7 @@
         <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
         <div class="text">
           <h4>${notificationData.item.name}</h4>
-          <p>${notification->description }</p>
+          <p>${notificationData->description }</p>
         </div>
       `;
     } else if (notificationData.notification_type === 'ORDER_UPDATE') {
@@ -144,7 +144,7 @@
         <img src="public/images/shop.png" alt="img">
         <div class="text">
           <h4>Purchase (${notificationData.id_purchase}) State Changed</h4>
-          <p>${notification->description }</p>
+          <p>${notificationData->description }</p>
         </div>
       `;
     } else if (notificationData.notification_type === 'PRICE_CHANGE') {
@@ -152,7 +152,7 @@
         <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
         <div class="text">
           <h4>${notificationData.item.name}</h4>
-          <p>${notification->description }</p>
+          <p>${notificationData->description }</p>
         </div>
       `;
     }

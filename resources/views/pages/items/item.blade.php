@@ -118,7 +118,7 @@
                     @endif
 
                     <div class="reviews-section">
-                        <h3  class= "mt-3" >Reviews:</h3>
+                        <h3 class= "mt-3" >Reviews:</h3>
                         @foreach($itemReviews as $review)
                             @if($review != null)
                                 @if($review->user != null && !$review->user->is_banned)
@@ -228,5 +228,4 @@
     </script>
 
 @endsection
-
 

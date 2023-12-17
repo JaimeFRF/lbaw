@@ -147,7 +147,7 @@ foreach($wishlist as $item){
 
     if (notificationData.notification_type === 'SALE') {
       newNotificationElement.innerHTML = `
-        <img src="img/notification_icon.png" alt="img">
+        <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
         <div class="text">
           <h4>${notificationData.item.name}</h4>
           <p>${notificationData.description}</p>
@@ -155,7 +155,7 @@ foreach($wishlist as $item){
       `;
     } else if (notificationData.notification_type === 'RESTOCK') {
       newNotificationElement.innerHTML = `
-        <img src="img/notification_icon.png" alt="img">
+        <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
         <div class="text">
           <h4>${notificationData.item.name}</h4>
           <p>${notificationData.description}</p>
@@ -163,10 +163,18 @@ foreach($wishlist as $item){
       `;
     } else if (notificationData.notification_type === 'ORDER_UPDATE') {
       newNotificationElement.innerHTML = `
-        <img src="img/notification_icon.png" alt="img">
+        <img src="public/images/shop.png" alt="img">
         <div class="text">
-          <h4>Purchase ${notificationData.id_purchase} State Changed</h4>
-          <p>${notificationData.description}</p>
+          <h4>Purchase (${notificationData.id_purchase}) State Changed</h4>
+          <p>${notificationData.description }</p>
+        </div>
+      `;
+    } else if (notificationData.notification_type === 'PRICE_CHANGE') {
+      newNotificationElement.innerHTML = `
+        <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
+        <div class="text">
+          <h4>${notificationData.item.name}</h4>
+          <p>${notificationData.description }</p>
         </div>
       `;
     }
@@ -175,5 +183,5 @@ foreach($wishlist as $item){
 
   }
 </script>
-
 <script src="{{asset('js/contextual-help.js')}}"defer></script>
+

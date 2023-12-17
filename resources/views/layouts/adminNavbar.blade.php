@@ -6,7 +6,6 @@
       <span class="navbar-toggler-icon"></span>
     </button>
 
-      <!-- User features -->
       <div class="navbar-nav text-white d-flex flex-row">   
     
         <a title="Orders" class="m-3 me-4" href="{{ route('orders') }}">

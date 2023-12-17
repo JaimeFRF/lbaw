@@ -14,9 +14,8 @@ use App\Models\Jeans;
 use App\Models\Shirt;
 use App\Models\Sneakers;
 use App\Models\Tshirt;
-
-
-
+use App\Models\Image;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
@@ -358,7 +357,7 @@ class ItemController extends Controller
             'price' => 'required|numeric',
             'stock' => 'required|integer',
             'photos' => 'sometimes|array',
-            'photos.*' => 'sometimes|file|image|max:2048',
+            'photos.*' => 'sometimes|file|image',
         ]);
 
         if ($validator->fails()) {
@@ -387,11 +386,22 @@ class ItemController extends Controller
         $category->{$request->category . '_type'} = $request->input('subCategory');
         $category->save();
 
-        // Handle file uploads if photos are included
         if ($request->has('photos')) {
             foreach ($request->file('photos') as $photo) {
-                // Save each photo and associate it with the item
-                // You might want to store the file path in the database, or use a service like Laravel's File Storage
+                $extension = $photo->getClientOriginalExtension();
+                
+                $filename = uniqid() . '.' . $extension;
+                
+                if (Storage::disk('public')->exists('images/' . $filename)) {
+                    Storage::disk('public')->delete($filename);
+                }
+        
+                $path = $photo->storeAs('images', $filename, 'public');
+                
+                $newImage = new Image;
+                $newImage->id_item = $item->id;
+                $newImage->filepath = 'storage/images/' . $filename;
+                $newImage->save();
             }
         }
 

@@ -22,6 +22,7 @@ use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\NotificationController;
 
 
 /*
@@ -41,6 +42,10 @@ Route::get('/', function () {
 });
 Route::get('/home', [HomeController::class, 'home'])->name('home');
 
+//Notifications
+Route::get('/get-notifications',  [NotificationController::class, 'getNotifications'])->name('notifications');
+Route::post('/send-item-notification', [NotificationController::class, 'sendItemNotification']) ->name('send.item.notification');
+Route::post('/send-order-notification', [NotificationController::class, 'sendOrderNotification'])->name('send.order.notification');
 
 //Purchase
 Route::post('/checkout', [PurchaseController::class, 'checkout'])->name('checkout');

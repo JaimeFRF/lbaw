@@ -26,6 +26,10 @@
         <h4 class="fw-bold">Cart Total</h4>
         <table>
         <tr>
+            <td>Subtotal</td>
+            <td id="total-price" >{{ number_format($items->sum(function($item) { return $item->price * $item->pivot->quantity; }), 2) }}€</td>
+        </tr>
+        <tr>
             <td>Shipping</td>
             <td>Free</td>
         </tr>
@@ -46,11 +50,11 @@
         
         </table>
     </div>
+
     <div class="cart-buttons d-flex justify-content-around">
         <form method="post" action="{{ route('checkout') }}">
             @csrf
             <div class="cart-buttons d-flex justify-content-around">
-                <!-- You can add hidden input for the items -->
                 <input type="hidden" id="items" name="items" value="{{ json_encode($items) }}">
                 @if (Auth::check())
                     <button type="submit" class="btn btn-success m-2 w-100" {{ count($items) == 0 ? 'disabled' : '' }}>

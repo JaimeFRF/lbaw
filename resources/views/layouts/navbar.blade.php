@@ -13,6 +13,7 @@
     <div class="collapse navbar-collapse  " id="navbarSupportedContent">
       <script src="{{asset('js/navbar_script.js')}}"defer></script>
       <ul class="navbar-nav ms-auto mb-lg-0 align-items-center w-30  me-4">
+
         <li>
           <div class="dropdown m-2">
             <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" data-toggle="dropdown">
@@ -64,30 +65,19 @@
           @endif
 
           @php
-            $n = DB::table('notification')->where('id_user', '=', Auth::id())->count();
+              $notifications = Auth::user()->notifications;
+              $notificationsCount = count($notifications);
           @endphp
 
           <a title="Notifications" class="m-3 me-4" id="notificationsDropdown" data-bs-toggle="dropdown">   
-            <i class="fa fa-bell text-white fs-5 bar-icon"></i>
-            <span class="text-white">(2)</span>
-          </a>
+          <i class="fa fa-bell text-white fs-5 bar-icon"></i>
+          <span class="text-white" id="notificationsCount">({{ $notificationsCount }})</span>
+        </a>
 
-          <div class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="notificationsDropdown">
-            <a class="dropdown-item notifi-item" href="#">
-              <img src="img/notification_icon.png" alt="img">
-              <div class="text">
-                <h4>Purchase ID State Changed</h4>
-                <p>The state of your purchase has been updated to <strong> NAME OF THE STATE </strong></p>
-              </div> 
-            </a>
-            <a class="dropdown-item notifi-item" href="#">
-              <!-- Another notification item -->
-              <img src="img/calças.png" alt="img">
-              <div class="text">
-                <h4>Calças vintage</h4>
-                <p>The item is in <strong> stock</strong></p>
-              </div> 
-            </a>
+          <div  id="notificationsContainer" class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="notificationsDropdown">
+              @foreach($notifications as $notification)
+                  @include('partials.notification',['notification' => $notification])
+              @endforeach
           </div>
           
           <a title="Cart" class="m-3 me-4" href="{{route('cart')}}">
@@ -119,4 +109,58 @@
   </div>
 </nav>
 
+<script>
+  const pusher = new Pusher(pusherAppKey, {
+    cluster: pusherCluster,
+    encrypted: true
+  });
+
+  const channel = pusher.subscribe('lbaw2366');
+  channel.bind('new-notification', function(notification) {
+    console.log('New notification received!');
+    updateNavbarUI(notification);
+  });
+
+  function updateNavbarUI(notificationData) {
+    const notificationsContainer = document.getElementById('notificationsContainer');
+    const notificationsCountElement = document.getElementById('notificationsCount');
+
+    const currentCount = parseInt(notificationsCountElement.innerText);
+    const newCount = currentCount + 1;
+    notificationsCountElement.innerText = newCount;
+
+    const newNotificationElement = document.createElement('a');
+    newNotificationElement.classList.add('dropdown-item', 'notifi-item');
+    newNotificationElement.href = '#'; 
+
+    if (notificationData.notification_type === 'SALE') {
+      newNotificationElement.innerHTML = `
+        <img src="img/notification_icon.png" alt="img">
+        <div class="text">
+          <h4>${notificationData.item.name}</h4>
+          <p>${notificationData.description}</p>
+        </div>
+      `;
+    } else if (notificationData.notification_type === 'RESTOCK') {
+      newNotificationElement.innerHTML = `
+        <img src="img/notification_icon.png" alt="img">
+        <div class="text">
+          <h4>${notificationData.item.name}</h4>
+          <p>${notificationData.description}</p>
+        </div>
+      `;
+    } else if (notificationData.notification_type === 'ORDER_UPDATE') {
+      newNotificationElement.innerHTML = `
+        <img src="img/notification_icon.png" alt="img">
+        <div class="text">
+          <h4>Purchase ${notificationData.id_purchase} State Changed</h4>
+          <p>${notificationData.description}</p>
+        </div>
+      `;
+    }
+
+    notificationsContainer.appendChild(newNotificationElement);
+  }
+
+</script>
 <script src="{{asset('js/contextual-help.js')}}"defer></script>

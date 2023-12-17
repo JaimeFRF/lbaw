@@ -68,7 +68,7 @@ class AdminController extends Controller
     
         return view('pages.admin.viewAdmins', [
             'admins' => $admins, 
-            'breadcrumbs' => ['AdminHome' => route('admin-home')], 
+            'breadcrumbs' => ['Admin Home' => route('admin-home')], 
             'current' => 'Admins'
         ]);
     }
@@ -372,7 +372,7 @@ public function updateItem(Request $request, $id)
         $query = $request->input('query');
         
         $users = User::where('name', 'LIKE', "%{$query}%")
-                     ->orWhere('email', 'LIKE', "%{$query}%")
+                     ->orWhere('email', 'LIKE', "%{$query}%")->orWhere('username', 'LIKE', "%{$query}%")
                      ->get();
     
         return response()->json($users);

@@ -102,12 +102,23 @@ document.getElementById('userSearchInput').addEventListener('input', function() 
                         const row = `
                             <tr data-user-id=${user.id}>
                                 <td class="text-center">${user.id}</td>
-                                <td class="text-center">${user.name}</td>
+                                <td class="text-center">${user.name ? user.name : ''}</td>
                                 <td class="text-center">${user.username}</td>
                                 <td class="text-center">${user.email}</td>
                                 <td class="text-center">${user.phone}</td>
                                 <td id="status" class="text-center">${user.is_banned ? "Banned" : "Active"}</td>
-                                <!-- Add other cells for actions like edit, delete, etc. -->
+                                <td class="text-center">
+                                    <button id="ban" data-user-id=${user.id} class="btn btn-danger">
+                                        <span>Ban</span>
+                                    </button>
+                                </td>
+                                <td class="text-center"><button class="btn btn-warning edit-btn">Edit</button></td>
+                                <td class="text-center">
+                                    <button id="delete" data-user-id=${user.id} class="btn btn-outline-danger btn-sm">
+                                        <i class="fa fa-times"></i>
+                                        <span>Delete</span>
+                                    </button>
+                                </td>
                             </tr>
                         `;
                         tableBody.innerHTML += row;
@@ -130,7 +141,18 @@ document.getElementById('userSearchInput').addEventListener('input', function() 
                             <td class="text-center">${user.email}</td>
                             <td class="text-center">${user.phone}</td>
                             <td id="status" class="text-center">${user.is_banned ? "Banned" : "Active"}</td>
-                            <!-- Add other cells for actions like edit, delete, etc. -->
+                            <td class="text-center">
+                                    <button id="ban" data-user-id=${user.id} class="btn btn-danger">
+                                        <span>Ban</span>
+                                    </button>
+                            </td>
+                            <td class="text-center"><button class="btn btn-warning edit-btn">Edit</button></td>
+                            <td class="text-center">
+                                <button id="delete" data-user-id=${user.id} class="btn btn-outline-danger btn-sm">
+                                    <i class="fa fa-times"></i>
+                                    <span>Delete</span>
+                                </button>
+                            </td>
                         </tr>
                     `;
                     tableBody.innerHTML += row;

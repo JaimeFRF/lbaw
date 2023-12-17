@@ -16,10 +16,10 @@
 
         <li>
           <div class="dropdown m-2">
-            <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" data-toggle="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" onclick="toggleDropdown()">
               Categories
             </button>
-            <nav class="dropdown-menu">
+            <nav class="dropdown-menu" id="dropdownMenu" style="display: none;">
               <form method="GET" action="{{route('shopFilter', ['filter' => 'shirt'])}}">
                   @csrf
                   <button type="submit" class="dropdown-item">Shirt</button>
@@ -74,7 +74,7 @@
           <span class="text-white" id="notificationsCount">({{ $notificationsCount }})</span>
         </a>
 
-          <div  id="notificationsContainer" class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="notificationsDropdown">
+          <div  id="notificationsContainer" class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="notificationsDropdown" >
               @foreach($notifications as $notification)
                   @include('partials.notification',['notification' => $notification])
               @endforeach
@@ -160,7 +160,8 @@
     }
 
     notificationsContainer.appendChild(newNotificationElement);
-  }
 
+  }
 </script>
+
 <script src="{{asset('js/contextual-help.js')}}"defer></script>

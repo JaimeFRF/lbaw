@@ -47,22 +47,23 @@ Route::post('/checkout', [PurchaseController::class, 'checkout'])->name('checkou
 Route::get('/success', [PurchaseController::class, 'success'])->name('checkout.success');
 Route::get('/cancel', [PurchaseController::class, 'cancel'])->name('checkout.cancel');
 Route::delete('/purchase/delete/{id}', [PurchaseController::class, 'cancelPurchase']);
-
+Route::post('/admin-update-order', [PurchaseController::class, 'updateOrder']);
+Route::get('/admin-get-order-address-info/{orderId}', [PurchaseController::class , 'getOrderAddressInfo']);
 //Admin
 Route::get('/admin-home', [AdminController::class, 'viewHome'])->name('admin-home');
 Route::get('/admin-add-item', [AdminController::class, 'addItem'])->name('addItem');
 Route::get('/admin-view-users',[AdminController::class, 'viewUsers'])->name('view-users');
 Route::get('/admin-view-admins',[AdminController::class, 'viewAdmins'])->name('view-admins');
-
 Route::get('/items', [AdminController::class, 'viewItems'])->name('items');
 Route::delete('admin-delete-user/{id}', [AdminController::class, 'deleteUser']);
 Route::post('admin-ban-user/{id}',[AdminController::class, 'banUser']);
-// UPDATAR COM PATH
 Route::post('/admin-update-user/{id}', [AdminController::class, 'updateUser']);
 Route::post('/admin-add-user',[AdminController::class, 'createUser']);
 Route::post('/admin-add-admin',[AdminController::class, 'addAdmin']);
 Route::post('/admin-update-admin/{id}', [AdminController::class, 'updateAdmin']);
 Route::delete('admin-delete-admin/{id}', [AdminController::class, 'deleteAdmin']);
+Route::post('/admin-update-item/{id}', [AdminController::class, 'updateItem']);
+Route::get('/orders', [AdminController::class, 'viewOrders'])->name('orders');
 
 
 
@@ -110,7 +111,7 @@ Route::controller(CartItemController::class)->group(function () {
 Route::controller(ItemController::class)->group(function () {
     Route::put('/api/cards/{card_id}', 'create');
     Route::post('/api/item/{id}', 'update');
-    Route::delete('/api/item/{id}', 'delete');
+    Route::delete('/api/item/{id}', 'removeStock');
     Route::get('/api/item/{id}', 'show');
     Route::get('/shop', 'shop')->name('shop');
     Route::get('/shop/{filter}', 'shopFilter')->name('shopFilter');

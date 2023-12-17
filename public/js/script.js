@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') // CSRF token
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') 
                 },
                 body: JSON.stringify({
                     itemId: itemId,
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 quantityElement.innerText = data.newQuantity;
                 if (data.newQuantity == 0) {
-                    const productRow = cartItem.closest('tr'); // Assuming each cart item is in its own table row
+                    const productRow = cartItem.closest('tr'); 
                     productRow.remove();
                 }
                 document.getElementById('total-price').innerText = data.totalPrice + '€';

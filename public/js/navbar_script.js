@@ -1,5 +1,4 @@
 window.onload = function() {
-    // Code to update the navbar goes here
     updateNavbar();
 };
 

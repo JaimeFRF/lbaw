@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (var i = 0; i < checkboxes.length; i++) {
             values.push(checkboxes[i].value);
         }
-        document.getElementById('shoeSizes').value = values.join(','); // Set the shoeSizes input field value
+        document.getElementById('shoeSizes').value = values.join(','); 
     }
 
     document.getElementById('filter').addEventListener('submit', getCheckedValues);

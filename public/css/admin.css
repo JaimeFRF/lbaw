@@ -64,3 +64,7 @@ body{
     border-color: #003366;
 }
 
+.table tbody tr:hover {
+    cursor: pointer; 
+    background-color: #d9d9d9; 
+}

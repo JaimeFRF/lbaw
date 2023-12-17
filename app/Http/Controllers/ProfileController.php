@@ -170,7 +170,6 @@ class ProfileController extends Controller{
         ]);
   
         if ($request->hasFile('imageInput')) {
-          Log::Info("entrei");
           $file = $request->file('imageInput');
           $extension = $file->getClientOriginalExtension();
           

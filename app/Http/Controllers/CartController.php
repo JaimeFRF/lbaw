@@ -29,7 +29,6 @@ class CartController extends Controller
     {        
         $cart = Cart::findOrFail($id);
 
-        Log::info($cart);
 
         //$this->authorize('show', $cart);  
 

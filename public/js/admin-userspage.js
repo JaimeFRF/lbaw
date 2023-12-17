@@ -43,9 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     updateButton.addEventListener('click', function(event) {
+        
         event.preventDefault();
 
         const userId = document.getElementById('editUserId').value;
+        console.log(userId)
         const formData = new FormData(editUserForm);
         formData.append('id_user', userId);
 
@@ -118,13 +120,11 @@ document.addEventListener('DOMContentLoaded', function() {
             let confirmTitle, confirmText, confirmButtonText, successMessage;
 
             if (status === 0) {
-                // User is not banned, ask to ban
                 confirmTitle = 'Confirm Ban';
                 confirmText = 'Are you sure you want to ban this user?';
                 confirmButtonText = 'Yes, ban!';
                 successMessage = 'User Banned';
             } else {
-                // User is already banned, ask to unban
                 confirmTitle = 'Confirm Unban';
                 confirmText = 'Are you sure you want to unban this user?';
                 confirmButtonText = 'Yes, unban!';
@@ -140,7 +140,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 cancelButtonText: 'Cancel',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Perform the ban/unban action based on status
                     const actionURL = '/admin-ban-user/';
                     fetch(actionURL + userID, {
                         method: 'POST',
@@ -186,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 cancelButtonText: 'Cancel',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // User confirmed, proceed with the delete action
                     fetch('/admin-delete-user/' + userId, {
                         method: 'DELETE',
                         headers: {

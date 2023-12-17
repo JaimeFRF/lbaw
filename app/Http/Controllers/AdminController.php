@@ -17,6 +17,8 @@ use App\Models\Jeans;
 use App\Models\Shirt;
 use App\Models\sneakers;
 use App\Models\Tshirt;
+use App\Models\Purchase;
+use App\Models\Location;
 use Illuminate\Support\Facades\DB;
 
 
@@ -52,11 +54,23 @@ class AdminController extends Controller
 
       return view('pages.admin.viewAdmins',['admins' => $admins, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Admins']);
     }
-    public function viewStock() 
+
+    public function viewOrders(Request $request)
     {
         $admin = Auth::guard('admin')->user();
         $this->authorize('view', $admin);
-      return view('pages.admin.viewItemsStock');
+        $orders = Purchase::get();
+        $ordersInfo = array();
+        foreach($orders as $order){
+            $idLocation = $order->id_location;
+            $location = Location::where('id', $idLocation)->get()->first();
+            if ($location) {
+                $order->location = $location; 
+            } else {
+                $order->location = null; 
+            }
+        }
+        return view('pages.admin.viewOrders',['orders' => $orders, 'breadcrumbs' => ['Admin Home' => route('admin-home')], 'current' => 'Orders']);
     }
 
     public function viewItems() 
@@ -87,28 +101,7 @@ class AdminController extends Controller
         )
         ->get();
 
-    // $allItems = [];
-    // foreach ($items as $item) {
-    //     $allItems[] = [
-    //         'id' => $item->id,
-    //         'name' => $item->name,
-    //         'price' => $item->price,
-    //         'stock' => $item->stock,
-    //         'color' => $item->color,
-    //         'era' => $item->era,
-    //         'fabric' => $item->fabric,
-    //         'description' => $item->description,
-    //         'brand' => $item->brand,
-    //         'category' => $item->category,
-    //         'type' => $item->type,
-    //         'size' => $item->size,
-    //     ];
-    // }
-    // Log::info($allItems);
-    // Log::info($items);
-
-
-        return view('pages.admin.viewItems',['items'=> $items, 'breadcrumbs' => ['AdminHome' => route('admin-home')], 'current' => 'Items']);
+    return view('pages.admin.viewItems',['items'=> $items, 'breadcrumbs' => ['Admin Home' => route('admin-home')], 'current' => 'Items']);
     }
 
     public function deleteUser($id, Request $request)
@@ -140,12 +133,9 @@ class AdminController extends Controller
       return response()->json(['message' => 'User banned'], 200);
     }
 
-    public function upgradeAdmin($id, Request $request){
-      
-    }
 
     public function updateUser(Request $request, $id)
-{
+    {
     $user = User::findOrFail($id);
 
     $auth_admin = Auth::guard('admin')->user();
@@ -161,7 +151,6 @@ class AdminController extends Controller
         'name' => 'nullable|string|max:255',
     ]);
 
-    // -------
     $user->fill($request->only(['name', 'email', 'username']));
     $user->phone = $request->phone;
     $user->save();
@@ -177,6 +166,95 @@ class AdminController extends Controller
         ]
     ], 200);
 }
+
+public function updateItem(Request $request, $id)
+{
+    $item = Item::findOrFail($id);
+
+
+    if (!$item) {
+        return response()->json(['message' => 'Item not found, wrong id'], 404);
+    }
+
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'price' => 'required|numeric',
+        'stock' => 'required|integer',
+        'color' => 'nullable|string|max:255',
+        'era' => 'nullable|string|max:255',
+        'fabric' => 'nullable|string|max:255',
+        'description' => 'nullable|string|max:255',
+        'brand' => 'nullable|string|max:255',
+        'subcategory' => 'nullable|string|max:255',
+    ]);
+    
+    // Update item attributes
+    $item->fill($request->only([
+        'name', 'price', 'stock', 'color', 'era', 'fabric', 'description', 'brand', 'subcategory'
+    ]));
+    
+
+    $item->stock = $request->stock;
+    
+    // Specific attributes for different item types
+    switch ($request->category) {
+        case 'Shirt':
+            $item->shirt()->update([
+                'shirt_type' => $request->type,
+                'size' => $request->size,
+            ]);
+            break;
+        case 'Tshirt':
+            $item->tshirt()->update([
+                'tshirt_type' => $request->type,
+                'size' => $request->size,
+            ]);
+            break;
+        case 'Jacket':
+            $item->jacket()->update([
+                'jacket_type' => $request->type,
+                'size' => $request->size,
+            ]);
+            break;
+        case 'Jeans':
+            $item->jeans()->update([
+                'jeans_type' => $request->type,
+                'size' => $request->size,
+            ]);
+            break;
+        case 'Sneakers':
+            $item->sneakers()->update([
+                'sneakers_type' => $request->type,
+                'size' => $request->size,
+            ]);
+            break;
+        default:
+            // Handle the 'Unknown' category or any other category
+            break;
+    }
+    
+    $item->save();
+    
+    return response()->json([
+        'message' => 'Item info updated',
+        'updatedItemData' => [
+            'name' => $item->name,
+            'price' => $item->price,
+            'stock' => $item->stock,
+            'color' => $item->color,
+            'era' => $item->era,
+            'fabric' => $item->fabric,
+            'description' => $item->description,
+            'brand' => $item->brand,
+            'category' => $request->category,
+            'type' => $request->type,
+            'size' => $request->size,
+            'subcategory' => $request->subcategory,
+        ]
+    ], 200);
+    
+}
+
 
 
     public function createUser(Request $request){

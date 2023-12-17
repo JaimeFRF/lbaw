@@ -132,7 +132,7 @@ CREATE TABLE jacket(
     size TEXT NOT NULL
 );
 
-CREATE TABLE sneaker(
+CREATE TABLE sneakers(
     id_item INTEGER PRIMARY KEY REFERENCES item(id) ON DELETE CASCADE,
     shoe_size INTEGER NOT NULL CONSTRAINT shoe_size_check CHECK (shoe_size >= 0)
 );

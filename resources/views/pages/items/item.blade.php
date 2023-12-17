@@ -6,6 +6,10 @@
 @endsection
 
 @section('content')
+    @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <body data-item-id="{{$item->id}}">
@@ -15,26 +19,24 @@
         <script src="{{asset('js/item-page_script.js')}}" defer></script>
         <div class="row m-5 mt-1">
             <div class="col-md product-info">
-                <p class= "mt-1">Home / CATEGORIA DE ITEM</p>
 
                 <h2 class= "mt-2" id="productName">{{$item->name}}</h2>
 
-                <small class="text-muted">Article: 01234</small>
+                <h4 class="my-4 price"> {{$item->price}} €</h4>
 
-                <h4 class="my-4 price">
-                    <span>Preço</span> {{$item->price}} €
-                </h4>
+                <h5 class="my-4">
+                    <span class="size-label">Size:</span>
+                    <span class="size-value">{{$size}}</span>
+                </h5>                
 
-                <div class="mt-3">
-                    <label for="size" class="text-muted">Size:</label>
-                    <select class="form-select" id="size" name="size">
-                        <option value="XS">XS</option>
-                        <option selected>S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                    </select>
-                </div>
+                <h5 class="my-4 size">
+                    @if($item->reviews()->count() > 0)
+                    <span id="star-rating"></span> 
+                    <span id="numeric-rating">{{ number_format($item->rating, 2) }}/5</span>
+                    @else
+                        No reviews on this item yet
+                    @endif
+                </h5>
 
                 <div class="mt-3  accordion">
                     <div class=" accordion-item">
@@ -64,33 +66,33 @@
                             </div>
                         </div>
                     </div>
-                    <div class=" accordion-item">
-                        <h2 class="accordion-header" id="headingThree">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                                <strong>Stock</strong>
+                                <strong>Era</strong>
                             </button>
                         </h2>
                         <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree">
+                            <div class="accordion-body">
+                                {{$item->era}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <strong>Stock</strong>
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour">
                             <div class="accordion-body">
                                 <?php if($item->stock > 0): ?>
                                     In Stock
                                 <?php else: ?>
                                     Not In Stock
                                 <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed rating-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                <strong>Rating</strong>
-                            </button>
-                        </h2>
-                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingTwo">
-                            <div class="accordion-body" id="itemRating">
-                                {{$item->rating}}
                             </div>
                         </div>
                     </div>
@@ -118,29 +120,49 @@
                     <div class="reviews-section">
                         <h3 class= "mt-3" >Reviews:</h3>
                         @foreach($itemReviews as $review)
-                            <div class="review">
-                                <hr></hr>
-                                <div class="review-header">
-                                    <div class="username">{{ $review->user->username }}</div>
-                                    <div class="rating" data-rating="{{ $review->rating }}">
-                                        @php $reviewRating = $review->rating; @endphp
-                                        @for ($i = 1; $i <= 5; $i++)
-                                            @if ($i <= $reviewRating)
-                                                <span class="star">&#9733;</span>
+                            @if($review != null)
+                                @if($review->user != null && !$review->user->is_banned)
+                                    <div class="review">
+                                        <hr></hr>
+                                        <div class="review-header">
+                                            <div class="username">{{ $review->user->username }}</div>
+                                            <div class="rating" data-rating="{{ $review->rating }}">
+                                                @php $reviewRating = $review->rating; @endphp
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= $reviewRating)
+                                                        <span class="star">&#9733;</span>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                            @if(Auth::check())
+                                                @if(Auth::user()->id == $review->user->id)
+                                                    <button class="edit-button" data-review-id="{{ $review->id }}"><i class="fa fa-pencil"></i></button>
+                                                    <button class="delete-button" data-review-id="{{ $review->id }}"><i class="fa fa-trash"></i></button>
+                                                @endif
                                             @endif
-                                        @endfor
+                                        </div>
+                                        <p>{{ $review->description }}</p>
+                                        <hr></hr>
                                     </div>
-                                    @if(Auth::check())
-                                        @if(Auth::user()->id == $review->user->id)
-                                            <button class="edit-button" data-review-id="{{ $review->id }}"><i class="fa fa-pencil"></i></button>
-                                            <button class="delete-button" data-review-id="{{ $review->id }}"><i class="fa fa-trash"></i></button>
-                                        @endif
-                                    @endif
-                                </div>
-                                <p>{{ $review->description }}</p>
-                                <hr></hr>
-
-                            </div>
+                                @else
+                                    <div class="review">
+                                        <hr></hr>
+                                        <div class="review-header">
+                                            <div class="username">[Removed User]</div>
+                                            <div class="rating" data-rating="{{ $review->rating }}">
+                                                @php $reviewRating = $review->rating; @endphp
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= $reviewRating)
+                                                        <span class="star">&#9733;</span>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                        </div>
+                                        <p>{{ $review->description }}</p>
+                                        <hr></hr>
+                                    </div>
+                                @endif
+                            @endif
                         @endforeach
                     </div>
 
@@ -149,29 +171,23 @@
 
             <div class="col-md m-1">
                 <div class="d-flex flex-column align-items-center">
-                    <div id="carouselExampleIndicators" class="carousel slide carousel-no-zoom" data-ride="carousel" style="width: 90%; height: 90%; margin: auto;">
-                            <div class="carousel-inner">
+
+                    <div class="swiper-container" style="width: 600px; height: 600px; overflow: hidden;">
+                        <div class="swiper-wrapper">
                             @if($item->images()->get()->isEmpty())
-                                <div class="carousel-item active">
+                                <div class="swiper-slide">
                                     <img src="{{ asset('images/default-product-image.png') }}" class="d-block carImg">
                                 </div>
                             @else
                                 @foreach($item->images()->get() as $image)
-                                    <div class="carousel-item {{$loop->first ? 'active' : ''}}">
+                                    <div class="swiper-slide">
                                         <img src="{{ asset($image->filepath) }}" class="d-block carImg">
                                     </div>
                                 @endforeach
                             @endif
-                            </div>
-                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Previous</span>
-                            </a>
-                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="sr-only">Next</span>
-                            </a>
                         </div>
+                    </div>
+
 
                     <div class="d-flex justify-content-between mt-3">
                         <script src="{{asset('js/item-page_script.js')}}" defer></script>
@@ -183,9 +199,9 @@
                                 <span>Add to wishlist</span>
                             </button>
                         </form>
-                        <form onclick="addItemToCart({{$item->id}})">
+                        <form onclick="addItemToCart({{$item->id}}, this.querySelector('button').getAttribute('data-stock'))">
                             @csrf
-                            <button class="btn btn-outline-primary" type="button" id="addToCart"> 
+                            <button class="btn btn-outline-primary" type="button" id="addToCart" data-stock="{{ $item->stock }}" {{ $item->stock == 0 ? 'disabled' : '' }}> 
                                 <i class="fa fa-cart-plus"></i>
                                 <span>Add to Cart</span>
                             </button>
@@ -195,4 +211,21 @@
             </div>
         </div>
     </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var mySwiper = new Swiper('.swiper-container', {
+                // Optional: Add other Swiper options here
+                loop: true, // Enable continuous loop
+                navigation: {
+                    nextEl: '.carousel-control-next',
+                    prevEl: '.carousel-control-prev',
+                },
+                autoplay: {
+                    delay: 5000, // Set the autoplay delay in milliseconds (e.g., 5000 for 5 seconds)
+                },
+            });
+        });
+    </script>
+
 @endsection
+

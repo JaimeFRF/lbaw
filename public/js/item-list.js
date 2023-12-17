@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     var currentOffset = 0;
     var totalItems = window.totalItems; 
-    console.log(totalItems);
 
     document.querySelector('.next-arrow').addEventListener('click', function() {
         currentOffset += 3;

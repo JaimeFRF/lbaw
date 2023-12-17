@@ -32,17 +32,19 @@ class PurchaseController extends Controller
         $purchase_price = 0;
         $line_items = [];
         foreach($items as $item){
-            $purchase_price += $item['price'] * $item['pivot']['quantity'];
-            $line_items[] = [
-                'price_data' => [
-                    'currency' => env('CASHIER_CURRENCY'),
-                    'product_data' => [
-                        'name' => $item['name'],
+            if($item['pivot']['quantity'] > 0){
+                $purchase_price += $item['price'] * $item['pivot']['quantity'];
+                $line_items[] = [
+                    'price_data' => [
+                        'currency' => env('CASHIER_CURRENCY'),
+                        'product_data' => [
+                            'name' => $item['name'],
+                        ],
+                        'unit_amount' => $item['price'] * 100, 
                     ],
-                    'unit_amount' => $item['price'] * 100, 
-                ],
-                'quantity' => $item['pivot']['quantity'],
-            ];
+                    'quantity' => $item['pivot']['quantity'],
+                ];
+            }
         }
 
         $customer = \Stripe\Customer::create([
@@ -83,7 +85,6 @@ class PurchaseController extends Controller
                 throw new NotFoundHttpException;
             }
         } catch (\Exception $e) {
-            Log::info($e->getMessage());
 
             throw new NotFoundHttpException();
         }
@@ -132,10 +133,69 @@ class PurchaseController extends Controller
     {
 
         $purchase = Purchase::find($id);
+        $cart = Cart::find($purchase->id_cart);
+
+        $items = $cart->products()->get();
+
+        foreach($items as $item){
+            $item->stock += $item->pivot->quantity;
+            $item->save();
+        }
+
         $purchase->delete();
     
         return response()->json(['success' => true]);
     }
 
+    public function updateOrder(Request $request){
+        $orderId = $request->input('order_id');
+        $amount = $request->input('amount');
+        $status = $request->input('status');
+        $deliveryDate = $request->input('deliveryDate');
+        $address = $request->input('address');
+        $city = $request->input('city');
+        $country = $request->input('country');
+        $postalCode = $request->input('postalCode');
+        $purchase = Purchase::find($orderId);
+
+        if ($purchase) {
+            $purchase->price = $amount;
+            $purchase->purchase_status = $status;
+            $purchase->delivery_date = $deliveryDate;
+            
+            $existingLocation = Location::where('address', $address)
+                      ->where('city', $city)
+                      ->where('country', $country)
+                      ->where('postal_code', $postalCode)
+                      ->first();
+
+            if (!$existingLocation) {
+                $newLocationId =Location::insertGetId([
+                    'address' => $address,
+                    'city' => $city,
+                    'country' => $country,
+                    'postal_code' => $postalCode
+                ]);
+                $purchase->id_location = $newLocationId;
+            }
+    
+            $purchase->save();
+    
+            return response()->json(['success' => true]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+    }
+
+    public function getOrderAddressInfo(Request $request, $orderId){
+        $purchase = Purchase::find($orderId);
+
+        if ($purchase) {
+            $location = Location::find($purchase->id_location);
+            return response()->json(['success' => true, 'location' => $location]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+    }
 
 }

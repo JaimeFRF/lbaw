@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
+use App\Models\User;
+use App\Models\Item;
+use App\Models\Cart;
 
 class LoginController extends Controller
 {
@@ -45,7 +48,24 @@ class LoginController extends Controller
  
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            
+            $cart = Session::get('cart', []);
+            $userCart = Auth::user()->cart()->first();
+            if (!empty($cart)) {
+                foreach ($cart as $item) {
+                    $itemId = $item['id'];
+                    $quantity = $item['quantity'];
+                    $itemInfo = Item::find($itemId);
+                    $existsItem = $userCart->products()->where('id_item', $itemId)->first();
+                    if ($existsItem) {
+                        $currentQuantity = $userCart->products()->where('id_item', $itemId)->first()->pivot->quantity;
+                        $userCart->products()->updateExistingPivot($itemId, ['quantity' => $currentQuantity + $quantity]);
+                    }
+                    else {
+                        $userCart->products()->attach($itemId, ['quantity' => $quantity]);
+                    }
+                }    
+            }
+            Session::forget('cart');
             return redirect()->intended('/home');
         }
  

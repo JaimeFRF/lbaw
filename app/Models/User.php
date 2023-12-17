@@ -28,6 +28,8 @@ class User extends Authenticatable
         'email',
         'username',
         'password',
+        'is_banned',
+        'phone',
         'id_cart',
         //'id_location',
     ];

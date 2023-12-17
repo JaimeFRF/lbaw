@@ -73,6 +73,35 @@ input:focus{
 	background-color: #eee;
 }
 
+#notificationsDropdown{
+  cursor: pointer;
+}
+
+#wishlistDropdown{
+  cursor: pointer;
+}
+
+.notification-item:hover {
+  cursor: pointer;
+}
+
+#notificationsContainer {
+  /* Push the container a bit to the left */
+  margin-right: 20px;
+
+  /* Add rounded corners */
+  border-radius: 10px;
+}
+
+#wishlistContainer {
+  /* Push the container a bit to the left */
+  margin-right: 9rem;
+
+  /* Add rounded corners */
+  border-radius: 10px;
+}
+
+
 .notifi-item img {
 	display: block;
 	width: 50px;
@@ -186,3 +215,4 @@ margin: auto;
   }
   
 }
+

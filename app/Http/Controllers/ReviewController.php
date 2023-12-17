@@ -16,7 +16,9 @@ class ReviewController extends Controller
     {
         if(!Auth::check())
             return response()->json(['error' => 'Unauthenticated.'], 401);
-        
+
+        $this->authorize('create', Review::class);
+
         $rating = $request->input('rating');
         $reviewText = $request->input('review');
 
@@ -52,9 +54,12 @@ class ReviewController extends Controller
     {
         if(!Auth::check())
             return response()->json(['error' => 'Unauthenticated.'], 401);
-        
+                
         $review = Review::find($id);
     
+        $this->authorize('delete', $review);
+
+
         if(!$review){
             return response()->json(['error' => 'Review not found.'], 404);
         }
@@ -73,8 +78,6 @@ class ReviewController extends Controller
     }
 
     public function editReview($id, Request $request){
-        Log::info('entrei');
-
 
         if(!Auth::check())
             return response()->json(['error' => 'Unauthenticated.'], 401);
@@ -83,6 +86,8 @@ class ReviewController extends Controller
         $reviewText = $request->input('description');
 
         $review = Review::find($id);
+        $this->authorize('edit', $review);
+        
         $review->rating = $rating;
         $review->description = $reviewText;
         $review->save();

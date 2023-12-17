@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Purchase;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Log;
 
 
@@ -21,7 +22,6 @@ class HomeController extends Controller
         $request->session()->put('price', "null");
         $request->session()->put('inStock', true); 
 
-        Log::info('Purchase: ', ['purchases' => $purchases]);
 
         return view('pages.home', [
             'items' => $items,

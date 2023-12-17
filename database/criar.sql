@@ -12,7 +12,7 @@ CREATE TYPE PaymentMethod as ENUM ('Transfer', 'Paypal');
 
 CREATE TYPE PurchaseStatus as ENUM ('Processing', 'Packed', 'Sent', 'Delivered');
 
-CREATE TYPE NotificationType as ENUM ('SALE', 'RESTOCK','ORDER_UPDATE');
+CREATE TYPE NotificationType as ENUM ('SALE', 'RESTOCK','ORDER_UPDATE', 'PRICE_CHANGE');
 
 ------------ tables
 
@@ -297,6 +297,30 @@ CREATE TRIGGER wishlist_stock_notification
     AFTER UPDATE ON item
     FOR EACH ROW
     EXECUTE FUNCTION notify_wishlist_stock();
+
+-- TRIGGER 7: Notify users when a product in cart changes price
+
+CREATE OR REPLACE FUNCTION notify_cart_item_price_change()
+RETURNS TRIGGER AS $BODY$
+BEGIN
+    IF NEW.price != OLD.price THEN
+        INSERT INTO notification (description, notification_type, id_user, id_item)
+        SELECT 
+            'Item in your cart (' || OLD.name || ') changed price to ' || NEW.price || '.',
+            'PRICE_CHANGE',
+            ci.id_cart,
+            NEW.id
+        FROM cart_item AS ci
+        WHERE ci.id_item = NEW.id;
+    END IF;
+    RETURN NEW;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER cart_item_price_change_notification
+AFTER UPDATE ON item
+FOR EACH ROW
+EXECUTE FUNCTION notify_cart_item_price_change();
 
 -- TRIGGER 5: Notify When a Purchase Status Changes
 CREATE OR REPLACE FUNCTION notify_purchase_status_change()

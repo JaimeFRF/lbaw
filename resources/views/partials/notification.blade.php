@@ -21,6 +21,18 @@
       <p>{{ $notification->description }}</p>
     </div>
 
+    @elseif ($notification->notification_type == 'PRICE_CHANGE')
+      @if($notification->item && $notification->item->images->isNotEmpty() && $notification->item->images->first()->filepath)
+          <img src="{{ asset($notification->item->images->first()->filepath) }}">
+      @else
+          <img src="{{ asset('images/default-product-image.png') }}">
+      @endif
+      <div class="text">
+        <h4>{{$notification->item->name}}</h4>
+        <p>{{ $notification->description }}</p>
+    </div>
+    @endif
+
     @elseif($notification->notification_type === 'ORDER_UPDATE')
     <img   src="{{ asset('images/shop.png') }}" alt="img">
     <div class="text">

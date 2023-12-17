@@ -4,10 +4,12 @@
 @php
 use App\Models\Wishlist;
 use App\Models\Item;
-$wishlist = Wishlist::where('id_user', Auth::user()->id)->get();
-$items_wishlist = [];
-foreach($wishlist as $item){
-  $items_wishlist[] = Item::find($item->id_item);
+if(Auth::check()){
+  $wishlist = Wishlist::where('id_user', Auth::user()->id)->get();
+  $items_wishlist = [];
+  foreach($wishlist as $item){
+    $items_wishlist[] = Item::find($item->id_item);
+  }
 }
 @endphp
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">

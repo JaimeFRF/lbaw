@@ -22,10 +22,10 @@ class MailModel extends Mailable
      *
      * @return void
      */
-    public function __construct($mailData)
+    public function __construct($mailData, $templateName = 'default')
     {
-        // Necessary to pass data from the controller.
         $this->mailData = $mailData;
+        $this->templateName = $templateName;
     }
 
     /**
@@ -34,11 +34,20 @@ class MailModel extends Mailable
      * @return \Illuminate\Mail\Mailables\Envelope
      */
     public function envelope()
-    {
-        return new Envelope(
-            from: new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')),
-            subject: 'LBAW Tutorial 01 - Send Email',
-        );
+    {   
+        if ($this->templateName == 'example'){
+
+            return new Envelope(
+                from: new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')),
+                subject: 'Antiquus: Reset Password',
+            );
+        }
+        else {
+            return new Envelope(
+                from: new Address(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')),
+                subject: 'Antiquus: Set Password',
+            );
+        }
     }
     
     /**
@@ -49,7 +58,7 @@ class MailModel extends Mailable
     public function content()
     {
         return new Content(
-            view: 'emails.recoverPassword',
+            view: 'emails.' . $this->templateName,
         );
     }
 

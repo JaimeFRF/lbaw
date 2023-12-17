@@ -35,7 +35,7 @@
     @endif
 
     @elseif($notification->notification_type === 'ORDER_UPDATE')
-    <img   src="{{ asset('images/shop.png') }}" alt="img">
+    <img  src="{{ asset('images/shop.jpg') }}"alt="img">
     <div class="text">
       <h4>Purchase ({{ $notification->id_purchase}}) State Changed</h4>
       <p>{{ $notification->description }}</p>

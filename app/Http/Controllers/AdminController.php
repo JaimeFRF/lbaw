@@ -294,8 +294,17 @@ public function updateItem(Request $request, $id)
 
       $user->save();
 
-      // You can send an email with the temporary password here using SMTP
+    //   $mailController = new MailController();
 
+    //   $emailData = [
+    //       'username' => $user->username,
+    //       'email' => $user->email,
+    //       'type' => 1,
+    //   ];
+
+    //   $mailController->send(new Request($emailData));
+
+      Log::info("sent");
       return response()->json(['message' => 'User created successfully', 'user' => $user], 200);
     }
 
@@ -310,14 +319,21 @@ public function updateItem(Request $request, $id)
             'username' => $request->input('username'),
             'email' => $request->input('email'),
             'phone' => $request->input('phone'),
-            'role' => $request->input('role'), 
             'password' => Hash::make($temporaryPassword),
         ]);
 
         $admin->save();
 
-        // You can send an email with the temporary password here using SMTP
+        // $mailController = new MailController();
 
+        // $emailData = [
+        //     'username' => $admin->username,
+        //     'email' => $admin->email,
+        //     'type' => 1,
+        // ];
+
+        // $mailController->send(new Request($emailData));
+        Log::info("sent");
         return response()->json(['message' => 'Admin created successfully', 'admin' => $admin], 200);
     }
 

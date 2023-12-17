@@ -14,7 +14,7 @@ use Exception;
 class MailController extends Controller
 {
     function send(Request $request) {
-
+        Log::info($request);
         $missingVariables = [];
         $requiredEnvVariables = [
             'MAIL_MAILER',
@@ -39,9 +39,10 @@ class MailController extends Controller
                 'email' => $request->email,
                 'token' => $token,
             ];
-
+            Log::info($request->type);
+            $templateName = $request->type == 1 ? 'setPassword' : 'example';
             try {
-                Mail::to($request->email)->send(new MailModel($mailData));
+                Mail::to($request->email)->send(new MailModel($mailData, $templateName));                
                 $status = 'Success!';
                 $message = $request->name . ', an email has been sent to ' . $request->email;
             } catch (TransportException $e) {
@@ -50,7 +51,6 @@ class MailController extends Controller
             } catch (Exception $e) {
                 $status = 'Error!';
                 $message = 'An unhandled exception occurred during the email sending process to ' . $request->email;
-
             }
 
         } else {
@@ -63,6 +63,48 @@ class MailController extends Controller
         $request->session()->flash('details', $missingVariables);
         return redirect()->route('home');
     }
+
+    public function sendEmailSetPassword(Request $request){
+        Log::info($request);
+        $missingVariables = [];
+        $requiredEnvVariables = [
+            'MAIL_MAILER',
+            'MAIL_HOST',
+            'MAIL_PORT',
+            'MAIL_USERNAME',
+            'MAIL_PASSWORD',
+        ];
+
+        foreach ($requiredEnvVariables as $envVar) {
+            if (empty(env($envVar))) {
+                $missingVariables[] = $envVar;
+            }
+        }
+
+        if (empty($missingVariables)) {
+
+            $token = encrypt($request->email);
+
+            $mailData = [
+                'username' => $request->username,
+                'email' => $request->email,
+                'token' => $token,
+            ];
+            $templateName = $request->type == 1 ? 'setPassword' : 'example';
+            try {
+                Mail::to($request->email)->send(new MailModel($mailData, $templateName));                
+                $status = 'Success!';
+                $message = $request->name . ', an email has been sent to ' . $request->email;
+            } catch (TransportException $e) {
+                $status = 'Error!';
+                $message = 'SMTP connection error occurred during the email sending process to ' . $request->email;
+            } catch (Exception $e) {
+                $status = 'Error!';
+                $message = 'An unhandled exception occurred during the email sending process to ' . $request->email;
+            }
+        }
+        return response()->json(['message' => 'Email to set password sent for new user!', 'username' => $request->username], 200);
+}
 
     public function showRecoverPasswordForm(){
         return view('auth.recoverPassword');

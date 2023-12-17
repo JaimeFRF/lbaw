@@ -138,6 +138,8 @@ Route::controller(LoginController::class)->group(function () {
 Route::get('/recoverPassword', [MailController::class, 'showRecoverPasswordForm'])->name('recover_password');
 Route::get('/resetPassword/{token}', [MailController::class, 'showResetPasswordForm'])->name('reset_password');
 Route::post('/send', [MailController::class, 'send']);
+Route::post('/send-email-set-password', [MailController::class, 'sendEmailSetPassword']);
+
 
 
 

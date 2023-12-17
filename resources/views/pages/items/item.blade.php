@@ -120,7 +120,7 @@
                     <div class="reviews-section">
                         <h3>Reviews:</h3>
                         @foreach($itemReviews as $review)
-                            @if($review != null)
+                            @if($review != null && !$review->user->is_banned)
                                 <div class="review">
                                     <hr></hr>
                                     <div class="review-header">

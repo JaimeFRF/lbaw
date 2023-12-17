@@ -51,7 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                     .then(data => {
                         Swal.fire('Stock Removed', "The item's stock has been removed successfully.", 'success');
-                        this.closest('tr').remove();
+                        const stockCell = this.closest('tr').children[6]; 
+                        stockCell.textContent = '0'; 
                     })
                     .catch(error => {
                         console.error('There has been a problem with your fetch operation:', error);

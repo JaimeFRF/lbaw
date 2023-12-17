@@ -388,7 +388,7 @@ public function updateItem(Request $request, $id)
         $query = $request->input('query');
         
         $users = User::where('name', 'LIKE', "%{$query}%")
-                     ->orWhere('email', 'LIKE', "%{$query}%")->orWhere('username', 'LIKE', "%{$query}%")
+                     ->orWhere('email', 'LIKE', "%{$query}%")->orWhere('username', 'LIKE', "%{$query}%")->orWhere('phone', 'LIKE', "%{$query}%")
                      ->get();
     
         return response()->json($users);

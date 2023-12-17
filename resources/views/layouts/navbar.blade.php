@@ -1,7 +1,15 @@
 @section('css')
     <link href="{{ url('css/contextual_help.css') }}" rel="stylesheet">
 @endsection
-
+@php
+use App\Models\Wishlist;
+use App\Models\Item;
+$wishlist = Wishlist::where('id_user', Auth::user()->id)->get();
+$items_wishlist = [];
+foreach($wishlist as $item){
+  $items_wishlist[] = Item::find($item->id_item);
+}
+@endphp
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
   <div class="container-fluid jusityf-content-between">
     <a class="navbar-brand" href="{{route('home')}}"> <span class="fs-2 ms-4">Antiquus</span> </a>
@@ -16,10 +24,10 @@
 
         <li>
           <div class="dropdown m-2">
-            <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" data-toggle="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" id="categoriesDropdown" onclick="toggleDropdown()">
               Categories
             </button>
-            <nav class="dropdown-menu">
+            <nav class="dropdown-menu" id="dropdownMenu" style="display: none;">
               <form method="GET" action="{{route('shopFilter', ['filter' => 'shirt'])}}">
                   @csrf
                   <button type="submit" class="dropdown-item">Shirt</button>
@@ -38,7 +46,7 @@
               </form>
               <form method="GET" action="{{route('shopFilter', ['filter' => 'sneakers'])}}">
                   @csrf
-                  <button type="submit" class="dropdown-item">sneakers</button>
+                  <button type="submit" class="dropdown-item">Sneakers</button>
               </form>
             </nav>
           </div>
@@ -59,9 +67,13 @@
       <div class="navbar-nav d-flex flex-row">
         @if (Auth::check())    
           @if(!Auth::user()->isadmin)
-            <a title="Wishlist" class="m-3 me-4" href="">
+            <a title="Wishlist" class="m-3 me-4" id="wishlistDropdown" data-bs-toggle="dropdown">
               <i class="fa fa-heart text-white fs-5 bar-icon"></i>
-            </a>     
+            </a>
+            <div  id="wishlistContainer" class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="wishlistDropdown" >
+                @include('partials.profile.wishlist', ['items_wishlist' => $items_wishlist])
+
+            </div>     
           @endif
 
           @php
@@ -70,11 +82,11 @@
           @endphp
 
           <a title="Notifications" class="m-3 me-4" id="notificationsDropdown" data-bs-toggle="dropdown">   
-          <i class="fa fa-bell text-white fs-5 bar-icon"></i>
-          <span class="text-white" id="notificationsCount">({{ $notificationsCount }})</span>
-        </a>
+            <i class="fa fa-bell text-white fs-5 bar-icon"></i>
+            <span class="text-white" id="notificationsCount">({{ $notificationsCount }})</span>
+          </a>
 
-          <div  id="notificationsContainer" class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="notificationsDropdown">
+          <div  id="notificationsContainer" class="dropdown-menu notifications dropdown-menu-end" aria-labelledby="notificationsDropdown" >
               @foreach($notifications as $notification)
                   @include('partials.notification',['notification' => $notification])
               @endforeach
@@ -135,7 +147,7 @@
 
     if (notificationData.notification_type === 'SALE') {
       newNotificationElement.innerHTML = `
-        <img src="img/notification_icon.png" alt="img">
+        <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
         <div class="text">
           <h4>${notificationData.item.name}</h4>
           <p>${notificationData.description}</p>
@@ -143,7 +155,7 @@
       `;
     } else if (notificationData.notification_type === 'RESTOCK') {
       newNotificationElement.innerHTML = `
-        <img src="img/notification_icon.png" alt="img">
+        <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
         <div class="text">
           <h4>${notificationData.item.name}</h4>
           <p>${notificationData.description}</p>
@@ -151,16 +163,25 @@
       `;
     } else if (notificationData.notification_type === 'ORDER_UPDATE') {
       newNotificationElement.innerHTML = `
-        <img src="img/notification_icon.png" alt="img">
+        <img src="public/images/shop.png" alt="img">
         <div class="text">
-          <h4>Purchase ${notificationData.id_purchase} State Changed</h4>
-          <p>${notificationData.description}</p>
+          <h4>Purchase (${notificationData.id_purchase}) State Changed</h4>
+          <p>${notificationData.description }</p>
+        </div>
+      `;
+    } else if (notificationData.notification_type === 'PRICE_CHANGE') {
+      newNotificationElement.innerHTML = `
+        <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
+        <div class="text">
+          <h4>${notificationData.item.name}</h4>
+          <p>${notificationData.description }</p>
         </div>
       `;
     }
 
     notificationsContainer.appendChild(newNotificationElement);
-  }
 
+  }
 </script>
 <script src="{{asset('js/contextual-help.js')}}"defer></script>
+

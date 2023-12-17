@@ -46,6 +46,7 @@ Route::get('/home', [HomeController::class, 'home'])->name('home');
 Route::get('/get-notifications',  [NotificationController::class, 'getNotifications'])->name('notifications');
 Route::post('/send-item-notification', [NotificationController::class, 'sendItemNotification']) ->name('send.item.notification');
 Route::post('/send-order-notification', [NotificationController::class, 'sendOrderNotification'])->name('send.order.notification');
+Route::delete('/notifications/delete/{id}', [NotificationController::class, 'deleteNotification']);
 
 //Purchase
 Route::post('/checkout', [PurchaseController::class, 'checkout'])->name('checkout');

@@ -120,29 +120,48 @@
                     <div class="reviews-section">
                         <h3>Reviews:</h3>
                         @foreach($itemReviews as $review)
-                            @if($review != null && !$review->user->is_banned)
-                                <div class="review">
-                                    <hr></hr>
-                                    <div class="review-header">
-                                        <div class="username">{{ $review->id_user ? $review->user->username : '[Removed User]' }}</div>
-                                        <div class="rating" data-rating="{{ $review->rating }}">
-                                            @php $reviewRating = $review->rating; @endphp
-                                            @for ($i = 1; $i <= 5; $i++)
-                                                @if ($i <= $reviewRating)
-                                                    <span class="star">&#9733;</span>
+                            @if($review != null)
+                                @if($review->user != null && !$review->user->is_banned)
+                                    <div class="review">
+                                        <hr></hr>
+                                        <div class="review-header">
+                                            <div class="username">{{ $review->user->username }}</div>
+                                            <div class="rating" data-rating="{{ $review->rating }}">
+                                                @php $reviewRating = $review->rating; @endphp
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= $reviewRating)
+                                                        <span class="star">&#9733;</span>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                            @if(Auth::check())
+                                                @if(Auth::user()->id == $review->user->id)
+                                                    <button class="edit-button" data-review-id="{{ $review->id }}"><i class="fa fa-pencil"></i></button>
+                                                    <button class="delete-button" data-review-id="{{ $review->id }}"><i class="fa fa-trash"></i></button>
                                                 @endif
-                                            @endfor
-                                        </div>
-                                        @if(Auth::check())
-                                            @if(Auth::user()->id == $review->user->id)
-                                                <button class="edit-button" data-review-id="{{ $review->id }}"><i class="fa fa-pencil"></i></button>
-                                                <button class="delete-button" data-review-id="{{ $review->id }}"><i class="fa fa-trash"></i></button>
                                             @endif
-                                        @endif
+                                        </div>
+                                        <p>{{ $review->description }}</p>
+                                        <hr></hr>
                                     </div>
-                                    <p>{{ $review->description }}</p>
-                                    <hr></hr>
-                                </div>
+                                @else
+                                    <div class="review">
+                                        <hr></hr>
+                                        <div class="review-header">
+                                            <div class="username">[Removed User]</div>
+                                            <div class="rating" data-rating="{{ $review->rating }}">
+                                                @php $reviewRating = $review->rating; @endphp
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= $reviewRating)
+                                                        <span class="star">&#9733;</span>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                        </div>
+                                        <p>{{ $review->description }}</p>
+                                        <hr></hr>
+                                    </div>
+                                @endif
                             @endif
                         @endforeach
                     </div>

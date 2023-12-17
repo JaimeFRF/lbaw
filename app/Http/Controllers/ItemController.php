@@ -108,6 +108,14 @@ class ItemController extends Controller
             $reviews = collect([$userReview])->concat($otherReviews);
         }
 
+        // foreach ($reviews as $review) {
+        //     if ($review != null ) {
+        //         Log::info('reviw', ['reviw' => $review]);
+        //     } 
+        //     else {
+        //         Log::info('no user');
+        //     }
+        // }
 
 
         $userHasNotPurchasedItem = false;

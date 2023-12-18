@@ -1,10 +1,10 @@
 @extends('layouts.adminApp')
 
 @section('content')
+    @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
-                @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
                 <h1 class="mb-4 text-center">User Details</h1>
             </div>
         </div>

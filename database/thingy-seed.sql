@@ -397,7 +397,6 @@ FOR EACH ROW
 WHEN (NEW.id IS NOT NULL)
 EXECUTE FUNCTION create_new_cart_for_new_user();
 
-
 -- TRIGGER 8: Notify users when a product in cart changes price
 
 CREATE OR REPLACE FUNCTION notify_cart_item_price_change()

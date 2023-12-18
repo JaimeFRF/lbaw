@@ -28,8 +28,12 @@ class AdminController extends Controller
     public function viewHome(){
         $admin = Auth::guard('admin')->user();
         $this->authorize('view', $admin);
+
+        $totalUsers = User::count();
+        $totalItems = Item::count();
+        $totalStock = Item::sum('stock');
     
-        return view('pages.admin.adminHome');
+        return view('pages.admin.adminHome', compact('totalUsers', 'totalItems', 'totalStock'));
     }
 
     public function addItem(){

@@ -2,11 +2,7 @@
   <div class="container-fluid jusityf-content-between">
     <a class="navbar-brand" href="{{route('admin-home')}}"> <span class="fs-2 ms-4">Antiquus</span> </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-      <div class="navbar-nav text-white d-flex flex-row">   
+      <div class="navbar-nav text-white d-flex flex-row">  
     
         <a title="Orders" class="m-3 me-4" href="{{ route('orders') }}">
           <i class="fas fa-clipboard text-white fs-5 bar-icon"></i>

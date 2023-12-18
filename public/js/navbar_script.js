@@ -27,6 +27,7 @@ function updateNavbar() {
 
 
 function removeNotification(id) {
+    console.log(id);
     fetch('/notifications/delete/' + id, {
         method: 'DELETE',
         headers: {
@@ -37,7 +38,10 @@ function removeNotification(id) {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        document.querySelector('.notifi-item').remove();
+        var element = document.querySelector('#notification-' + id);
+        if (element) {
+            element.remove();
+        }
     })
     .catch((error) => {
         console.error('There has been a problem with your fetch operation:', error);

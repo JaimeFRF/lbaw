@@ -14,6 +14,7 @@ use App\Models\Purchase;
 use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use App\Http\Controllers\NotificationController;
 
 
 class PurchaseController extends Controller
@@ -180,6 +181,11 @@ class PurchaseController extends Controller
             }
     
             $purchase->save();
+
+            $userId = User::find($purchase->id_user)->id;
+            $notificationController = new NotificationController();
+            $notificationController->sendOrderNotification($userId, $orderId, $status);
+    
     
             return response()->json(['success' => true]);
         } else {

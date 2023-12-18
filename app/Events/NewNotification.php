@@ -27,4 +27,8 @@ class NewNotification implements ShouldBroadcast
     {
         return'lbaw2366';
     }
+
+    public function broadcastAs() {
+        return 'new-notification';
+    }
 }

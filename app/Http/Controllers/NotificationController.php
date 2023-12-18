@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Wishlist;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Log;
 
 use App\Events\NewNotification;
 
@@ -54,34 +55,31 @@ class NotificationController extends Controller
         return response()->json(['message' => 'Item notification sent successfully']);
     }
 
-    public function sendOrderNotification(Request $request)
+    public function sendOrderNotification($userId, $purchaseId, $status)
     {
-        $userId = $request->input('user_id');
-        $purchaseId = $request->input('purchase_id');
 
         $user = User::find($userId);
 
-        if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
-        }
-    
-        $notificationData = [
-            'id_user' => $userId,
-            'notification_type' => 'ORDER_UPDATE',
-            'id_purchase' => $purchaseId,
-        ];
-    
-        $newNotification = Notification::create($notificationData);
-    
-        broadcast(new NewNotification($newNotification));
+        $newNot = Notification::where('id_user', $userId)
+        ->where('id_purchase', $purchaseId)
+        ->orderBy('id', 'desc')
+        ->first();
+
+        Log::info('newNot: ', ['newNot' => $newNot]);
+
+        broadcast(new NewNotification($newNot));
     
         return response()->json(['message' => 'Order update notification sent successfully']);
     }
 
     public function deleteNotification($id)
     {
+        Log::info('id: ' . $id);    
         $notification = Notification::find($id);
         $notification->delete();
+
+        $allNots = Notification::all();
+        Log::info('allNots: ' . $allNots);
         return response()->json(['message' => 'Notification deleted successfully']);
     }
     

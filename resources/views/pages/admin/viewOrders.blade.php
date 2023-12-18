@@ -71,7 +71,6 @@
                     <div class="mb-3">
                         <label for="detailedOrderStatus" class="form-label">Status</label>
                         <select class="form-select" id="detailedOrderStatus" name="status" required>
-                            <option value="Processing">Processing</option>
                             <option value="Packed">Packed</option>
                             <option value="Sent">Sent</option>
                             <option value="Delivered">Delivered</option>                        

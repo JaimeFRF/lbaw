@@ -107,7 +107,7 @@ CREATE TABLE review(
 
 CREATE TABLE notification(
     id SERIAL PRIMARY KEY,
-    description TEXT NOT NULL,
+    description TEXT NOT NULL, 
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
     notification_type NotificationType NOT NULL,
     id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
@@ -405,12 +405,13 @@ RETURNS TRIGGER AS $BODY$
 BEGIN
     IF NEW.price != OLD.price THEN
         INSERT INTO notification (description, notification_type, id_user, id_item)
-        SELECT 
-            'Item in your cart (' || OLD.name || ') changed price to ' || NEW.price || '.',
+        SELECT
+            'Item in your cart ("' || OLD.name || '") changed price to ' || NEW.price || '.',
             'PRICE_CHANGE',
-            ci.id_cart,
+            u.id,
             NEW.id
         FROM cart_item AS ci
+        JOIN users AS u ON ci.id_cart = u.id_cart
         WHERE ci.id_item = NEW.id;
     END IF;
     RETURN NEW;

@@ -39,7 +39,9 @@
           <td class="text-center">{{$item->size}}</td>            
           <td class="text-center">{{$item->price}}€</td>
           <td class="text-center">{{$item->stock}}</td>
-          <td class="text-center"><button class="edit-btn btn btn-warning" data-bs-toggle="modal" data-bs-target="#editItemModal">Edit</button></td>
+          <td class="text-center">
+            <button class="edit-btn btn btn-warning" data-bs-toggle="modal" data-bs-target="#editItemModal" data-item="{{ json_encode($item) }}">Edit</button>
+        </td>
           <td class="text-center">
               <button id="delete" data-item-id={{$item->id}} class="btn btn-outline-danger btn-sm delete-item-btn">
                   <i class="fa fa-times"></i>
@@ -155,32 +157,37 @@
                       <label for="editProductName" class="form-label">Product Name</label>
                       <input type="text" class="form-control" id="editProductName" name="name" placeholder="Enter product name">
                   </div>
-                    <div class="mb-3">
-                      <label for="editCategory" class="form-label">Category</label>
-                      <select class="form-control" id="editCategory" name="category">
-                          <option value="tshirt">T-Shirt</option>
-                          <option value="shirt">Shirt</option>
-                          <option value="jacket">Jacket</option>
-                          <option value="jeans">Jeans</option>
-                          <option value="sneakers">Sneakers</option>
-                      </select>
-                  </div>
                   <div class="mb-3">
-                      <label for="editSubCategory" class="form-label">Sub-category</label>
-                      <input type="text" class="form-control" id="editSubCategory" name="subCategory" placeholder="Enter sub-category">
-                  </div>
+                    <small class="text-danger required-text">*</small>
+                    <label for="categoryEdit" class="form-label">Category</label>
+                    <select class="form-select" id="categoryEdit" name="categoryEdit" aria-label="Category select" required>
+                        <option value="">Select a category</option>
+                        <option value="Tshirt">Tshirt</option>
+                        <option value="Shirt">Shirt</option>
+                        <option value="Jacket">Jacket</option>
+                        <option value="Jeans">Jeans</option>
+                        <option value="Sneakers">Sneakers</option>                    
+                    </select>
+                </div>
+                <div class="mb-3">
+                  <small class="text-danger required-text">*</small>
+                  <label for="subCategoryEdit" class="form-label">Sub-category</label>
+                  <select class="form-select" id="subCategoryEdit" name="subCategoryEdit" aria-label="Sub-category select" disabled required>
+                      <option value="">Select a sub-category</option>
+                  </select>
+              </div>
                   <div class="mb-3">
                       <label for="editSize" class="form-label">Size</label>
-                      <input type="text" class="form-control" id="editSize" name="size" placeholder="Enter size">
+                      <input type="text" class="form-control" id="editSize" name="size" placeholder="{{$item->size}}" value="{{$item->size}}">
                   </div>
                   <div class="mb-3">
                       <label for="editUnitPrice" class="form-label">Unit Price(€)</label>
-                      <input type="text" class="form-control" id="editUnitPrice" name="price" placeholder="Enter unit price">
+                      <input type="text" class="form-control" id="editUnitPrice" name="price" placeholder="{{$item->price}}" value="{{$item->price}}">
                   </div>
                   <div class="mb-3">
-                      <label for="editStock" class="form-label">Stock</label>
-                      <input type="number" class="form-control" id="editStock" name="stock" placeholder="Enter stock quantity">
-                  </div>
+                    <label for="editStock" class="form-label">Stock</label>
+                    <input type="number" class="form-control" id="editStock" name="stock" placeholder="Current stock: {{ $item->stock }}" value="{{ $item->stock }}">
+                </div>
                   <div class="mb-3">
                     <label for="photos" class="form-label">Photos</label>
                     <input type="file" class="form-control" id="photos" name="photos[]" multiple>

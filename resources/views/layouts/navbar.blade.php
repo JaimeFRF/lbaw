@@ -147,7 +147,7 @@ if(Auth::check()){
     notificationsCountElement.innerText = `(${newCount})`;
 
     const notificationType = notificationData.notification.notification_type;
-    console.log(notificationType);
+    console.log(notificationData);
 
     const newNotificationElement = document.createElement('a');
     newNotificationElement.classList.add('dropdown-item', 'notifi-item');
@@ -163,9 +163,8 @@ if(Auth::check()){
       `;
     } else if (notificationType === 'RESTOCK') {
       newNotificationElement.innerHTML = `
-        <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
         <div class="text">
-          <h4>${notificationData.notification.item.name}</h4>
+          <h4>${notificationData.item.name}</h4>
           <p>${notificationData.notification.description}</p>
         </div>
       `;

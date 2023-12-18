@@ -188,14 +188,11 @@ class AdminController extends Controller
 
 public function updateItem(Request $request, $id)
 {
-    Log::info('Entrei');
     $item = Item::findOrFail($id);
-    Log::info('a');
 
     if (!$item) {
         return response()->json(['message' => 'Item not found, wrong id'], 404);
     }
-    Log::info('b');
 
 
     $request->validate([
@@ -210,6 +207,7 @@ public function updateItem(Request $request, $id)
         'subcategory' => 'nullable|string|max:255',
     ]);
 
+    $wasOutOfStock = $item->stock == 0;
 
     // Update item attributes
     $item->fill($request->only([
@@ -218,9 +216,8 @@ public function updateItem(Request $request, $id)
     
 
     $item->stock = $request->stock;
+    $isInStock = $item->stock > 0;
 
-    Log::info($request->categoryEdit);
-    Log::info($request->subCategoryEdit);
 
     // Specific attributes for different item types
     switch ($request->category) {
@@ -260,6 +257,11 @@ public function updateItem(Request $request, $id)
     }
     
     $item->save();
+
+    if ($wasOutOfStock && $isInStock) {
+        $notificationController = new NotificationController();
+        $notificationController->sendItemNotification($item->id);
+    }
     
     return response()->json([
         'message' => 'Item info updated',
@@ -300,16 +302,6 @@ public function updateItem(Request $request, $id)
 
       $user->save();
 
-    //   $mailController = new MailController();
-
-    //   $emailData = [
-    //       'username' => $user->username,
-    //       'email' => $user->email,
-    //       'type' => 1,
-    //   ];
-
-    //   $mailController->send(new Request($emailData));
-
       Log::info("sent");
       return response()->json(['message' => 'User created successfully', 'user' => $user], 200);
     }
@@ -330,16 +322,6 @@ public function updateItem(Request $request, $id)
 
         $admin->save();
 
-        // $mailController = new MailController();
-
-        // $emailData = [
-        //     'username' => $admin->username,
-        //     'email' => $admin->email,
-        //     'type' => 1,
-        // ];
-
-        // $mailController->send(new Request($emailData));
-        Log::info("sent");
         return response()->json(['message' => 'Admin created successfully', 'admin' => $admin], 200);
     }
 

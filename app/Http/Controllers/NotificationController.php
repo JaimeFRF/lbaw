@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
 use App\Models\Wishlist;
+use App\Models\Item;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Log;
 
@@ -29,27 +30,22 @@ class NotificationController extends Controller
         }
     }
   
-    public function sendItemNotification(Request $request)
+    public function sendItemNotification($itemId)
     {
-        $itemId = $request->input('item_id');
-        $notificationType = $request->input('notification_type');
-    
-        $users = User::whereHas('wishlist', function ($query) use ($itemId) {
-            $query->where('item_id', $itemId);
-        })->get();
+       Log::info('teste');
+       $product = Item::find($itemId);
+
+       $wishlist = Wishlist::where('id_item', $itemId)->get();
+       $users = [];
+        foreach($wishlist as $item){
+            $users[] = User::find($item->id_user);
+        }
     
         foreach ($users as $user) {
-            $notificationData = [
-                'id_user' => $user->id,
-                'notification_type' => $notificationType,
-                'id_item' => $itemId,
-            ];
     
-            // Create a new notification
-            $newNotification = Notification::create($notificationData);
+            $newNotification = Notification::where('id_user', $user->id)->where('id_item', $itemId)->where('notification_type', 'RESTOCK')->first();
     
-            // Broadcast the new notification
-            broadcast(new NewNotification($newNotification));
+            broadcast(new NewNotification($newNotification, $product));
         }
     
         return response()->json(['message' => 'Item notification sent successfully']);

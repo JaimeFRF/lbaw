@@ -72,6 +72,7 @@ Route::post('/admin-update-item/{id}', [AdminController::class, 'updateItem']);
 Route::get('/orders', [AdminController::class, 'viewOrders'])->name('orders');
 Route::get('/search-users', [AdminController::class, 'search']);
 Route::get('/get-all-users',[AdminController::class, 'getAllUsers']);
+Route::get('/admin-view-users/{id}', [AdminController::class, 'userDetails'])->name('userDetails');
 
 
 

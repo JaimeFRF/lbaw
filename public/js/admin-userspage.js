@@ -10,6 +10,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const addUserForm = document.getElementById('addUserForm');
     const addUserModal = new bootstrap.Modal(document.getElementById('addUserModal'));
 
+
+    var rows = document.querySelectorAll(".clickable-row");
+        rows.forEach(function(row) {
+            row.addEventListener("click", function(event) {
+                var isButton = event.target.tagName.toLowerCase() === 'button';
+                var isSpan = event.target.tagName.toLowerCase() === 'span';
+                
+                if (!isButton && !isSpan) {
+                    window.location = row.getAttribute("data-href");
+                }
+            });
+        });
+
     addUserForm.addEventListener('submit', function (event) {
         event.preventDefault();
 

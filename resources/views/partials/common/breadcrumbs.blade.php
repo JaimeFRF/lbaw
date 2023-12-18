@@ -1,4 +1,4 @@
-<nav class="m-3" aria-label="breadcrumb" id="breadcrumbs" >
+<nav class="m-2" aria-label="breadcrumb" id="breadcrumbs" >
   <ol class="breadcrumb">
 
     @foreach($breadcrumbs as $name => $path)

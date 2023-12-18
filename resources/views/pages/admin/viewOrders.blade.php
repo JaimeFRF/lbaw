@@ -34,7 +34,7 @@
                     <td class="text-center">{{$order->purchase_status}}</td>
                     <td class="text-center">
                     <button id="delete" data-order-id={{$order->id}} class="btn btn-outline-danger btn-sm">
-                        <i class="fa fa-times"></i>
+                        <i class="fa fa-times">Cancel</i>
                     </button>
                     </td>
                 </tr>

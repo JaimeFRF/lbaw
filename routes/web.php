@@ -55,6 +55,7 @@ Route::get('/cancel', [PurchaseController::class, 'cancel'])->name('checkout.can
 Route::delete('/purchase/delete/{id}', [PurchaseController::class, 'cancelPurchase']);
 Route::post('/admin-update-order', [PurchaseController::class, 'updateOrder']);
 Route::get('/admin-get-order-address-info/{orderId}', [PurchaseController::class , 'getOrderAddressInfo']);
+
 //Admin
 Route::get('/admin-home', [AdminController::class, 'viewHome'])->name('admin-home');
 Route::get('/admin-add-item', [AdminController::class, 'addItem'])->name('addItem');

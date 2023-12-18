@@ -7,21 +7,21 @@
         <div class="card bg-primary text-white text-center p-3">
           <i class="fa fa-users fa-3x mb-2"></i>
           <h4>Total Users</h4>
-          <h5>10</h5>
+          <h5> {{ $totalUsers }}</h5>
         </div>
       </div>
       <div class="col-sm-4">
         <div class="card bg-primary text-white text-center p-3">
           <i class="fa fa-th-large fa-3x mb-2"></i>
           <h4>Total Items</h4>
-          <h5>10</h5>
+          <h5> {{ $totalItems }}</h5>
         </div>
       </div>
       <div class="col-sm-4">
         <div class="card bg-primary text-white text-center p-3">
           <i class="fa fa-th-list fa-3x mb-2"></i>
           <h4>Total Stock</h4>
-          <h5>10</h5>
+          <h5>{{ $totalStock }}</h5>
         </div>
       </div>
     </div>       

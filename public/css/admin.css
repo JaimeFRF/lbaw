@@ -69,3 +69,36 @@ body{
     background-color: #d9d9d9; 
 }
 
+.card {
+    border-radius: 8px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+    background-color: #e9ecef; 
+    border: 1px solid #dee2e6; 
+}
+
+.card .fa {
+    margin-bottom: 15px;
+    color: #4a7ebc; /* Muted blue for icons */
+}
+
+.card h4 {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #343a40; /* Darker text for contrast and readability */
+}
+.card h5 {
+    font-size: 1.2em;
+    color: #495057; 
+}
+
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 15px;
+    }
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-color: #adb5bd;
+}

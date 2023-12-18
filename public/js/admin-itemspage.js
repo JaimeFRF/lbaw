@@ -7,7 +7,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const addItemForm = document.getElementById('addItemForm');
     const manualCloseModalButton = document.getElementById('manualCloseModalButton');
     const categorySelect = document.getElementById('category');
+    const categorySelectEdit = document.getElementById('categoryEdit');
     const subCategorySelect = document.getElementById('subCategory');
+    const subCategorySelectEdit = document.getElementById('subCategoryEdit');
     const deleteItemButtons = document.querySelectorAll('.delete-item-btn');
 
     addItemModalElement.addEventListener('hidden.bs.modal', function () {
@@ -16,6 +18,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     editItemModalElement.addEventListener('hidden.bs.modal', function () {
         editItemForm.reset();
+    });
+
+    document.querySelectorAll('.edit-btn').forEach(function(button) {
+        button.addEventListener('click', function() {
+            var item = JSON.parse(this.getAttribute('data-item')); 
+    
+            document.getElementById('editItemId').value = item.id;
+            document.getElementById('editProductName').value = item.name;
+            document.getElementById('categoryEdit').value = item.category;
+            document.getElementById('subCategoryEdit').value = item.subCategory;
+            document.getElementById('editSize').value = item.size;
+            document.getElementById('editUnitPrice').value = item.price;
+            document.getElementById('editStock').value = item.stock;
+        });
     });
     
     deleteItemButtons.forEach(button => {
@@ -103,6 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const itemId = document.getElementById('editItemId').value;
         const formData = new FormData(editItemForm);
         formData.append('id_item', itemId);
+        console.log(formData);
 
         fetch(`/admin-update-item/${itemId}`, {
             method: 'POST',
@@ -120,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(data => {
             const row = document.querySelector(`tr[data-item-id="${itemId}"]`);
+    
             row.cells[1].innerText = data.updatedItemData.name;
             row.cells[2].innerText = data.updatedItemData.category;
             row.cells[3].innerText = data.updatedItemData.subCategory;
@@ -171,6 +189,39 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    categorySelectEdit.addEventListener('change', function() {
+        const selectedCategory = this.value;
+        console.log(selectedCategory);
+        subCategorySelectEdit.innerHTML = '<option value="">Select a sub-category</option>'; 
+        subCategorySelectEdit.disabled = true; 
+
+        if (selectedCategory) {
+            fetch(`/api/subcategories/${selectedCategory}`, {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+            }).then(response => response.json())
+            .then(subCategories => {
+                subCategories.forEach(subCategory => {
+                    const option = document.createElement('option');
+                    option.textContent = subCategory; 
+                    subCategorySelectEdit.appendChild(option);
+                });
+
+                if (subCategories.length > 0) {
+                    subCategorySelectEdit.disabled = false; 
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching sub-categories:', error);
+            });
+        }
+    });
+
+
+    
+
     addItemForm.addEventListener('submit', function (event) {
         event.preventDefault();
 
@@ -200,7 +251,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     location.reload();
                 }
             });
-            //setTimeout(function() {location.reload();}, 2000);
         })
         .catch(error => {
             console.error('There was a problem with your fetch operation:', error);

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\Purchase;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 
@@ -15,6 +16,8 @@ class HomeController extends Controller
     public function home(Request $request) {
         $items = Item::all();
         $purchases = Purchase::all();
+        $notifications = Notification::all();
+        Log::info("Notifications: " , ['notifications' => $notifications]);
 
         $request->session()->put('color', "all");
         $request->session()->put('category', "None");

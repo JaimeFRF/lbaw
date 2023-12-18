@@ -188,12 +188,15 @@ class AdminController extends Controller
 
 public function updateItem(Request $request, $id)
 {
+    Log::info('Entrei');
     $item = Item::findOrFail($id);
-
+    Log::info('a');
 
     if (!$item) {
         return response()->json(['message' => 'Item not found, wrong id'], 404);
     }
+    Log::info('b');
+
 
     $request->validate([
         'name' => 'required|string|max:255',
@@ -206,7 +209,8 @@ public function updateItem(Request $request, $id)
         'brand' => 'nullable|string|max:255',
         'subcategory' => 'nullable|string|max:255',
     ]);
-    
+
+
     // Update item attributes
     $item->fill($request->only([
         'name', 'price', 'stock', 'color', 'era', 'fabric', 'description', 'brand', 'subcategory'
@@ -214,36 +218,39 @@ public function updateItem(Request $request, $id)
     
 
     $item->stock = $request->stock;
-    
+
+    Log::info($request->categoryEdit);
+    Log::info($request->subCategoryEdit);
+
     // Specific attributes for different item types
     switch ($request->category) {
         case 'Shirt':
             $item->shirt()->update([
-                'shirt_type' => $request->type,
+                'shirt_type' => $request->subCategoryEdit,
                 'size' => $request->size,
             ]);
             break;
         case 'Tshirt':
             $item->tshirt()->update([
-                'tshirt_type' => $request->type,
+                'tshirt_type' => $request->subCategoryEdit,
                 'size' => $request->size,
             ]);
             break;
         case 'Jacket':
             $item->jacket()->update([
-                'jacket_type' => $request->type,
+                'jacket_type' => $request->subCategoryEdit,
                 'size' => $request->size,
             ]);
             break;
         case 'Jeans':
             $item->jeans()->update([
-                'jeans_type' => $request->type,
+                'jeans_type' => $request->subCategoryEdit,
                 'size' => $request->size,
             ]);
             break;
         case 'Sneakers':
             $item->sneakers()->update([
-                'sneakers_type' => $request->type,
+                'sneakers_type' => $request->subCategoryEdit,
                 'size' => $request->size,
             ]);
             break;
@@ -265,10 +272,9 @@ public function updateItem(Request $request, $id)
             'fabric' => $item->fabric,
             'description' => $item->description,
             'brand' => $item->brand,
-            'category' => $request->category,
-            'type' => $request->type,
+            'category' => $request->categoryEdit,
             'size' => $request->size,
-            'subcategory' => $request->subcategory,
+            'subCategory' => $request->subCategoryEdit,
         ]
     ], 200);
     

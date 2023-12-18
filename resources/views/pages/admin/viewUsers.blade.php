@@ -32,7 +32,7 @@
         </thead>
         <tbody class="tbody">
           @foreach ($users as $user)
-              <tr data-user-id={{$user->id}}>
+          <tr data-user-id="{{ $user->id }}" data-href="{{ route('userDetails', ['id' => $user->id]) }}" class="clickable-row">
                   <td class="text-center">{{$user->id}}</td>
                   <td class="text-center">{{$user->name}}</td>
                   <td class="text-center">{{$user->username}}</td>

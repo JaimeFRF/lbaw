@@ -393,4 +393,32 @@ public function updateItem(Request $request, $id)
     
         return response()->json($users);
     }
+
+    public function userDetails($id)
+{
+    $user = User::findOrFail($id);
+    $orders = Purchase::where('id_user', $id)->get();
+
+    foreach ($orders as $order) {
+        $idLocation = $order->id_location;
+        $location = Location::where('id', $idLocation)->first();
+
+        if ($location) {
+            $order->location = $location;
+        } else {
+            $order->location = null;
+        }
+    }
+
+    return view('pages.admin.userDetails', [
+        'user' => $user,
+        'orders' => $orders,
+        'breadcrumbs' => [
+            'Admin Home' => route('admin-home'),
+            'Users' => route('view-users'), // Replace 'admin-users' with the actual route for listing users
+        ],
+        'current' => "{$user->username}'s details",
+    ]);
+}
+
 }

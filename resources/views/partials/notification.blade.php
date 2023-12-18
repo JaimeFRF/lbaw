@@ -32,7 +32,6 @@
         <h4>{{$notification->item->name}}</h4>
         <p>{{ $notification->description }}</p>
     </div>
-    @endif
 
     @elseif($notification->notification_type === 'ORDER_UPDATE')
     <img  src="{{ asset('images/shop.jpg') }}"alt="img">

@@ -208,7 +208,7 @@ public function updateItem(Request $request, $id)
     ]);
 
     $wasOutOfStock = $item->stock == 0;
-    $firstPrice = $item->price;
+    $oldPrice = $item->price;
 
     // Update item attributes
     $item->fill($request->only([
@@ -217,7 +217,7 @@ public function updateItem(Request $request, $id)
 
     $item->stock = $request->stock;
     $isInStock = $item->stock > 0;
-    $isInSale = ($firstPrice - $item->price) > 0;
+    $changedPrice = $oldPrice != $request->price;
 
     // Specific attributes for different item types
     switch ($request->category) {
@@ -252,19 +252,19 @@ public function updateItem(Request $request, $id)
             ]);
             break;
         default:
-            // Handle the 'Unknown' category or any other category
             break;
     }
     
     $item->save();
 
-    if ($wasOutOfStock && $isInStock) {
-        $notificationController = new NotificationController();
-        $notificationController->sendRestockNotification($item->id);
-    }
+    $notificationController = new NotificationController();
 
-    if ($isInSale) {
-        $notificationController = new NotificationController();
+    if ($wasOutOfStock && $isInStock) {
+        $notificationController->sendItemNotification($item->id);
+    }
+    
+    if ($changedPrice) {
+        $notificationController->sendPriceChangeNotification($item->id);
         $notificationController->sendWishlistSaleNotification($item->id);
     }
 

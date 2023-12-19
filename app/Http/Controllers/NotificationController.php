@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
 use App\Models\Wishlist;
+use App\Models\Cart;
 use App\Models\Item;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Log;
@@ -43,8 +44,8 @@ class NotificationController extends Controller
     
         foreach ($users as $user) {
     
-            $newNotification = Notification::where('id_user', $user->id)->where('id_item', $itemId)->where('notification_type', 'RESTOCK')->first();
-    
+            $newNotification = Notification::where('id_user', $user->id)->where('id_item', $itemId)->where('notification_type', 'RESTOCK')->first();    
+
             broadcast(new NewNotification($newNotification, $product));
         }
     
@@ -53,7 +54,6 @@ class NotificationController extends Controller
     
     public function sendWishlistSaleNotification($itemId)
     {
-       Log::info('teste');
        $product = Item::find($itemId);
 
        $wishlist = Wishlist::where('id_item', $itemId)->get();
@@ -86,6 +86,27 @@ class NotificationController extends Controller
     
         return response()->json(['message' => 'Order update notification sent successfully']);
     }
+
+    public function sendPriceChangeNotification($itemId){
+        
+        $carts = Cart::whereHas('products', function ($query) use ($itemId) {
+            $query->where('id_item', $itemId);
+        })->get();
+
+        $item = Item::find($itemId);
+
+        foreach ($carts as $cart) {
+            $user = User::where('id_cart', $cart->id)->first();
+
+            if($user != null){
+                $newNotification = Notification::where('id_user', $user->id)->where('id_item', $itemId)->where('notification_type', 'PRICE_CHANGE')->first();
+                broadcast(new NewNotification($newNotification, $item));
+            }
+        }
+        return response()->json(['message' => 'Price change notification sent successfully']);
+
+    }
+
 
     public function deleteNotification($id)
     {

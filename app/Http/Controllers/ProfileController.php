@@ -85,8 +85,8 @@ class ProfileController extends Controller{
       $this->authorize('show', $user);
 
       return view('pages.profile.edit_profile', [
-        'breadcrumbs' => ['Profile' => route('profile'), 'EditProfile' => route('edit_profile')],
-        'current' => null, 
+        'breadcrumbs' => ['Profile' => route('profile')],
+        'current' => 'Edit Profile', 
         'user' => $user
       ]);
     }

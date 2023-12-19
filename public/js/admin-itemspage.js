@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
             document.getElementById('editItemId').value = item.id;
             document.getElementById('editProductName').value = item.name;
-            document.getElementById('categoryEdit').value = item.category;
-            document.getElementById('subCategoryEdit').value = item.subCategory;
             document.getElementById('editSize').value = item.size;
             document.getElementById('editUnitPrice').value = item.price;
             document.getElementById('editStock').value = item.stock;
@@ -139,8 +137,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const row = document.querySelector(`tr[data-item-id="${itemId}"]`);
     
             row.cells[1].innerText = data.updatedItemData.name;
-            row.cells[2].innerText = data.updatedItemData.category;
-            row.cells[3].innerText = data.updatedItemData.subCategory;
+            if(data.updatedItemData.category != "") {row.cells[2].innerText = data.updatedItemData.category;}
+            if(data.updatedItemData.subCategory != "") {row.cells[3].innerText = data.updatedItemData.subCategory;}
             row.cells[4].innerText = data.updatedItemData.size;
             row.cells[5].innerText = data.updatedItemData.price;
             row.cells[6].innerText = data.updatedItemData.stock;

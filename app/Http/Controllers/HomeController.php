@@ -17,7 +17,6 @@ class HomeController extends Controller
         $items = Item::all();
         $purchases = Purchase::all();
         $notifications = Notification::all();
-        Log::info("Notifications: " , ['notifications' => $notifications]);
 
         $request->session()->put('color', "all");
         $request->session()->put('category', "None");

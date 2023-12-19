@@ -9,6 +9,8 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+
 use App\Models\Item;
 
 
@@ -20,7 +22,7 @@ class NewNotification implements ShouldBroadcast
     public $item;
 
     // Here you create the message to be sent when the event is triggered.
-    public function __construct($notification,$item = null)
+    public function __construct($notification, $item = null)
     {
         $this->notification = $notification;
         $this->item = $item;
@@ -29,7 +31,9 @@ class NewNotification implements ShouldBroadcast
     // You should specify the name of the channel created in Pusher.
     public function broadcastOn()
     {
-        return'lbaw2366';
+        Log::info('newNotification: ', ['newNotification' => $this->notification->id_user]);
+
+        return'lbaw2366-' . $this->notification->id_user;
     }
 
     public function broadcastAs() {

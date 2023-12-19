@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addItemForm = document.getElementById('addItemForm');
     const manualCloseModalButton = document.getElementById('manualCloseModalButton');
     const categorySelect = document.getElementById('category');
-    const categorySelectEdit = document.getElementById('categoryEdit');
+    const categorySelectEdit = document.getElementById('Editcategory');
     const subCategorySelect = document.getElementById('subCategory');
     const subCategorySelectEdit = document.getElementById('subCategoryEdit');
     const deleteItemButtons = document.querySelectorAll('.delete-item-btn');
@@ -91,19 +91,47 @@ document.addEventListener('DOMContentLoaded', function() {
             
             document.getElementById('editItemId').value = itemId;
             document.getElementById('editProductName').value = itemName;
-            document.getElementById('editSubCategory').value = itemSubCategory;
+            document.getElementById('Editcategory').value = itemCategory;
+            // document.getElementById('subCategoryEdit').value = itemSubCategory;
             document.getElementById('editSize').value = itemSize;
             document.getElementById('editUnitPrice').value = itemPrice;
             document.getElementById('editStock').value = itemStock;
             
             document.querySelectorAll('#editCategory option').forEach(option => {
-                if (option.value.toLowerCase() === itemCategory.toLowerCase().replace(/\s+/g, '')) {
+
+                if (option.text.trim().toLowerCase() === itemCategory.trim().toLowerCase()) {
                     option.selected = true;
                 } else {
                     option.selected = false;
                 }
             });
-            
+            const selectedCategory = itemCategory;
+            subCategorySelectEdit.innerHTML = '<option value="">Select a sub-category</option>'; 
+            subCategorySelectEdit.disabled = true; 
+
+            if (selectedCategory) {
+                fetch(`/api/subcategories/${selectedCategory}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    },
+                }).then(response => response.json())
+                .then(subCategories => {
+                    subCategories.forEach(subCategory => {
+                        const option = document.createElement('option');
+                        option.textContent = subCategory; 
+                        subCategorySelectEdit.appendChild(option);
+                        if (subCategory == itemSubCategory) option.selected = true;
+                    });
+
+                    if (subCategories.length > 0) {
+                        subCategorySelectEdit.disabled = false; 
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching sub-categories:', error);
+                });
+            }
             editItemModal.show();
         });
     });
@@ -157,11 +185,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
     });
 
+    
 
-    categorySelect.addEventListener('change', function() {
+    categorySelect.addEventListener('change', function (){
         const selectedCategory = this.value;
         subCategorySelect.innerHTML = '<option value="">Select a sub-category</option>'; 
-        subCategorySelect.disabled = true; 
+        console.log("hey");
+        // subCategorySelect.disabled = true; 
 
         if (selectedCategory) {
             fetch(`/api/subcategories/${selectedCategory}`, {

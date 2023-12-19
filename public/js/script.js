@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 let items = JSON.parse(document.getElementById('items').value);
                 let item = items.find(item => item.id == itemId);
+                console.log(itemId);
                 if (item.pivot && item.pivot.quantity != null) {
                     item.pivot.quantity += newQuantity;
                 } else if (item.quantity != null) {
@@ -34,6 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.newQuantity == 0) {
                     const productRow = cartItem.closest('tr'); 
                     productRow.remove();
+                    items = items.filter(item => item.id != itemId);
+                    if (items.length == 0) {
+                        checkoutButton.disabled = true;
+                    }
                 }
                 document.getElementById('total-price').innerText = data.totalPrice + '€';
                 document.getElementById('items').value = JSON.stringify(items);

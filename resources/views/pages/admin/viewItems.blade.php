@@ -160,7 +160,7 @@
                   <div class="mb-3">
                     <small class="text-danger required-text">*</small>
                     <label for="categoryEdit" class="form-label">Category</label>
-                    <select class="form-select" id="categoryEdit" name="categoryEdit" aria-label="Category select" required>
+                    <select class="form-select" id="Editcategory" name="Editcategory" aria-label="Category select" required>
                         <option value="">Select a category</option>
                         <option value="Tshirt">Tshirt</option>
                         <option value="Shirt">Shirt</option>

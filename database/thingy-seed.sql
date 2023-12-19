@@ -99,8 +99,6 @@ CREATE TABLE review(
     id SERIAL PRIMARY KEY,
     description TEXT NOT NULL CONSTRAINT description_length CHECK (length(description) <= 200),
     rating FLOAT NOT NULL CONSTRAINT rating_positive CHECK (rating >= 0.0 AND rating <= 5.0),
-    up_votes INTEGER DEFAULT 0,
-    down_votes INTEGER DEFAULT 0,
     id_user INTEGER REFERENCES users(id) ON DELETE SET NULL,
     id_item INTEGER NOT NULL REFERENCES item(id)
 );

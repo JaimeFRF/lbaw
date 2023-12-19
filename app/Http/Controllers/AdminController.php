@@ -76,7 +76,6 @@ class AdminController extends Controller
             'current' => 'Admins'
         ]);
     }
-    
 
     public function viewOrders(Request $request)
     {
@@ -156,7 +155,6 @@ class AdminController extends Controller
       return response()->json(['message' => 'User banned'], 200);
     }
 
-
     public function updateUser(Request $request, $id)
     {
     $user = User::findOrFail($id);
@@ -178,7 +176,6 @@ class AdminController extends Controller
     $user->phone = $request->phone;
     $user->save();
 
-
     return response()->json([
         'message' => 'User info updated',
         'updatedUserData' => [
@@ -198,7 +195,6 @@ public function updateItem(Request $request, $id)
         return response()->json(['message' => 'Item not found, wrong id'], 404);
     }
 
-
     $request->validate([
         'name' => 'required|string|max:255',
         'price' => 'required|numeric',
@@ -212,50 +208,48 @@ public function updateItem(Request $request, $id)
     ]);
 
     $wasOutOfStock = $item->stock == 0;
-    $oldPrice = $item->price; 
-
+    $oldPrice = $item->price;
 
     // Update item attributes
     $item->fill($request->only([
         'name', 'price', 'stock', 'color', 'era', 'fabric', 'description', 'brand', 'subcategory'
     ]));
-    
 
     $item->stock = $request->stock;
     $isInStock = $item->stock > 0;
-
+    $changedPrice = $oldPrice != $request->price;
 
     // Specific attributes for different item types
-    switch ($request->categoryEdit) {
+    switch ($request->category) {
         case 'Shirt':
-            $shirt = Shirt::where('id_item', $item->id)->first();
-            $shirt->shirt_type = $request->subCategoryEdit;
-            $shirt->size = $request->size;
-            $shirt->save();
+            $item->shirt()->update([
+                'shirt_type' => $request->subCategoryEdit,
+                'size' => $request->size,
+            ]);
             break;
         case 'Tshirt':
-            $tshirt = Tshirt::where('id_item', $item->id)->first();
-            $tshirt->tshirt_type = $request->subCategoryEdit;
-            $tshirt->size = $request->size;
-            $tshirt->save();
+            $item->tshirt()->update([
+                'tshirt_type' => $request->subCategoryEdit,
+                'size' => $request->size,
+            ]);
             break;
         case 'Jacket':
-            $jacket = Jacket::where('id_item', $item->id)->first();
-            $jacket->jacket_type = $request->subCategoryEdit;
-            $jacket->size = $request->size;
-            $jacket->save();
+            $item->jacket()->update([
+                'jacket_type' => $request->subCategoryEdit,
+                'size' => $request->size,
+            ]);
             break;
         case 'Jeans':
-            $jeans = Jeans::where('id_item', $item->id)->first();
-            $jeans->jeans_type = $request->subCategoryEdit;
-            $jeans->size = $request->size;
-            $jeans->save();
+            $item->jeans()->update([
+                'jeans_type' => $request->subCategoryEdit,
+                'size' => $request->size,
+            ]);
             break;
         case 'Sneakers':
-            $sneakers = Sneakers::where('id_item', $item->id)->first();
-            $sneakers->sneakers_type = $request->subCategoryEdit;
-            $sneakers->size = $request->size;
-            $sneakers->save();
+            $item->sneakers()->update([
+                'sneakers_type' => $request->subCategoryEdit,
+                'size' => $request->size,
+            ]);
             break;
         default:
             break;
@@ -264,12 +258,11 @@ public function updateItem(Request $request, $id)
     $item->save();
 
     $notificationController = new NotificationController();
-    $changedPrice = $oldPrice != $request->price;
 
     if ($wasOutOfStock && $isInStock) {
         $notificationController->sendItemNotification($item->id);
     }
-
+    
     if ($changedPrice) {
         $notificationController->sendPriceChangeNotification($item->id);
         $notificationController->sendWishlistSaleNotification($item->id);
@@ -293,8 +286,6 @@ public function updateItem(Request $request, $id)
     ], 200);
     
 }
-
-
 
     public function createUser(Request $request){
 

@@ -76,7 +76,6 @@ class AdminController extends Controller
             'current' => 'Admins'
         ]);
     }
-    
 
     public function viewOrders(Request $request)
     {
@@ -156,7 +155,6 @@ class AdminController extends Controller
       return response()->json(['message' => 'User banned'], 200);
     }
 
-
     public function updateUser(Request $request, $id)
     {
     $user = User::findOrFail($id);
@@ -178,7 +176,6 @@ class AdminController extends Controller
     $user->phone = $request->phone;
     $user->save();
 
-
     return response()->json([
         'message' => 'User info updated',
         'updatedUserData' => [
@@ -198,7 +195,6 @@ public function updateItem(Request $request, $id)
         return response()->json(['message' => 'Item not found, wrong id'], 404);
     }
 
-
     $request->validate([
         'name' => 'required|string|max:255',
         'price' => 'required|numeric',
@@ -212,16 +208,16 @@ public function updateItem(Request $request, $id)
     ]);
 
     $wasOutOfStock = $item->stock == 0;
+    $firstPrice = $item->price;
 
     // Update item attributes
     $item->fill($request->only([
         'name', 'price', 'stock', 'color', 'era', 'fabric', 'description', 'brand', 'subcategory'
     ]));
-    
 
     $item->stock = $request->stock;
     $isInStock = $item->stock > 0;
-
+    $isInSale = ($firstPrice - $item->price) > 0;
 
     // Specific attributes for different item types
     switch ($request->category) {
@@ -264,9 +260,14 @@ public function updateItem(Request $request, $id)
 
     if ($wasOutOfStock && $isInStock) {
         $notificationController = new NotificationController();
-        $notificationController->sendItemNotification($item->id);
+        $notificationController->sendRestockNotification($item->id);
     }
-    
+
+    if ($isInSale) {
+        $notificationController = new NotificationController();
+        $notificationController->sendWishlistSaleNotification($item->id);
+    }
+
     return response()->json([
         'message' => 'Item info updated',
         'updatedItemData' => [
@@ -285,8 +286,6 @@ public function updateItem(Request $request, $id)
     ], 200);
     
 }
-
-
 
     public function createUser(Request $request){
 

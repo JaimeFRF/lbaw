@@ -30,7 +30,7 @@ class NotificationController extends Controller
         }
     }
   
-    public function sendItemNotification($itemId)
+    public function sendRestockNotification($itemId)
     {
        Log::info('teste');
        $product = Item::find($itemId);
@@ -50,10 +50,29 @@ class NotificationController extends Controller
     
         return response()->json(['message' => 'Item notification sent successfully']);
     }
-
-    public function sendOrderNotification($userId, $purchaseId, $status)
+    
+    public function sendWishlistSaleNotification($itemId)
     {
+       Log::info('teste');
+       $product = Item::find($itemId);
 
+       $wishlist = Wishlist::where('id_item', $itemId)->get();
+       $users = [];
+        foreach($wishlist as $item){
+            $users[] = User::find($item->id_user);
+        }
+    
+        foreach ($users as $user) {
+    
+            $newNotification = Notification::where('id_user', $user->id)->where('id_item', $itemId)->where('notification_type', 'SALE')->first();
+    
+            broadcast(new NewNotification($newNotification, $product));
+        }
+    
+        return response()->json(['message' => 'Item notification sent successfully']);
+    }
+
+    public function sendOrderNotification($userId, $purchaseId, $status) {
         $user = User::find($userId);
 
         $newNot = Notification::where('id_user', $userId)

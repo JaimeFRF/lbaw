@@ -204,31 +204,31 @@ CREATE INDEX search_idx ON item USING GIN (tsvectors);
 
 -- TRIGGER 1: Updates the stock of an item when a purchase is made.
 
-CREATE OR REPLACE FUNCTION update_item_stock()
-RETURNS TRIGGER AS $BODY$
-DECLARE
-    item_record RECORD; 
-BEGIN
-    FOR item_record IN (
-        SELECT item.id, cart_item.quantity
-        FROM cart_item
-        JOIN item ON cart_item.id_item = item.id
-        WHERE cart_item.id_cart = NEW.id_cart
-    ) LOOP
-        UPDATE item
-        SET stock = stock - item_record.quantity
-        WHERE id = item_record.id;
-    END LOOP;
+-- CREATE OR REPLACE FUNCTION update_item_stock()
+-- RETURNS TRIGGER AS $BODY$
+-- DECLARE
+--     item_record RECORD; 
+-- BEGIN
+--     FOR item_record IN (
+--         SELECT item.id, cart_item.quantity
+--         FROM cart_item
+--         JOIN item ON cart_item.id_item = item.id
+--         WHERE cart_item.id_cart = NEW.id_cart
+--     ) LOOP
+--         UPDATE item
+--         SET stock = stock - item_record.quantity
+--         WHERE id = item_record.id;
+--     END LOOP;
 
-    RETURN NEW;
-END;
-$BODY$
-LANGUAGE plpgsql;
+--     RETURN NEW;
+-- END;
+-- $BODY$
+-- LANGUAGE plpgsql;
 
-CREATE TRIGGER update_item_stock
-AFTER INSERT ON purchase
-FOR EACH ROW
-EXECUTE FUNCTION update_item_stock();
+-- CREATE TRIGGER update_item_stock
+-- AFTER INSERT ON purchase
+-- FOR EACH ROW
+-- EXECUTE FUNCTION update_item_stock();
 
 -- TRIGGER 2: Updates the review count and average rating for an item whenever a new review is added or an existing review is modified
 
@@ -284,7 +284,6 @@ CREATE TRIGGER wishlist_sale_notification
 CREATE OR REPLACE FUNCTION notify_wishlist_stock()
 RETURNS TRIGGER AS $BODY$
 BEGIN
-    -- Check if the 'stock' column was updated and the new stock is greater than 0
     IF OLD.stock = 0 AND NEW.stock > 0 THEN
         INSERT INTO notification (description, notification_type, id_user, id_item)
         SELECT 
@@ -353,26 +352,24 @@ CREATE TRIGGER purchase_status_change_notification
 
 -- TRIGGER 6: Change users to a new empty cart whenever they make a purchase
 
-CREATE OR REPLACE FUNCTION create_new_cart_for_user()
-RETURNS TRIGGER AS $$
-DECLARE
-    new_cart_id INTEGER;
-BEGIN
-    -- Create a new empty cart for the user and capture the new ID
-    INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
+-- CREATE OR REPLACE FUNCTION create_new_cart_for_user()
+-- RETURNS TRIGGER AS $$
+-- DECLARE
+--     new_cart_id INTEGER;
+-- BEGIN
+--     INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
 
-    -- Update the user's record with the new cart ID
-    UPDATE users SET id_cart = new_cart_id WHERE id = NEW.id_user;
+--     UPDATE users SET id_cart = new_cart_id WHERE id = NEW.id_user;
 
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER user_made_purchase
-AFTER INSERT ON purchase
-FOR EACH ROW
-WHEN (NEW.id_user IS NOT NULL)
-EXECUTE FUNCTION create_new_cart_for_user();
+-- CREATE TRIGGER user_made_purchase
+-- AFTER INSERT ON purchase
+-- FOR EACH ROW
+-- WHEN (NEW.id_user IS NOT NULL)
+-- EXECUTE FUNCTION create_new_cart_for_user();
 
 -- TRIGGER 7: Creating cart for new user
 
@@ -381,10 +378,8 @@ RETURNS TRIGGER AS $$
 DECLARE
     new_cart_id INTEGER;
 BEGIN
-    -- Create a new empty cart for the user and capture the new ID
     INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
 
-    -- Update the user's record with the new cart ID
     UPDATE users SET id_cart = new_cart_id WHERE id = NEW.id;
 
     RETURN NEW;
@@ -421,6 +416,61 @@ CREATE TRIGGER cart_item_price_change_notification
 AFTER UPDATE ON item
 FOR EACH ROW
 EXECUTE FUNCTION notify_cart_item_price_change();
+
+CREATE OR REPLACE FUNCTION combined_purchase_trigger()
+RETURNS TRIGGER AS $$
+DECLARE
+    item_record RECORD;
+    new_cart_id INTEGER;
+BEGIN
+    IF NEW.id_user IS NOT NULL THEN
+        INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
+        UPDATE users SET id_cart = new_cart_id WHERE id = NEW.id_user;
+    END IF;
+
+    FOR item_record IN (
+        SELECT item.id, cart_item.quantity
+        FROM cart_item
+        JOIN item ON cart_item.id_item = item.id
+        WHERE cart_item.id_cart = NEW.id_cart
+    ) LOOP
+        UPDATE item
+        SET stock = stock - item_record.quantity
+        WHERE id = item_record.id;
+    END LOOP;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER combined_purchase_trigger
+AFTER INSERT ON purchase
+FOR EACH ROW
+EXECUTE FUNCTION combined_purchase_trigger();
+
+
+
+-- TRIGGER 9: Remove item from all carts when its stock is 0
+
+CREATE OR REPLACE FUNCTION remove_items_from_carts()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.stock = 0 THEN
+        DELETE FROM cart_item
+        WHERE id_item = NEW.id
+        AND id_cart NOT IN (SELECT id_cart FROM purchase);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER remove_from_carts_on_stock_zero
+AFTER UPDATE OF stock ON item
+FOR EACH ROW
+WHEN (OLD.stock != NEW.stock)
+EXECUTE FUNCTION remove_items_from_carts();
+
+
 
 --- LOCATION
 
@@ -508,11 +558,7 @@ INSERT INTO image (id_item, filepath) VALUES (4, 'images/vintage_highwaist_jeans
 INSERT INTO image (id_item, filepath) VALUES (5, 'images/retro_sneakers_1.png');
 INSERT INTO image (id_item, filepath) VALUES (5, 'images/retro_sneakers_2.png');
 
-INSERT INTO image (id_user, filepath) VALUES (1, 'images/profile_user_1.png');
-INSERT INTO image (id_user, filepath) VALUES (2, 'images/profile_user_2.png');
-INSERT INTO image (id_user, filepath) VALUES (3, 'images/profile_user_3.png');
-INSERT INTO image (id_user, filepath) VALUES (4, 'images/profile_user_4.png');
-INSERT INTO image (id_user, filepath) VALUES (5, 'images/profile_user_5.png');
+INSERT INTO image (id_user, filepath) VALUES (1, 'storage/images/profile_user_1.png');
 
 --- SHIRT
 
@@ -549,6 +595,16 @@ INSERT INTO cart_item (id_cart, id_item) VALUES (7, 2);
 INSERT INTO cart_item (id_cart, id_item) VALUES (8, 1);
 INSERT INTO cart_item (id_cart, id_item) VALUES (9, 4);
 INSERT INTO cart_item (id_cart, id_item) VALUES (10, 5);
+
+--testing
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Test', 1, 1, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (7, 'Casual', '39');
+INSERT INTO cart_item (id_cart, id_item) VALUES (11, 7);
+INSERT INTO cart_item (id_cart, id_item) VALUES (12, 7);
+-- INSERT INTO purchase (price, purchase_date, delivery_date, purchase_status, payment_method, id_user, id_location, id_cart)
+-- VALUES ( 1, '2023-10-10', '2023-10-15', 'Paid', 'Transfer', 1, 1, 12);
+
 
 --- REVIEW
 

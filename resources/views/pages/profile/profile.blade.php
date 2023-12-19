@@ -38,12 +38,15 @@
                     <div class="card-header text-center">
                         Wishlist
                     </div>
-                    <div class="card-body d-flex flex-column">
+
+                    <div class="card-body d-flex flex-column scrollable-content" id="wishlist-history">
                         @include('partials.profile.wishlist', ['items_wishlist' => $items_wishlist])
                     </div>
-                    <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto">See more...</a>
+                    @if(count($items_wishlist) > 3)
+                    <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto" onclick="toggleScroll('wishlist-history')">See more...</a>
+                    @endif
                 </div>
-            </div>        
+            </div>  
 
             <div class="col-md-4 mb-4">
                 <div class="card">
@@ -51,10 +54,12 @@
                         Pending Orders
                     </div>
                     
-                    <div class="card-body">
+                    <div class="card-body  d-flex flex-column scrollable-content" id="orders-history">
                         @include('partials.profile.profile-pending', ['orders' => $orders, 'carts_orders' => $carts_orders])
                     </div>
-                    <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto">See more...</a>
+                    @if(count($carts_orders) > 2)
+                    <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto" onclick="toggleScroll('orders-history')">See more...</a>
+                    @endif
                 </div>
             </div>
 
@@ -63,14 +68,15 @@
                     <div class="card-header text-center">
                         Purchase History
                     </div>
-                    <div class="card-body d-flex flex-column">
+
+                    <div class="card-body  d-flex flex-column scrollable-content" id="purchase-history">
                         @include('partials.profile.profile-purchases', ['purchases' => $purchases, 'carts_purchases' => $carts_purchases])
                     </div>
-                    <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto">See more...</a>
+                    @if(count($carts_purchases) > 2)
+                    <a href="#" class="btn btn-link text-decoration-none text-reset align-self-end mt-auto" onclick="toggleScroll('purchase-history')">See more...</a>
+                    @endif
                 </div>
             </div>
-
-
         </div>
     </section>
 @endsection

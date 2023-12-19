@@ -52,3 +52,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function toggleScroll(contentId) {
+    var content = document.getElementById(contentId);
+    var seeMoreLink = content.nextElementSibling; 
+
+    if (seeMoreLink.textContent.trim() === 'See more...') {
+        content.style.maxHeight = '600px';
+        content.style.overflowY = 'auto';  
+        seeMoreLink.textContent = 'See less...';
+    } 
+    else {
+        content.style.maxHeight = '450px';   
+        content.style.overflowY = 'hidden'; 
+        seeMoreLink.textContent = 'See more...';
+    }
+}
+

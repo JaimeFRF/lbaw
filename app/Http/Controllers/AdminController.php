@@ -76,7 +76,6 @@ class AdminController extends Controller
             'current' => 'Admins'
         ]);
     }
-    
 
     public function viewOrders(Request $request)
     {
@@ -156,7 +155,6 @@ class AdminController extends Controller
       return response()->json(['message' => 'User banned'], 200);
     }
 
-
     public function updateUser(Request $request, $id)
     {
     $user = User::findOrFail($id);
@@ -177,7 +175,6 @@ class AdminController extends Controller
     $user->fill($request->only(['name', 'email', 'username']));
     $user->phone = $request->phone;
     $user->save();
-
 
     return response()->json([
         'message' => 'User info updated',
@@ -293,9 +290,6 @@ public function updateItem(Request $request, $id)
     ], 200);
     
 }
-
-
-
     public function createUser(Request $request){
 
         $auth_admin = Auth::guard('admin')->user();

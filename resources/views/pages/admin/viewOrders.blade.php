@@ -27,7 +27,11 @@
             @foreach ($orders as $order)
                 <tr class="order-row" data-order-id={{$order->id}}>
                     <td class="text-center">{{$order->id}}</td>
+                    @if($order->user == null)
+                    <td class="text-center">[[Removed User]]</td>
+                    @else
                     <td class="text-center">{{$order->user->username}}</td>
+                    @endif
                     <td class="text-center">{{$order->price}}€</td>
                     <td class="text-center">{{$order->purchase_date}}</td>
                     <td class="text-center">{{$order->delivery_date}}</td>

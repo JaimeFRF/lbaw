@@ -212,6 +212,8 @@ public function updateItem(Request $request, $id)
     ]);
 
     $wasOutOfStock = $item->stock == 0;
+    $oldPrice = $item->price; 
+
 
     // Update item attributes
     $item->fill($request->only([
@@ -224,43 +226,50 @@ public function updateItem(Request $request, $id)
 
 
     // Specific attributes for different item types
-    switch ($request->category) {
+    switch ($request->categoryEdit) {
         case 'Shirt':
-            $item->shirt()->update([
-                'shirt_type' => $request->subCategoryEdit,
-                'size' => $request->size,
-            ]);
+            $shirt = Shirt::where('id_item', $item->id)->first();
+            $shirt->shirt_type = $request->subCategoryEdit;
+            $shirt->size = $request->size;
+            $shirt->save();
             break;
         case 'Tshirt':
-            $item->tshirt()->update([
-                'tshirt_type' => $request->subCategoryEdit,
-                'size' => $request->size,
-            ]);
+            $tshirt = Tshirt::where('id_item', $item->id)->first();
+            $tshirt->tshirt_type = $request->subCategoryEdit;
+            $tshirt->size = $request->size;
+            $tshirt->save();
             break;
         case 'Jacket':
-            $item->jacket()->update([
-                'jacket_type' => $request->subCategoryEdit,
-                'size' => $request->size,
-            ]);
+            $jacket = Jacket::where('id_item', $item->id)->first();
+            $jacket->jacket_type = $request->subCategoryEdit;
+            $jacket->size = $request->size;
+            $jacket->save();
             break;
         case 'Jeans':
-            $item->jeans()->update([
-                'jeans_type' => $request->subCategoryEdit,
-                'size' => $request->size,
-            ]);
+            $jeans = Jeans::where('id_item', $item->id)->first();
+            $jeans->jeans_type = $request->subCategoryEdit;
+            $jeans->size = $request->size;
+            $jeans->save();
             break;
         case 'Sneakers':
-            $item->sneakers()->update([
-                'sneakers_type' => $request->subCategoryEdit,
-                'size' => $request->size,
-            ]);
+            $sneakers = Sneakers::where('id_item', $item->id)->first();
+            $sneakers->sneakers_type = $request->subCategoryEdit;
+            $sneakers->size = $request->size;
+            $sneakers->save();
             break;
         default:
-            // Handle the 'Unknown' category or any other category
             break;
     }
     
     $item->save();
+
+    if ($oldPrice != $request->price) {
+        $notificationController = new NotificationController();
+        $notificationController->sendPriceChangeNotification($item->id);
+
+        $notificationController = new NotificationController();
+        $notificationController->sendWishlistSaleNotification($item->id);
+    }
 
     if ($wasOutOfStock && $isInStock) {
         $notificationController = new NotificationController();

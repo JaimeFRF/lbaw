@@ -127,12 +127,14 @@ if(Auth::check()){
 <script>
   var pusherAppKey = "{{ env('PUSHER_APP_KEY') }}";
   var pusherCluster = "{{ env('PUSHER_APP_CLUSTER') }}";
+  var userId = "{{ Auth::id() }}";
+  console.log(userId);
   const pusher = new Pusher(pusherAppKey, {
     cluster: pusherCluster,
     encrypted: true
   });
 
-  const channel = pusher.subscribe('lbaw2366');
+  const channel = pusher.subscribe('lbaw2366-' + userId);
   channel.bind('new-notification', function(notification) {
     console.log('New notification received!');
     updateNavbarUI(notification);
@@ -155,9 +157,8 @@ if(Auth::check()){
 
     if (notificationType === 'SALE') {
       newNotificationElement.innerHTML = `
-        <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
         <div class="text">
-          <h4>${notificationData.notification.item.name}</h4>
+          <h4>${notificationData.item.name}</h4>
           <p>${notificationData.notification.description}</p>
         </div>
       `;
@@ -178,9 +179,8 @@ if(Auth::check()){
       `;
     } else if (notificationType === 'PRICE_CHANGE') {
       newNotificationElement.innerHTML = `
-        <img src="${notificationData.item.images.length ? notificationData.item.images[0].filepath : 'public/images/default-product-image.png'}" alt="img">
         <div class="text">
-          <h4>${notificationData.notification.item.name}</h4>
+          <h4>${notificationData.item.name}</h4>
           <p>${notificationData.notification.description }</p>
         </div>
       `;

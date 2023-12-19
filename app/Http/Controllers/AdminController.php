@@ -263,19 +263,18 @@ public function updateItem(Request $request, $id)
     
     $item->save();
 
-    if ($oldPrice != $request->price) {
-        $notificationController = new NotificationController();
-        $notificationController->sendPriceChangeNotification($item->id);
+    $notificationController = new NotificationController();
+    $changedPrice = $oldPrice != $request->price;
 
-        $notificationController = new NotificationController();
+    if ($wasOutOfStock && $isInStock) {
+        $notificationController->sendItemNotification($item->id);
+    }
+
+    if ($changedPrice) {
+        $notificationController->sendPriceChangeNotification($item->id);
         $notificationController->sendWishlistSaleNotification($item->id);
     }
 
-    if ($wasOutOfStock && $isInStock) {
-        $notificationController = new NotificationController();
-        $notificationController->sendItemNotification($item->id);
-    }
-    
     return response()->json([
         'message' => 'Item info updated',
         'updatedItemData' => [

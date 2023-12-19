@@ -28,6 +28,19 @@
     clear: both;
 }
 
+.description{
+    display: none;
+}
+
+.title-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.arrow{
+    padding-right: 1em;
+}
+
 /* Responsive Styles */
 @media screen and (max-width: 768px) {
     .aboutText h7 {

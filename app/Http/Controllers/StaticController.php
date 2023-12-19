@@ -26,4 +26,11 @@ class StaticController extends Controller
           'current' => 'Contacts'
         ]);
       }
+
+      public function features(){
+        return view('pages.static.features',[
+          'breadcrumbs' => ['Home' => route('home'), 'About' => route('about')],
+          'current' => 'Features'
+        ]);
+      }
 }

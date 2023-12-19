@@ -81,6 +81,7 @@ Route::get('/admin-view-users/{id}', [AdminController::class, 'userDetails'])->n
 Route::get('/faq', [StaticController::class, 'faq'])->name('faq');
 Route::get('/contacts', [StaticController::class, 'contacts'])->name('contacts');
 Route::get('/about', [StaticController::class, 'about'])->name('about');
+Route::get('/about/features', [StaticController::class, 'features'])-> name('features');
 
 
 // Items on home-page

@@ -140,6 +140,11 @@ input:focus{
   color: var(--website-main-color);
 }
 
+.scrollable-content {
+  max-height: 450px; /* Adjust as needed */
+  overflow-y: hidden;
+}
+
 /*!********************************* BUTTONS COLORS ********************************!*/
 .btn a{
   color: inherit;

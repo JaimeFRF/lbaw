@@ -120,6 +120,15 @@ input:focus{
 	font-size: 12px;
 }
 
+#loginButton{
+  background-color: #1b1b1b;
+  border: 0;
+}
+
+#loginButton:hover{
+  background-color: #5c636a;
+}
+
 /*!********************************** COMMON TAGS **********************************!*/
 
 #content{

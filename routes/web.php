@@ -47,6 +47,8 @@ Route::get('/get-notifications',  [NotificationController::class, 'getNotificati
 Route::post('/send-item-notification', [NotificationController::class, 'sendItemNotification']) ->name('send.item.notification');
 Route::post('/send-order-notification', [NotificationController::class, 'sendOrderNotification'])->name('send.order.notification');
 Route::delete('/notifications/delete/{id}', [NotificationController::class, 'deleteNotification']);
+Route::get('/notifications/count', [NotificationController::class, 'countNotifications']);
+
 
 //Purchase
 Route::post('/checkout', [PurchaseController::class, 'checkout'])->name('checkout');
@@ -76,7 +78,6 @@ Route::get('/get-all-users',[AdminController::class, 'getAllUsers']);
 Route::get('/admin-view-users/{id}', [AdminController::class, 'userDetails'])->name('userDetails');
 
 
-
 //Statics
 Route::get('/faq', [StaticController::class, 'faq'])->name('faq');
 Route::get('/contacts', [StaticController::class, 'contacts'])->name('contacts');
@@ -89,7 +90,8 @@ Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
 Route::get('/clearFilters', [ItemController::class, 'clearFilters'])->name('clearFilters');
 Route::get('/search', [ItemController::class, 'search'])->name('search');
 Route::get('/search/filter', [ItemController::class, 'filter'])->name('filter');
-
+Route::get('/api/get/item-picture/{id}' , [ItemController::Class, 'getImages']);
+Route::post('/delete-item-image' , [ItemController::Class, 'deleteItemImage']);
 //Wishlist
 Route::put('users/wishlist/product/{id_item}', [WishlistController::class, 'add']);
 Route::delete('users/wishlist/product/{product_id}', [WishlistController::class, 'delete']);
@@ -142,7 +144,6 @@ Route::get('/recoverPassword', [MailController::class, 'showRecoverPasswordForm'
 Route::get('/resetPassword/{token}', [MailController::class, 'showResetPasswordForm'])->name('reset_password');
 Route::post('/send', [MailController::class, 'send']);
 Route::post('/send-email-set-password', [MailController::class, 'sendEmailSetPassword']);
-
 
 
 

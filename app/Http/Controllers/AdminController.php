@@ -15,13 +15,13 @@ use App\Models\Review;
 use App\Models\Jacket;
 use App\Models\Jeans;
 use App\Models\Shirt;
-use App\Models\sneakers;
+use App\Models\Sneakers;
 use App\Models\Tshirt;
 use App\Models\Purchase;
 use App\Models\Location;
 use Illuminate\Support\Facades\DB;
-
-
+use Illuminate\Support\Facades\Storage;
+use App\Models\Image;
 
 class AdminController extends Controller
 {   
@@ -211,46 +211,98 @@ public function updateItem(Request $request, $id)
     $wasOutOfStock = $item->stock == 0;
     $oldPrice = $item->price; 
 
-
-    // Update item attributes
     $item->fill($request->only([
         'name', 'price', 'stock', 'color', 'era', 'fabric', 'description', 'brand', 'subcategory'
     ]));
     
-
     $item->stock = $request->stock;
     $isInStock = $item->stock > 0;
+    $item->save();
+
+    $itemCategory = Item::select('item.id', DB::raw("
+        CASE
+            WHEN EXISTS (SELECT 1 FROM shirt WHERE id_item = item.id) THEN 'Shirt'
+            WHEN EXISTS (SELECT 1 FROM tshirt WHERE id_item = item.id) THEN 'Tshirt'
+            WHEN EXISTS (SELECT 1 FROM jacket WHERE id_item = item.id) THEN 'Jacket'
+            WHEN EXISTS (SELECT 1 FROM jeans WHERE id_item = item.id) THEN 'Jeans'
+            WHEN EXISTS (SELECT 1 FROM sneakers WHERE id_item = item.id) THEN 'Sneakers'
+            ELSE 'Unknown'
+        END AS category
+    "))
+    ->where('item.id', $id)
+    ->first();
 
 
-    // Specific attributes for different item types
-    switch ($request->categoryEdit) {
+    switch ($itemCategory['category']) {
         case 'Shirt':
             $shirt = Shirt::where('id_item', $item->id)->first();
-            $shirt->shirt_type = $request->subCategoryEdit;
+            if ($shirt) {
+                $shirt->delete();
+            }
+            break;
+        case 'Tshirt':
+            $tshirt = Tshirt::where('id_item', $item->id)->first();
+            if ($tshirt) {
+                $tshirt->delete();
+            }
+            break;
+        case 'Jacket':
+            Log::info("vou apagar");
+            $jacket = Jacket::where('id_item', $item->id)->first();
+            if ($jacket) {
+                Log::info("apaguei");
+                $jacket->delete(); 
+            }
+            break;
+        case 'Jeans':
+            $jeans = Jeans::where('id_item', $item->id)->first();
+            if ($jeans) {
+                $jeans->delete(); 
+            }
+            break;
+        case 'Sneakers':
+            $sneakers = Sneakers::where('id_item', $item->id)->first();
+            if ($sneakers) {
+                $sneakers->delete(); 
+            }
+            break;
+        default:
+            break;
+    }
+
+    switch ($request->category) {
+        case 'Shirt':
+            $shirt = new Shirt();
+            $shirt->id_item = $item->id;
+            $shirt->shirt_type = $request->subcategory;
             $shirt->size = $request->size;
             $shirt->save();
             break;
         case 'Tshirt':
-            $tshirt = Tshirt::where('id_item', $item->id)->first();
-            $tshirt->tshirt_type = $request->subCategoryEdit;
+            $tshirt = new Tshirt();
+            $tshirt->id_item = $item->id;
+            $tshirt->tshirt_type = $request->subcategory;
             $tshirt->size = $request->size;
             $tshirt->save();
             break;
         case 'Jacket':
-            $jacket = Jacket::where('id_item', $item->id)->first();
-            $jacket->jacket_type = $request->subCategoryEdit;
+            $jacket = new Jacket();
+            $jacket->id_item = $item->id;
+            $jacket->jacket_type = $request->subcategory;
             $jacket->size = $request->size;
             $jacket->save();
             break;
         case 'Jeans':
-            $jeans = Jeans::where('id_item', $item->id)->first();
-            $jeans->jeans_type = $request->subCategoryEdit;
+            $jeans = new Jeans();
+            $jeans->id_item = $item->id;
+            $jeans->jeans_type = $request->subcategory;
             $jeans->size = $request->size;
             $jeans->save();
             break;
         case 'Sneakers':
-            $sneakers = Sneakers::where('id_item', $item->id)->first();
-            $sneakers->sneakers_type = $request->subCategoryEdit;
+            $sneakers = new Sneakers();
+            $sneakers->id_item = $item->id;
+            $sneakers->sneakers_type = $request->subcategory;
             $sneakers->size = $request->size;
             $sneakers->save();
             break;
@@ -258,19 +310,39 @@ public function updateItem(Request $request, $id)
             break;
     }
     
-    $item->save();
 
     $notificationController = new NotificationController();
     $changedPrice = $oldPrice != $request->price;
 
     if ($wasOutOfStock && $isInStock) {
-        $notificationController->sendItemNotification($item->id);
+        $notificationController->sendRestockNotification($item->id);
     }
 
     if ($changedPrice) {
         $notificationController->sendPriceChangeNotification($item->id);
         $notificationController->sendWishlistSaleNotification($item->id);
     }
+
+    if ($request->has('photos')) {
+        foreach ($request->file('photos') as $photo) {
+            $extension = $photo->getClientOriginalExtension();
+            
+            $filename = uniqid() . '.' . $extension;
+            
+            if (Storage::disk('public')->exists('images/' . $filename)) {
+                Storage::disk('public')->delete($filename);
+            }
+    
+            $path = $photo->storeAs('images', $filename, 'public');
+            
+            $newImage = new Image;
+            $newImage->id_item = $item->id;
+            $newImage->filepath = 'storage/images/' . $filename;
+            $newImage->save();
+        }
+    }
+
+
 
     return response()->json([
         'message' => 'Item info updated',
@@ -283,9 +355,9 @@ public function updateItem(Request $request, $id)
             'fabric' => $item->fabric,
             'description' => $item->description,
             'brand' => $item->brand,
-            'category' => $request->categoryEdit,
+            'category' => $request->category,
             'size' => $request->size,
-            'subCategory' => $request->subCategoryEdit,
+            'subCategory' => $request->subcategory,
         ]
     ], 200);
     

@@ -14,7 +14,8 @@ class Image extends Model
     public function items(){
         return $this->belongsTo(Item::class, 'id_item');
     }
-  
+
+    
 }
 
 ?>

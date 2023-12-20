@@ -13,7 +13,7 @@
             'rating' => 'float',
         ];
 
-        protected $fillable = ['id', 'description', 'rating', 'up_votes', 'down_votes', 'id_user', 'id_item'];
+        protected $fillable = ['id', 'description', 'rating', 'id_user', 'id_item'];
 
         public function user(){
             return $this->belongsTo(User::class, 'id_user');

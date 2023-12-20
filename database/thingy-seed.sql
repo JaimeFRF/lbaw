@@ -4,15 +4,15 @@ SET search_path TO lbaw2366;
 
 ----------- types
 
-CREATE TYPE ShirtType as ENUM('Collarless', 'Regular', 'Short sleeve');
+CREATE TYPE ShirtType as ENUM('Collarless', 'Regular', 'Short Sleeve');
 
-CREATE TYPE TshirtType as ENUM ('Regular', 'Long sleeve', 'Football');
+CREATE TYPE TshirtType as ENUM ('Regular', 'Long Sleeve', 'Football');
 
 CREATE TYPE JacketType as ENUM ('Regular', 'Baseball', 'Bomber');
 
 CREATE TYPE JeansType as ENUM ('Regular', 'Skinny', 'Baggy');
 
-CREATE TYPE SneakersType as ENUM ('Leather', 'Casual');
+CREATE TYPE SneakersType as ENUM ('Leather', 'Casual', 'Sports');
 
 CREATE TYPE PaymentMethod as ENUM ('Transfer', 'Paypal');
 
@@ -498,6 +498,40 @@ INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('
 INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Retro Sneakers', 50.00, 40, 'Multi', '90s', 'Canvas', 'Colorful sneakers with a retro look.');
 INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Leather Jacket', 109.99, 0, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
 
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Striped Polo Shirt', 34.99, 15, 'White, Blue', '2000s', 'Cotton', 'Polo shirt with a classic striped pattern.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Hooded Zip-up Jacket', 69.99, 18, 'Gray', '90s', 'Polyester', 'Comfortable hooded jacket with a zip-up front.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Corduroy Pants', 42.00, 22, 'Green', '2000s', 'Corduroy', 'Brown corduroy pants with a vintage touch.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Brushed Leather Shoes', 59.99, 35, 'Black', '2010s', 'Leather', 'Classic leathered shoes with details.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Casual Button-up Shirt', 29.99, 28, 'Navy', '80s', 'Cotton', 'Versatile button-up shirt for a casual look.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Casual Regular T-Shirt', 9.99, 50, 'Gray', '2000s', 'Cotton', 'Comfortable regular fit T-shirt in gray.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Athletic Running Shoes', 39.99, 35, 'Gray', '2010s', 'Mesh', 'Performance-oriented running shoes in gray.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Bomber Jacket', 89.99, 12, 'White, Purple, Black', '80s', 'Satin', 'Vintage bomber jacket with 3 colors. ');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('High-Top Canvas Sneakers', 44.00, 30, 'White', '2010s', 'Canvas', 'White high-top sneakers for a trendy look.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Long Sleeve Graphic Tee', 24.99, 35, 'Black', '2010s', 'Cotton', 'Stylish long sleeve T-shirt with a graphic design in black.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Football Jersey', 99.99, 1, 'Red', '2000s', 'Polyester', 'Footbal jersey from the 2008/09 season in red');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Classic Baseball Jacket', 74.99, 15, 'Olive', '80s', 'Wool', 'Stylish olive green bomber jacket.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Cargo Pants', 47.00, 20, 'Olive', '2000s', 'Cotton', 'Comfortable khaki cargo pants.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Suede Ankle Boots', 79.99, 25, 'Tan', '90s', 'Suede', 'Fashionable tan suede ankle boots.');
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Football Jersey', 89.99, 3, 'White', '90s', 'Polyester', 'White footbal jersey from the 1996/97 season');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Hip-Hop Group Shirt', 14.99, 15, 'Yellow', '90s', 'Cotton', 'Yellow T-shirt in honor of an old-school hip-hop group');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Distressed Band Tour T-Shirt', 14.99, 25, 'Black', '70s', 'Cotton', 'Black T-shirt from a rock band tour');
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Beach Shirt', 19.99, 25, 'Green', '2010s', 'Cotton', 'Green T-shirt adequate for sunsets in the beach.');
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('High-Waist Flared Jeans', 35.00, 18, 'Light Blue', '2010s', 'Denim', 'Light blue high-waisted flared jeans, a staple from the 2010s era.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Cargo Shorts', 29.99, 20, 'Blue', '80s', 'Denim', 'Channel the 1980s with these acid-washed skinny jeans for a bold vintage look.');
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Designed Old School Jacket', 89.99, 10, 'Olive', '2000s', 'Corduroy', 'Olive green corduroy bomber jacket, a timeless piece from the 2000s.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Leather Aviator Jacket', 129.99, 8, 'Dark Brown', '80s', 'Leather', 'Dark brown leather aviator jacket, capturing the spirit of vintage aviation.');
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Canvas Low-Top Sneakers', 45.00, 25, 'White', '2010s', 'Canvas', 'Cream-colored canvas low-top sneakers, reminiscent of the 2010s fashion era.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Old School Basketball Shoes', 59.00, 15, 'White', '90s', 'Leather', 'Shoes worn by basketball players in the 2000s that turned into famous streetwear.');
+
+
+
+
+
 --- USER
 
 insert into users (username, email, password, phone) values ('johndoe', 'johndoe@example.com', '$2y$10$xAvXOTsApkcRzaJ0ZKQyyuE24KAc0X8RfTJxHMtDHSc7fcOvTQxjK', '938203081'); -- password is 1234567890
@@ -542,43 +576,118 @@ INSERT INTO wishlist (id_user,id_item) VALUES (5,5);
 --- IMAGE
 
 INSERT INTO image (id_item, filepath) VALUES (1, 'images/retro_graphic_tshirt_1.png');
-INSERT INTO image (id_item, filepath) VALUES (1, 'images/retro_graphic_tshirt_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (2, 'images/vintage_denim_jacket_1.png');
 INSERT INTO image (id_item, filepath) VALUES (2, 'images/vintage_denim_jacket_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (3, 'images/classic_flannel_shirt_1.png');
-INSERT INTO image (id_item, filepath) VALUES (3, 'images/classic_flannel_shirt_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (4, 'images/vintage_highwaist_jeans_1.png');
-INSERT INTO image (id_item, filepath) VALUES (4, 'images/vintage_highwaist_jeans_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (5, 'images/retro_sneakers_1.png');
-INSERT INTO image (id_item, filepath) VALUES (5, 'images/retro_sneakers_2.png');
+
+INSERT INTO image (id_item, filepath) VALUES (7, 'images/striped_polo_shirt_1.png');
+INSERT INTO image (id_item, filepath) VALUES (7, 'images/striped_polo_shirt_2.png');
+
+INSERT INTO image (id_item, filepath) VALUES (8, 'images/hooded_zipup_jacket_1.png');
+INSERT INTO image (id_item, filepath) VALUES (8, 'images/hooded_zipup_jacket_2.png');
+
+INSERT INTO image (id_item, filepath) VALUES (9, 'images/vintage_corduroy_pants.png');
+
+INSERT INTO image (id_item, filepath) VALUES (10, 'images/brushed_leather_shoes_1.png');
+INSERT INTO image (id_item, filepath) VALUES (10, 'images/brushed_leather_shoes_2.png');
+
+INSERT INTO image (id_item, filepath) VALUES (11, 'images/casual_button_shirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (12, 'images/casual_regular_tshirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (13, 'images/athletic_running_shoes.png');
+
+INSERT INTO image (id_item, filepath) VALUES (14, 'images/graphic_bomber_jacket.png');
+
+INSERT INTO image (id_item, filepath) VALUES (15, 'images/hightop_canvas_sneakers.png');
+
+INSERT INTO image (id_item, filepath) VALUES (16, 'images/long_sleeve_graphic_tshirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (17, 'images/football_jersey.png');
+
+INSERT INTO image (id_item, filepath) VALUES (18, 'images/classic_baseball_jacket.png');
+
+INSERT INTO image (id_item, filepath) VALUES (19, 'images/cargo_pants.png');
+
+INSERT INTO image (id_item, filepath) VALUES (20, 'images/suede_anke_boots.png');
+
+INSERT INTO image (id_item, filepath) VALUES (21, 'images/white_football_jersey.png');
+
+INSERT INTO image (id_item, filepath) VALUES (22, 'images/hh_group_shirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (23, 'images/rock_band_tshirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (24, 'images/beach_shirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (25, 'images/flared_jeans.png');
+
+INSERT INTO image (id_item, filepath) VALUES (26, 'images/cargo_shorts.png');
+
+INSERT INTO image (id_item, filepath) VALUES (27, 'images/designer_vintage_jacket.png');
+
+INSERT INTO image (id_item, filepath) VALUES (28, 'images/leather_aviator_jacket.png');
+
+INSERT INTO image (id_item, filepath) VALUES (29, 'images/canvas_low_top.png');
+
+INSERT INTO image (id_item, filepath) VALUES (30, 'images/basketball_shoes.png');
+
 
 INSERT INTO image (id_user, filepath) VALUES (1, 'storage/images/profile_user_1.png');
 
 --- SHIRT
 
 INSERT INTO shirt (id_item, shirt_type, size) VALUES (3, 'Regular', 'M');
+INSERT INTO shirt (id_item, shirt_type, size) VALUES (7, 'Short Sleeve', 'S');
+INSERT INTO shirt (id_item, shirt_type, size) VALUES (11, 'Regular', 'XL');
+INSERT INTO shirt (id_item, shirt_type, size) VALUES (24, 'Short Sleeve', 'M');
 
 --- TSHIRT
 
 INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (1, 'Regular', 'L');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (12, 'Regular', 'XL');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (16, 'Long Sleeve', 'M');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (17, 'Football', 'S');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (21, 'Football', 'L');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (22, 'Regular', 'M');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (23, 'Regular', 'XL');
 
 --- JACKET
 
 INSERT INTO jacket (id_item, jacket_type, size) VALUES (2, 'Bomber', 'S');
 INSERT INTO jacket (id_item, jacket_type, size) VALUES (6, 'Regular', 'M');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (8, 'Regular', 'L');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (14, 'Bomber', 'XL');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (18, 'Baseball', 'M');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (27, 'Regular', 'M');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (28, 'Regular', 'L');
 
 
 --- JEANS
 
 INSERT INTO jeans (id_item, jeans_type, size) VALUES (4, 'Regular', 'S');
+INSERT INTO jeans (id_item, jeans_type, size) VALUES (9, 'Regular', 'M');
+INSERT INTO jeans (id_item, jeans_type, size) VALUES (19, 'Baggy', 'M');
+INSERT INTO jeans (id_item, jeans_type, size) VALUES (25, 'Regular', 'M');
+INSERT INTO jeans (id_item, jeans_type, size) VALUES (26, 'Skinny', 'S');
 
 --- sneakers
 
 INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (5, 'Casual', '38');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (10, 'Leather', '41');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (13, 'Sports', '43');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (15, 'Casual', '36');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (20, 'Casual', '45');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (29, 'Casual', '45');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (30, 'Sports', '45');
+
+
+
 
 --- CART_ITEM
 

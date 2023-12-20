@@ -143,13 +143,16 @@ if(Auth::check()){
   function updateNavbarUI(notificationData) {
     const notificationsContainer = document.getElementById('notificationsContainer');
     const notificationsCountElement = document.getElementById('notificationsCount');
-    var currentCount = document.getElementById('notificationsCount').getAttribute('value');
-    currentCount = parseInt(currentCount); 
-    const newCount = currentCount + 1;
-    notificationsCountElement.innerText = `(${newCount})`;
+
+
+    fetch('/notifications/count')
+    .then(response => response.json())
+    .then(data => {
+      notificationsCountElement.innerText = `(${data.notificationsCount})`;
+    })
+    .catch(error => console.error('Error:', error));
 
     const notificationType = notificationData.notification.notification_type;
-    console.log(notificationData);
 
     const newNotificationElement = document.createElement('a');
     newNotificationElement.classList.add('dropdown-item', 'notifi-item');

@@ -414,6 +414,13 @@ class ItemController extends Controller
         return response()->json(['message' => 'Item added successfully', 'item' => $item], 200);
     }
 
+    public function deleteItemImage(Request $request){
+
+        $image = Image::find($request->imageId);
+        $image->delete();
+        return response()->json(['message' => 'Image deleted successfully'], 200);
+    }
+
     private function getCategoryModelName($category)
     {
         $allowedCategories = ['Tshirt', 'Shirt', 'Jacket', 'Jeans', 'Sneakers'];

@@ -158,15 +158,43 @@ document.addEventListener('DOMContentLoaded', function() {
                 const deleteButton = document.createElement('button');
                 deleteButton.innerText = 'Delete';
                 deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
-                deleteButton.onclick = function() {
-                    
-                };
-
+                
+                
                 const imageDiv = document.createElement('div');
-                imageDiv.classList.add('d-flex', 'flex-column', 'align-items-center', 'mr-3', 'mb-3');
+                imageDiv.classList.add('image-container','d-flex', 'flex-column', 'align-items-center', 'mr-3', 'mb-3');
                 imageDiv.appendChild(imgElement);
+                deleteButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    fetch('/delete-item-image', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        },
+                        body: JSON.stringify({
+                            'imageId': image.id,
+                        }),
+                    }).then(response => {
+                        if (response.status == 200) {
+                            return response.json();
+                        }
+                        else {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                    }).then(
+                        data => {
+                            console.log(data);
+                            const imageDiv = this.closest('.image-container');
+                            console.log(imageDiv);
+                            imageDiv.remove();
+                        }
+                    ).catch(error => {
+                        console.error('Error:', error);
+                    });
+                });
+            
                 imageDiv.appendChild(deleteButton);
-
                 container.appendChild(imageDiv);
             });
             editItemModal.show();

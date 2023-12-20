@@ -22,7 +22,7 @@
                     <div class="card-body d-flex align-items-center">
                         <div class="profile-picture me-4">
                             
-                            <img src={{$profile_picture}} alt="Profile Picture" class="rounded-circle" width="100" height="100">
+                            <img src="{{ asset($profile_picture) }}" alt="Profile Picture" class="rounded-circle" width="100" height="100">
                         </div>
                         <div>
                             <p class="mb-1"><strong>Username:</strong> {{$user->username}}</p>

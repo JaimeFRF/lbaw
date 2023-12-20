@@ -18,7 +18,7 @@
 
                 <div class="user-login-fields">
                     <div class="form-group d-flex flex-column mt-3">
-                        <label for="email"><h6>Email</h6></label>
+                        <label for="email"><h6>Email *</h6></label>
                         <input class="form-control"type="email" name="email" value="{{ old('email') }}" required autofocus onmouseover="getContextualHelp('password', 'email-help').show()" onmouseout="getContextualHelp('password', 'email-help').hide()">
                         @if ($errors->has('email'))
                             <span class="error">
@@ -30,7 +30,7 @@
 
 
                     <div class="form-group d-flex flex-column mt-3" id="pwd">
-                        <label for="password"><h6>Password</h6></label>
+                        <label for="password"><h6>Password *</h6></label>
                         <div class="input-group">
                             <input class="form-control" type="password" name="password" required onmouseover="getContextualHelp('password', 'password-help').show()" onmouseout="getContextualHelp('password', 'password-help').hide()">
                             <span title="Show password" class="toggle-password input-group-text">

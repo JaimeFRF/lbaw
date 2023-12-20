@@ -19,7 +19,7 @@ h4 {
     vertical-align: middle; /* Align vertically with the stars */
     margin-left: 5px; /* Adjust spacing as needed */
     display: inline-block; /* Treat as block-level element for better control */
-    line-height: 1; /* Adjust line height to align better */
+    line-height: 1.4; /* Adjust line height to align better */
 }
 
 

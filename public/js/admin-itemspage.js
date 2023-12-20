@@ -7,10 +7,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const addItemForm = document.getElementById('addItemForm');
     const manualCloseModalButton = document.getElementById('manualCloseModalButton');
     const categorySelect = document.getElementById('category');
-    const categorySelectEdit = document.getElementById('categoryEdit');
+    const categorySelectEdit = document.getElementById('Editcategory');
     const subCategorySelect = document.getElementById('subCategory');
     const subCategorySelectEdit = document.getElementById('subCategoryEdit');
     const deleteItemButtons = document.querySelectorAll('.delete-item-btn');
+
 
     addItemModalElement.addEventListener('hidden.bs.modal', function () {
         addItemForm.reset();
@@ -20,17 +21,17 @@ document.addEventListener('DOMContentLoaded', function() {
         editItemForm.reset();
     });
 
-    document.querySelectorAll('.edit-btn').forEach(function(button) {
-        button.addEventListener('click', function() {
-            var item = JSON.parse(this.getAttribute('data-item')); 
+    // document.querySelectorAll('.edit-btn').forEach(function(button) {
+    //     button.addEventListener('click', function() {
+    //         var item = JSON.parse(this.getAttribute('data-item')); 
     
-            document.getElementById('editItemId').value = item.id;
-            document.getElementById('editProductName').value = item.name;
-            document.getElementById('editSize').value = item.size;
-            document.getElementById('editUnitPrice').value = item.price;
-            document.getElementById('editStock').value = item.stock;
-        });
-    });
+    //         document.getElementById('editItemId').value = item.id;
+    //         document.getElementById('editProductName').value = item.name;
+    //         document.getElementById('editSize').value = item.size;
+    //         document.getElementById('editUnitPrice').value = item.price;
+    //         document.getElementById('editStock').value = item.stock;
+    //     });
+    // });
     
     deleteItemButtons.forEach(button => {
         button.addEventListener('click', function (event) {
@@ -91,24 +92,118 @@ document.addEventListener('DOMContentLoaded', function() {
             
             document.getElementById('editItemId').value = itemId;
             document.getElementById('editProductName').value = itemName;
-            document.getElementById('editSubCategory').value = itemSubCategory;
+            document.getElementById('Editcategory').value = itemCategory;
+            // document.getElementById('subCategoryEdit').value = itemSubCategory;
             document.getElementById('editSize').value = itemSize;
             document.getElementById('editUnitPrice').value = itemPrice;
             document.getElementById('editStock').value = itemStock;
             
             document.querySelectorAll('#editCategory option').forEach(option => {
-                if (option.value.toLowerCase() === itemCategory.toLowerCase().replace(/\s+/g, '')) {
+
+                if (option.text.trim().toLowerCase() === itemCategory.trim().toLowerCase()) {
                     option.selected = true;
                 } else {
                     option.selected = false;
                 }
             });
+            const selectedCategory = itemCategory;
+            subCategorySelectEdit.innerHTML = '<option value="">Select a sub-category</option>'; 
+            subCategorySelectEdit.disabled = true; 
+
+            if (selectedCategory) {
+                fetch(`/api/subcategories/${selectedCategory}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    },
+                }).then(response => response.json())
+                .then(subCategories => {
+                    subCategories.forEach(subCategory => {
+                        const option = document.createElement('option');
+                        option.textContent = subCategory; 
+                        subCategorySelectEdit.appendChild(option);
+                        if (subCategory == itemSubCategory) option.selected = true;
+                    });
+
+                    if (subCategories.length > 0) {
+                        subCategorySelectEdit.disabled = false; 
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching sub-categories:', error);
+                });
+            }
+
+            const container = document.getElementById('itemImagesContainer');
+            container.innerHTML = ''; 
+            fetch(`/api/get/item-picture/${itemId}` , {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+            }).then(images => {
+                console.log(images);
+                images.forEach(image => {
+                const imgElement = document.createElement('img');
+                imgElement.src = image.filepath; 
+                imgElement.classList.add('img-thumbnail', 'mr-2');
+
+                const deleteButton = document.createElement('button');
+                deleteButton.innerText = 'Delete';
+                deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
+                
+                
+                const imageDiv = document.createElement('div');
+                imageDiv.classList.add('image-container','d-flex', 'flex-column', 'align-items-center', 'mr-3', 'mb-3');
+                imageDiv.appendChild(imgElement);
+                deleteButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    fetch('/delete-item-image', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        },
+                        body: JSON.stringify({
+                            'imageId': image.id,
+                        }),
+                    }).then(response => {
+                        if (response.status == 200) {
+                            return response.json();
+                        }
+                        else {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                    }).then(
+                        data => {
+                            console.log(data);
+                            const imageDiv = this.closest('.image-container');
+                            console.log(imageDiv);
+                            imageDiv.remove();
+                        }
+                    ).catch(error => {
+                        console.error('Error:', error);
+                    });
+                });
             
+                imageDiv.appendChild(deleteButton);
+                container.appendChild(imageDiv);
+            });
             editItemModal.show();
-        });
+            })
+    });
     });
 
-    const updateItemButton = document.querySelector('.update-item-btn')
+
+    const updateItemButton = document.querySelector('.update-item-btn');
 
     updateItemButton.addEventListener('click', function (event) {
         
@@ -117,7 +212,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const itemId = document.getElementById('editItemId').value;
         const formData = new FormData(editItemForm);
         formData.append('id_item', itemId);
-        console.log(formData);
 
         fetch(`/admin-update-item/${itemId}`, {
             method: 'POST',
@@ -144,12 +238,12 @@ document.addEventListener('DOMContentLoaded', function() {
             row.cells[6].innerText = data.updatedItemData.stock;
             
 
-            editItemModal.hide();
             Swal.fire({
                 icon: 'success',
                 title: 'Item Updated',
                 text: 'The item has been updated successfully!',
             });
+            editItemModal.hide();
         })
         .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
@@ -157,11 +251,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
     });
 
+    
 
-    categorySelect.addEventListener('change', function() {
+    categorySelect.addEventListener('change', function (){
         const selectedCategory = this.value;
         subCategorySelect.innerHTML = '<option value="">Select a sub-category</option>'; 
-        subCategorySelect.disabled = true; 
+        console.log("hey");
+        // subCategorySelect.disabled = true; 
 
         if (selectedCategory) {
             fetch(`/api/subcategories/${selectedCategory}`, {

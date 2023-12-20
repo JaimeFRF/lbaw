@@ -38,8 +38,7 @@ class ReviewController extends Controller
             $entry->id_item = $item->id;
             $entry->rating = $rating;
             $entry->description = $reviewText;
-            $entry->up_votes = 0;
-            $entry->down_votes = 0;
+
 
             $entry->save();
             $newRating =  $item->reviews()->avg('rating');

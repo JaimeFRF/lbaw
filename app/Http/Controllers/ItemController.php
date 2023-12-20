@@ -146,6 +146,12 @@ class ItemController extends Controller
         ]);
     }
 
+    public function getImages(Request $request, $id){
+        $images = Image::where('id_item', $id)->get();
+        Log::info($images);
+        return response()->json($images);
+    }
+
     public function search(Request $request)
     {
         $user_input = $request->input('search');    
@@ -406,6 +412,13 @@ class ItemController extends Controller
         }
 
         return response()->json(['message' => 'Item added successfully', 'item' => $item], 200);
+    }
+
+    public function deleteItemImage(Request $request){
+
+        $image = Image::find($request->imageId);
+        $image->delete();
+        return response()->json(['message' => 'Image deleted successfully'], 200);
     }
 
     private function getCategoryModelName($category)

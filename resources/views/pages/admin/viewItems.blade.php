@@ -29,18 +29,16 @@
     </thead>
     <tbody>
       @foreach ($items as $item)
-        <tr data-item-id={{$item->id}}>
+        <tr class="item-row" data-item-id={{$item->id}}>
           <td class="text-center">{{$item->id}}</td>
-          {{-- <td><img src='path_to_image1'></td> --}}
           <td class="text-center">{{$item->name}}</td>
-          {{-- <td class="text-center">{{$item->']deription}}</td> --}}
           <td class="text-center">{{$item->category}}</td>
           <td class="text-center">{{$item->type}}</td>
           <td class="text-center">{{$item->size}}</td>            
           <td class="text-center">{{$item->price}}€</td>
           <td class="text-center">{{$item->stock}}</td>
           <td class="text-center">
-            <button class="edit-btn btn btn-warning" data-bs-toggle="modal" data-bs-target="#editItemModal" data-item="{{ json_encode($item) }}">Edit</button>
+            <button class="edit-btn btn btn-warning">Edit</button>
         </td>
           <td class="text-center">
               <button id="delete" data-item-id={{$item->id}} class="btn btn-outline-danger btn-sm delete-item-btn">
@@ -151,53 +149,57 @@
           </div>
           <div class="modal-body">
               <form id="editItemForm">
-                  @csrf
-                  <input type="hidden" id="editItemId" name="item_id">
-                  <div class="mb-3">
-                      <label for="editProductName" class="form-label">Product Name</label>
-                      <input type="text" class="form-control" id="editProductName" name="name" placeholder="Enter product name">
-                  </div>
-                  <div class="mb-3">
-                    <small class="text-danger required-text">*</small>
-                    <label for="categoryEdit" class="form-label">Category</label>
-                    <select class="form-select" id="categoryEdit" name="categoryEdit" aria-label="Category select" required>
-                        <option value="">Select a category</option>
-                        <option value="Tshirt">Tshirt</option>
-                        <option value="Shirt">Shirt</option>
-                        <option value="Jacket">Jacket</option>
-                        <option value="Jeans">Jeans</option>
-                        <option value="Sneakers">Sneakers</option>                    
-                    </select>
+                @csrf
+                <input type="hidden" id="editItemId" name="item_id">
+                <div class="mb-3">
+                    <label for="editProductName" class="form-label">Product Name</label>
+                    <input type="text" class="form-control" id="editProductName" name="name" placeholder="Enter product name">
+                </div>
+                <div class="mb-3">
+                  <small class="text-danger required-text">*</small>
+                  <label for="categoryEdit" class="form-label">Category</label>
+                  <select class="form-select" id="Editcategory" name="category" aria-label="Category select" required>
+                      <option value="">Select a category</option>
+                      <option value="Tshirt">Tshirt</option>
+                      <option value="Shirt">Shirt</option>
+                      <option value="Jacket">Jacket</option>
+                      <option value="Jeans">Jeans</option>
+                      <option value="Sneakers">Sneakers</option>                    
+                  </select>
                 </div>
                 <div class="mb-3">
                   <small class="text-danger required-text">*</small>
                   <label for="subCategoryEdit" class="form-label">Sub-category</label>
-                  <select class="form-select" id="subCategoryEdit" name="subCategoryEdit" aria-label="Sub-category select" disabled required>
+                  <select class="form-select" id="subCategoryEdit" name="subcategory" aria-label="Sub-category select" disabled required>
                       <option value="">Select a sub-category</option>
                   </select>
-              </div>
-                  <div class="mb-3">
-                      <label for="editSize" class="form-label">Size</label>
-                      <input type="text" class="form-control" id="editSize" name="size" placeholder="{{$item->size}}" value="{{$item->size}}">
-                  </div>
-                  <div class="mb-3">
-                      <label for="editUnitPrice" class="form-label">Unit Price(€)</label>
-                      <input type="text" class="form-control" id="editUnitPrice" name="price" placeholder="{{$item->price}}" value="{{$item->price}}">
-                  </div>
-                  <div class="mb-3">
-                    <label for="editStock" class="form-label">Stock</label>
-                    <input type="number" class="form-control" id="editStock" name="stock" placeholder="Current stock: {{ $item->stock }}" value="{{ $item->stock }}">
                 </div>
-                  <div class="mb-3">
-                    <label for="photos" class="form-label">Photos</label>
-                    <input type="file" class="form-control" id="photos" name="photos[]" multiple>
+                <div class="mb-3">
+                    <label for="editSize" class="form-label">Size</label>
+                    <input type="text" class="form-control" id="editSize" name="size" placeholder="{{$item->size}}" value="{{$item->size}}">
+                </div>
+                <div class="mb-3">
+                    <label for="editUnitPrice" class="form-label">Unit Price(€)</label>
+                    <input type="text" class="form-control" id="editUnitPrice" name="price" placeholder="{{$item->price}}" value="{{$item->price}}">
+                </div>
+                <div class="mb-3">
+                  <label for="editStock" class="form-label">Stock</label>
+                  <input type="number" class="form-control" id="editStock" name="stock" placeholder="Current stock: {{ $item->stock }}" value="{{ $item->stock }}">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Photos</label>
+                  <div id="itemImagesContainer" class="d-flex flex-wrap">
                   </div>
+                </div>
+                <div class="mb-3">
+                    <label for="photos" class="form-label">Upload New Photos</label>
+                    <input type="file" class="form-control" id="photos" name="photos[]" multiple>
+                </div>
               </form>
-          </div>
-          <div class="modal-footer">
-            {{-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalButton">Close</button> --}}  
-              <button form="editItemForm" class="btn btn-primary update-item-btn">Update Item</button>
-          </div>
+            </div>
+            <div class="modal-footer">
+                <button form="editItemForm" class="btn btn-primary update-item-btn">Update Item</button>
+            </div>
       </div>
   </div>
 </div>
@@ -205,7 +207,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" defer></script>
-<script src="{{ asset('js/admin-itemspage.js') }}"></script>
+<script src="{{ asset('js/admin-itemspage.js') }}" defer></script>
 @endsection
 @section('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

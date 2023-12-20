@@ -47,6 +47,8 @@ Route::get('/get-notifications',  [NotificationController::class, 'getNotificati
 Route::post('/send-item-notification', [NotificationController::class, 'sendItemNotification']) ->name('send.item.notification');
 Route::post('/send-order-notification', [NotificationController::class, 'sendOrderNotification'])->name('send.order.notification');
 Route::delete('/notifications/delete/{id}', [NotificationController::class, 'deleteNotification']);
+Route::get('/notifications/count', [NotificationController::class, 'countNotifications']);
+
 
 //Purchase
 Route::post('/checkout', [PurchaseController::class, 'checkout'])->name('checkout');
@@ -142,7 +144,6 @@ Route::get('/recoverPassword', [MailController::class, 'showRecoverPasswordForm'
 Route::get('/resetPassword/{token}', [MailController::class, 'showResetPasswordForm'])->name('reset_password');
 Route::post('/send', [MailController::class, 'send']);
 Route::post('/send-email-set-password', [MailController::class, 'sendEmailSetPassword']);
-
 
 
 

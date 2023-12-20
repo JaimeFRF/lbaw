@@ -41,6 +41,13 @@ function removeNotification(id) {
         var element = document.querySelector('#notification-' + id);
         if (element) {
             element.remove();
+            const notificationsCountElement = document.getElementById('notificationsCount');
+            fetch('/notifications/count')
+            .then(response => response.json())
+            .then(data => {
+              notificationsCountElement.innerText = `(${data.notificationsCount})`;
+            })
+            .catch(error => console.error('Error:', error));
         }
     })
     .catch((error) => {

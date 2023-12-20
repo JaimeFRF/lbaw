@@ -71,10 +71,6 @@
                         <option value="rating-high-low" {{ session('orderBy') == 'rating-high-low' ? 'selected' : '' }}>Rating: high to low</option>
                     </select>
                     
-                    <div class="container-stock">
-                        <input type="checkbox" id="inStock" class="styled-checkbox" name="inStock" value="1" {{ session('inStock') ? 'checked' : '' }}>
-                        <label for="inStock">Stock</label>
-                    </div>
 
                     <label for="price">Price:</label>
                     <select id="price" name="price" class="form-select mb-3">
@@ -87,8 +83,13 @@
                         <option value="100plus" {{ session('price') == '100plus' ? 'selected' : '' }}>100+ €</option>
                     </select>
 
+                    <div class="container-stock">
+                        <input type="checkbox" id="inStock" class="styled-checkbox" name="inStock" value="1" {{ session('inStock') ? 'checked' : '' }}>
+                        <label id="stockText" for="inStock">Stock</label>
+                    </div>
 
-                    <div class="col-md d-flex justify-content-center">
+
+                    <div id="filterDiv" class="col-md d-flex justify-content-center">
                         <button id="filterButton" class = "btn btn-success">
                             Filter
                         </button>

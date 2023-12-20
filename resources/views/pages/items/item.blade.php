@@ -196,14 +196,14 @@
                         <form method="POST" action="{{ url('/users/wishlist/product/'.$item->id) }}">
                             @csrf
                             @method('PUT')
-                            <button class="btn btn-outline-danger me-2" type="submit">
+                            <button id="itemButton" class="btn btn-outline-danger me-2" type="submit">
                                 <i class="fa fa-heart"></i>
                                 <span>Add to wishlist</span>
                             </button>
                         </form>
                         <form onclick="addItemToCart({{$item->id}}, this.querySelector('button').getAttribute('data-stock'))">
                             @csrf
-                            <button class="btn btn-outline-primary" type="button" id="addToCart" data-stock="{{ $item->stock }}" {{ $item->stock == 0 ? 'disabled' : '' }}> 
+                            <button id="itemButton" class="btn btn-outline-primary" type="button" id="addToCart" data-stock="{{ $item->stock }}" {{ $item->stock == 0 ? 'disabled' : '' }}> 
                                 <i class="fa fa-cart-plus"></i>
                                 <span>Add to Cart</span>
                             </button>

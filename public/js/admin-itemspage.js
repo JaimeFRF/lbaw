@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const subCategorySelectEdit = document.getElementById('subCategoryEdit');
     const deleteItemButtons = document.querySelectorAll('.delete-item-btn');
 
+
     addItemModalElement.addEventListener('hidden.bs.modal', function () {
         addItemForm.reset();
     });
@@ -20,17 +21,17 @@ document.addEventListener('DOMContentLoaded', function() {
         editItemForm.reset();
     });
 
-    document.querySelectorAll('.edit-btn').forEach(function(button) {
-        button.addEventListener('click', function() {
-            var item = JSON.parse(this.getAttribute('data-item')); 
+    // document.querySelectorAll('.edit-btn').forEach(function(button) {
+    //     button.addEventListener('click', function() {
+    //         var item = JSON.parse(this.getAttribute('data-item')); 
     
-            document.getElementById('editItemId').value = item.id;
-            document.getElementById('editProductName').value = item.name;
-            document.getElementById('editSize').value = item.size;
-            document.getElementById('editUnitPrice').value = item.price;
-            document.getElementById('editStock').value = item.stock;
-        });
-    });
+    //         document.getElementById('editItemId').value = item.id;
+    //         document.getElementById('editProductName').value = item.name;
+    //         document.getElementById('editSize').value = item.size;
+    //         document.getElementById('editUnitPrice').value = item.price;
+    //         document.getElementById('editStock').value = item.stock;
+    //     });
+    // });
     
     deleteItemButtons.forEach(button => {
         button.addEventListener('click', function (event) {
@@ -132,11 +133,49 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.error('Error fetching sub-categories:', error);
                 });
             }
+
+            const container = document.getElementById('itemImagesContainer');
+            container.innerHTML = ''; 
+            fetch(`/api/get/item-picture/${itemId}` , {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+            }).then(images => {
+                console.log(images);
+                images.forEach(image => {
+                const imgElement = document.createElement('img');
+                imgElement.src = image.filepath; 
+                imgElement.classList.add('img-thumbnail', 'mr-2');
+
+                const deleteButton = document.createElement('button');
+                deleteButton.innerText = 'Delete';
+                deleteButton.classList.add('btn', 'btn-danger', 'btn-sm');
+                deleteButton.onclick = function() {
+                    
+                };
+
+                const imageDiv = document.createElement('div');
+                imageDiv.classList.add('d-flex', 'flex-column', 'align-items-center', 'mr-3', 'mb-3');
+                imageDiv.appendChild(imgElement);
+                imageDiv.appendChild(deleteButton);
+
+                container.appendChild(imageDiv);
+            });
             editItemModal.show();
-        });
+            })
+    });
     });
 
-    const updateItemButton = document.querySelector('.update-item-btn')
+
+    const updateItemButton = document.querySelector('.update-item-btn');
 
     updateItemButton.addEventListener('click', function (event) {
         
@@ -145,7 +184,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const itemId = document.getElementById('editItemId').value;
         const formData = new FormData(editItemForm);
         formData.append('id_item', itemId);
-        console.log(formData);
 
         fetch(`/admin-update-item/${itemId}`, {
             method: 'POST',
@@ -172,12 +210,12 @@ document.addEventListener('DOMContentLoaded', function() {
             row.cells[6].innerText = data.updatedItemData.stock;
             
 
-            editItemModal.hide();
             Swal.fire({
                 icon: 'success',
                 title: 'Item Updated',
                 text: 'The item has been updated successfully!',
             });
+            editItemModal.hide();
         })
         .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);

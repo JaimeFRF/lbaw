@@ -76,7 +76,6 @@ Route::get('/get-all-users',[AdminController::class, 'getAllUsers']);
 Route::get('/admin-view-users/{id}', [AdminController::class, 'userDetails'])->name('userDetails');
 
 
-
 //Statics
 Route::get('/faq', [StaticController::class, 'faq'])->name('faq');
 Route::get('/contacts', [StaticController::class, 'contacts'])->name('contacts');
@@ -89,6 +88,7 @@ Route::get('/next-items/{offset}', [ItemController::class, 'nextItems']);
 Route::get('/clearFilters', [ItemController::class, 'clearFilters'])->name('clearFilters');
 Route::get('/search', [ItemController::class, 'search'])->name('search');
 Route::get('/search/filter', [ItemController::class, 'filter'])->name('filter');
+Route::get('/api/get/item-picture/{id}' , [ItemController::Class, 'getImages']);
 
 //Wishlist
 Route::put('users/wishlist/product/{id_item}', [WishlistController::class, 'add']);

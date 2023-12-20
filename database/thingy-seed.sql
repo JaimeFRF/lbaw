@@ -542,19 +542,15 @@ INSERT INTO wishlist (id_user,id_item) VALUES (5,5);
 --- IMAGE
 
 INSERT INTO image (id_item, filepath) VALUES (1, 'images/retro_graphic_tshirt_1.png');
-INSERT INTO image (id_item, filepath) VALUES (1, 'images/retro_graphic_tshirt_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (2, 'images/vintage_denim_jacket_1.png');
 INSERT INTO image (id_item, filepath) VALUES (2, 'images/vintage_denim_jacket_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (3, 'images/classic_flannel_shirt_1.png');
-INSERT INTO image (id_item, filepath) VALUES (3, 'images/classic_flannel_shirt_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (4, 'images/vintage_highwaist_jeans_1.png');
-INSERT INTO image (id_item, filepath) VALUES (4, 'images/vintage_highwaist_jeans_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (5, 'images/retro_sneakers_1.png');
-INSERT INTO image (id_item, filepath) VALUES (5, 'images/retro_sneakers_2.png');
 
 INSERT INTO image (id_user, filepath) VALUES (1, 'storage/images/profile_user_1.png');
 

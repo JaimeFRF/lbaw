@@ -146,6 +146,12 @@ class ItemController extends Controller
         ]);
     }
 
+    public function getImages(Request $request, $id){
+        $images = Image::where('id_item', $id)->get();
+        Log::info($images);
+        return response()->json($images);
+    }
+
     public function search(Request $request)
     {
         $user_input = $request->input('search');    

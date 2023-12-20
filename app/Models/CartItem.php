@@ -7,7 +7,6 @@ class CartItem extends Model
 {
     public $timestamps = false;
     
-    //Relation primary key
     public $primaryKey = 'id_cart';
 
     protected $table = 'cart_item';

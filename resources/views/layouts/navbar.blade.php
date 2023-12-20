@@ -114,7 +114,7 @@ if(Auth::check()){
             <span id="ItemCartNumber" class="text-white"></span>
           </a> 
 
-          <a title="Login" class="btn btn-primary m-3" href="{{route('login')}}"> 
+          <a title="Login" id="loginButton" class="btn btn-primary m-3" href="{{route('login')}}"> 
             <i class="fa fa-sign-in-alt"></i>
             <span>Login</span>
           </a>

@@ -2,6 +2,9 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="{{ url('js/profile.js') }}"></script>
+@section('css')
+<link href="{{ url('css/edit_profile.css') }}" rel="stylesheet">
+@endsection
 
 @section('content')
 @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
@@ -13,8 +16,8 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span>User Information</span>
                         <div>
-                            <span class="ms-2">Edit Profile</span>
-                            <a href="{{ route('edit_profile') }}" class="btn btn-secondary rounded-circle">
+                            <a href="{{ route('edit_profile') }}" class="ms-2">Edit Profile</span>
+                            <a href="{{ route('edit_profile') }}" id="pencilButton" class="btn btn-secondary rounded-circle">
                                 <i class="fas fa-pencil-alt"></i>
                             </a>
                         </div>

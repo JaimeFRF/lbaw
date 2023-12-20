@@ -106,3 +106,13 @@ h4 {
 .edit-button {
     background-color: rgb(116, 202, 224); /* Blue */
 }
+
+#itemButton{
+    color: white;
+    background-color: #666;
+    border: 1px solid #333;
+}
+
+#itemButton:hover{
+    background-color: #333;
+}

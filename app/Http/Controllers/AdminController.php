@@ -264,7 +264,7 @@ public function updateItem(Request $request, $id)
     $changedPrice = $oldPrice != $request->price;
 
     if ($wasOutOfStock && $isInStock) {
-        $notificationController->sendItemNotification($item->id);
+        $notificationController->sendRestockNotification($item->id);
     }
 
     if ($changedPrice) {

@@ -118,5 +118,13 @@ class NotificationController extends Controller
         Log::info('allNots: ' . $allNots);
         return response()->json(['message' => 'Notification deleted successfully']);
     }
+
+    public function countNotifications()
+    {
+        $user = Auth::user();
+        $notificationsCount = Notification::where('id_user', $user->id)->count();
+
+        return response()->json(['notificationsCount' => $notificationsCount]);
+    }
     
 }

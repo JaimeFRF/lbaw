@@ -18,7 +18,7 @@
 
                 <div class="user-login-fields">
                     <div class="form-group d-flex flex-column mt-3">
-                        <label for="email"><h6>Email</h6></label>
+                        <label for="email"><h6>Email *</h6></label>
                         <input class="form-control"type="email" name="email" value="{{ old('email') }}" required autofocus onmouseover="getContextualHelp('password', 'email-help').show()" onmouseout="getContextualHelp('password', 'email-help').hide()">
                         @if ($errors->has('email'))
                             <span class="error">
@@ -30,7 +30,7 @@
 
 
                     <div class="form-group d-flex flex-column mt-3" id="pwd">
-                        <label for="password"><h6>Password</h6></label>
+                        <label for="password"><h6>Password *</h6></label>
                         <div class="input-group">
                             <input class="form-control" type="password" name="password" required onmouseover="getContextualHelp('password', 'password-help').show()" onmouseout="getContextualHelp('password', 'password-help').hide()">
                             <span title="Show password" class="toggle-password input-group-text">
@@ -56,8 +56,8 @@
                     </div>
 
                     <div class="form-group d-flex justify-content-center mt-3">
-                        <span>Don't have an account?</span>
-                        <a class="btn p-0 btn-link mt-8 text-decoration-underline mb-2 ml-2" href="{{ route('register') }}">Sign up!</a>
+                        <span>Don't have an account? </span>
+                        <a class="btn p-0 btn-link mt-8 text-decoration-underline mb-2 ml-2" href="{{ route('register') }}"> Sign up!</a>
                     </div>
                 </div>
             </form>

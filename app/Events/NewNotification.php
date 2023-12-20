@@ -21,14 +21,12 @@ class NewNotification implements ShouldBroadcast
     public $notification;
     public $item;
 
-    // Here you create the message to be sent when the event is triggered.
     public function __construct($notification, $item = null)
     {
         $this->notification = $notification;
         $this->item = $item;
     }   
 
-    // You should specify the name of the channel created in Pusher.
     public function broadcastOn()
     {
         Log::info('newNotification: ', ['newNotification' => $this->notification->id_user]);

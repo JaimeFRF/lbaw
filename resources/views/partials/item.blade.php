@@ -3,7 +3,6 @@
         @if($item->images()->first())
             <img src="{{ asset($item->images()->first()->filepath) }}">
         @else
-            <!-- Handle the case where there are no images for the item -->
             <img src="{{ asset('images/default-product-image.png') }}">
         @endif
 

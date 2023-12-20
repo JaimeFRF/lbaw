@@ -56,8 +56,8 @@
                     </div>
 
                     <div class="form-group d-flex justify-content-center mt-3">
-                        <span>Don't have an account?</span>
-                        <a class="btn p-0 btn-link mt-8 text-decoration-underline mb-2 ml-2" href="{{ route('register') }}">Sign up!</a>
+                        <span>Don't have an account? </span>
+                        <a class="btn p-0 btn-link mt-8 text-decoration-underline mb-2 ml-2" href="{{ route('register') }}"> Sign up!</a>
                     </div>
                 </div>
             </form>

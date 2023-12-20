@@ -14,6 +14,8 @@
 
     <body data-item-id="{{$item->id}}">
     <script src="{{ asset('js/item-review.js') }}" defer></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
     <section class="container-fluid mt-2">
         <script src="{{asset('js/item-page_script.js')}}" defer></script>

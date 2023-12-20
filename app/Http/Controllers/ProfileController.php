@@ -35,6 +35,7 @@ class ProfileController extends Controller{
 
       if ($image && $image->filepath) {
           $profile_picture = $image->filepath;
+          Log::info($profile_picture);
         } else {
           $profile_picture = 'images/default-person.png';
       }  
@@ -171,9 +172,9 @@ class ProfileController extends Controller{
   
         if ($request->hasFile('imageInput')) {
           $file = $request->file('imageInput');
-          $extension = $file->getClientOriginalExtension();
-          
-          $filename = 'profile_user_' . $user_id . '.' . $extension;
+          $extension = $photo->getClientOriginalExtension();
+                
+          $filename = uniqid() . '.' . $extension;
   
           if (Storage::disk('public')->exists('images/' . $filename)) {
             Storage::disk('public')->delete($filename);

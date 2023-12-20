@@ -23,8 +23,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function addItemToCart(product, stock) {
     if (stock <= 0) {
-        alert('This item is out of stock');
-        return;
+    Swal.fire({
+        title: 'Out of Stock',
+        text: 'This item is out of stock',
+        icon: 'warning',
+        confirmButtonText: 'OK'
+    });
+    return;
     }
 
     const value = document.getElementById("ItemCartNumber").innerText;

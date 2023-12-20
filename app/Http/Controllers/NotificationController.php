@@ -107,7 +107,6 @@ class NotificationController extends Controller
 
     }
 
-
     public function deleteNotification($id)
     {
         Log::info('id: ' . $id);    

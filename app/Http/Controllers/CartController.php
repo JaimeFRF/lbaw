@@ -22,27 +22,18 @@ use App\Models\Image;
 
 class CartController extends Controller
 {
-    /**
-     * Show the card for a given id.
-     */
+
     public function show(string $id): View
     {        
         $cart = Cart::findOrFail($id);
-
-
-        //$this->authorize('show', $cart);  
 
         return view('pages.cart', [
             'cart' => $cart
         ]);
     }
 
-    /**
-     * Shows cart.
-     */
     public function list()
-    {
-        
+    { 
         if (!Auth::check()) {
             $cart = Session::get('cart', []);
 
@@ -82,43 +73,27 @@ class CartController extends Controller
         ]);
     }
 
-    /**
-     * 
-     * Creates a new card.
-     */
     public function create(Request $request)
     {
-        // Create a blank new Card.
         $cart = new Cart();
 
-        // Check if the current user is authorized to create this cart.
         $this->authorize('create', $cart);
 
-        // Set cart details.
         $cart->name = $request->input('name');
         $cart->user_id = Auth::user()->id;
 
-        // Save the cart and return it as JSON.
         $cart->save();
         return response()->json($cart);
     }
 
-    /**
-     * Delete a cart.
-     */
     public function delete(Request $request, $id)
     {
-        // Find the cart.
         $cart = Cart::find($id);
 
-        // Check if the current user is authorized to delete this cart.
         $this->authorize('delete', $cart);
 
-        // Delete the cart and return it as JSON.
         $cart->delete();
         return response()->json($cart);
     }
-
-
 
 }

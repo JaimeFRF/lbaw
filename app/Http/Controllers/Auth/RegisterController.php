@@ -16,17 +16,12 @@ use Illuminate\Support\Facades\Log;
 
 class RegisterController extends Controller
 {
-    /**
-     * Display a login form.
-     */
+
     public function showRegistrationForm(): View
     {
         return view('auth.register');
     }
 
-    /**
-     * Register a new user.
-     */
     public function register(Request $request)
     {
 

@@ -12,27 +12,14 @@ use Illuminate\Mail\Mailables\Address;
 
 class MailModel extends Mailable
 {
-
-    // Necessary to pass data from the controller.
     public $mailData;
 
-
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
     public function __construct($mailData, $templateName = 'default')
     {
         $this->mailData = $mailData;
         $this->templateName = $templateName;
     }
 
-    /**
-     * Get the message envelope.
-     *
-     * @return \Illuminate\Mail\Mailables\Envelope
-     */
     public function envelope()
     {   
         if ($this->templateName == 'example'){
@@ -50,11 +37,6 @@ class MailModel extends Mailable
         }
     }
     
-    /**
-     * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
-     */
     public function content()
     {
         return new Content(

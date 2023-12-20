@@ -32,9 +32,6 @@ public function authenticate(Request $request): RedirectResponse
         ])->onlyInput('email');
     }
 
-    /**
-     * Log out the user from application.
-     */
     public function logout(Request $request)
     {
         Auth::guard('admin')->logout();

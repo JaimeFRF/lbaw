@@ -10,7 +10,6 @@ class Admin extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    // Don't add create and update timestamps in the database.
     public $timestamps  = false;
     protected $table = 'admin'; 
 

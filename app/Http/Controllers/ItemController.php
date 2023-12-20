@@ -19,22 +19,6 @@ use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
-
-    public function create(Request $request, $card_id)
-    {
-        $item = new Item();
-
-        $item->card_id = $card_id;
-
-        $this->authorize('create', $item);
-
-        $item->done = false;
-        $item->description = $request->input('description');
-
-        $item->save();
-        return response()->json($item);
-    }
-
     public function nextItems($offset)
     {
         $items = Item::skip($offset)->take(3)->get();
@@ -62,8 +46,6 @@ class ItemController extends Controller
 
         return response()->json($item);
     }
-    
-
     
     public function show($id)
     {
@@ -432,8 +414,6 @@ class ItemController extends Controller
 
         return null;
     }
-
-    
     
 }
 

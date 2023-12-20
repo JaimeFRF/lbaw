@@ -7,7 +7,6 @@
             <h6 id="name">{{ $item->name }}</h6>
             {{-- <small>Size: {{$item->size}}</small> --}}
             <br>
-            <a class="remove" href=""> Remove</a>
         </div>
       @else
         <img src="{{ $item['picture'] }}">
@@ -15,7 +14,6 @@
             <h6 id="name">{{ $item['name'] }}</h6>
             {{-- <small>Size: {{$item['size']}}</small> --}}
             <br>
-            <a class="remove" href=""> Remove</a>
         </div>
       @endif
     </div>

@@ -109,12 +109,8 @@ class NotificationController extends Controller
 
     public function deleteNotification($id)
     {
-        Log::info('id: ' . $id);    
         $notification = Notification::find($id);
         $notification->delete();
-
-        $allNots = Notification::all();
-        Log::info('allNots: ' . $allNots);
         return response()->json(['message' => 'Notification deleted successfully']);
     }
 

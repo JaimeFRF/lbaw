@@ -27,7 +27,6 @@ function updateNavbar() {
 
 
 function removeNotification(id) {
-    console.log(id);
     fetch('/notifications/delete/' + id, {
         method: 'DELETE',
         headers: {
@@ -39,6 +38,7 @@ function removeNotification(id) {
             throw new Error('Network response was not ok');
         }
         var element = document.querySelector('#notification-' + id);
+        
         if (element) {
             element.remove();
             const notificationsCountElement = document.getElementById('notificationsCount');
@@ -64,11 +64,8 @@ function toggleDropdown() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    var dropdownItems = document.querySelectorAll('.notifi-item');
-    dropdownItems.forEach(function(dropdownItem) {
-      dropdownItem.addEventListener('click', function(e) {
-        e.stopPropagation();
-      });
-    });
+document.body.addEventListener('click', function(e) {
+    if(e.target.matches('.notifi-item, .notifi-item *')) {
+      e.stopPropagation();
+    }
   });

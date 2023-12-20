@@ -160,32 +160,43 @@ if(Auth::check()){
 
     if (notificationType === 'SALE') {
       newNotificationElement.innerHTML = `
-        <div class="text">
-          <h4>${notificationData.item.name}</h4>
-          <p>${notificationData.notification.description}</p>
-        </div>
+          <a class="dropdown-item notifi-item" id="notification-${notificationData.notification.id}" href="#">
+          <button class="btn btn-outline-danger btn-sm" type="button" style="max-height: 30px; position: absolute; left:90%" onclick="removeNotification(${notificationData.notification.id})"><i class="fa fa-times"></i></button>  
+          <div class="text">
+            <h4>${notificationData.item.name}</h4>
+            <p>${notificationData.notification.description}</p>
+          </div>
+        </a>
       `;
     } else if (notificationType === 'RESTOCK') {
       newNotificationElement.innerHTML = `
-        <div class="text">
-          <h4>${notificationData.item.name}</h4>
-          <p>${notificationData.notification.description}</p>
-        </div>
+          <a class="dropdown-item notifi-item" id="notification-${notificationData.notification.id}" href="#">
+          <button class="btn btn-outline-danger btn-sm" type="button" style="max-height: 30px; position: absolute; left:90%" onclick="removeNotification(${notificationData.notification.id})"><i class="fa fa-times"></i></button>  
+          <div class="text">
+            <h4>${notificationData.item.name}</h4>
+            <p>${notificationData.notification.description}</p>
+          </div>
+        </a>
       `;
     } else if (notificationType === 'ORDER_UPDATE') {
       newNotificationElement.innerHTML = `
-        <img  src="{{ asset('images/shop.jpg') }}"alt="img">
-        <div class="text">
-          <h4>Purchase (${notificationData.notification.id_purchase}) State Changed</h4>
-          <p>${notificationData.notification.description }</p>
-        </div>
+        <a class="dropdown-item notifi-item" id="notification-${notificationData.notification.id}" href="#">
+          <button class="btn btn-outline-danger btn-sm" type="button" style="max-height: 30px; position: absolute; left:90%" onclick="removeNotification(${notificationData.notification.id})"><i class="fa fa-times"></i></button>  
+          <div class="text">
+            <h4>${notificationData.item.name}</h4>
+            <p>${notificationData.notification.description}</p>
+          </div>
+        </a>
       `;
     } else if (notificationType === 'PRICE_CHANGE') {
       newNotificationElement.innerHTML = `
-        <div class="text">
-          <h4>${notificationData.item.name}</h4>
-          <p>${notificationData.notification.description }</p>
-        </div>
+            <a class="dropdown-item notifi-item" id="notification-${notificationData.notification.id}" href="#">
+            <button class="btn btn-outline-danger btn-sm" type="button" style="max-height: 30px; position: absolute; left:90%" onclick="removeNotification(${notificationData.notification.id})"><i class="fa fa-times"></i></button>  
+            <div class="text">
+              <h4>${notificationData.item.name}</h4>
+              <p>${notificationData.notification.description}</p>
+            </div>
+          </a>
       `;
     }
 

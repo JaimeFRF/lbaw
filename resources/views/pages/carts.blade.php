@@ -63,9 +63,6 @@
                 @endif
             </div>
         </form>
-        <button type="submit" class="btn btn-outline-danger m-2 w-100">
-                Empty Cart
-        </button>
     </div>
 </section>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

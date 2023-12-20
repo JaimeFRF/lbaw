@@ -31,9 +31,7 @@
       @foreach ($items as $item)
         <tr data-item-id={{$item->id}}>
           <td class="text-center">{{$item->id}}</td>
-          {{-- <td><img src='path_to_image1'></td> --}}
           <td class="text-center">{{$item->name}}</td>
-          {{-- <td class="text-center">{{$item->']deription}}</td> --}}
           <td class="text-center">{{$item->category}}</td>
           <td class="text-center">{{$item->type}}</td>
           <td class="text-center">{{$item->size}}</td>            
@@ -172,7 +170,7 @@
                 <div class="mb-3">
                   <small class="text-danger required-text">*</small>
                   <label for="subCategoryEdit" class="form-label">Sub-category</label>
-                  <select class="form-select" id="subCategoryEdit" name="subCategoryEdit" aria-label="Sub-category select" disabled required>
+                  <select class="form-select" id="subCategoryEdit" name="subCategoryEdit" aria-label="Sub-category select" required>
                       <option value="">Select a sub-category</option>
                   </select>
               </div>
@@ -202,12 +200,13 @@
   </div>
 </div>
 
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" defer></script>
 <script src="{{ asset('js/admin-itemspage.js') }}"></script>
+
 @endsection
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 @endsection
    

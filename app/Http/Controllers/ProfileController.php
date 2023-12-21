@@ -35,12 +35,12 @@ class ProfileController extends Controller{
 
       if ($image && $image->filepath) {
           $profile_picture = $image->filepath;
-          Log::info($profile_picture);
         } else {
           $profile_picture = 'images/default-person.png';
       }  
 
 
+      Log::info($profile_picture);
       $wishlist = Wishlist::where('id_user', $user->id)->get();
 
       $items_wishlist = [];
@@ -98,17 +98,20 @@ class ProfileController extends Controller{
           $new_username = $request->input('new_username');
   
           if($new_username === null){
-              return view('pages.profile.edit_profile', ['user' => $user, 'errorUsername' => 'Username cannot be empty']);
+              return view('pages.profile.edit_profile', ['user' => $user, 'errorUsername' => 'Username cannot be empty',         'breadcrumbs' => ['Home' => route('home')],
+              'current' => 'Profile']);
           }
           else{
               $existingUser = User::where('username', $new_username)->first();
               if($existingUser){
-                  return view('pages.profile.edit_profile', ['user' => $user, 'errorUsername' => 'Username already exists']);
+                  return view('pages.profile.edit_profile', ['user' => $user, 'errorUsername' => 'Username already exists',         'breadcrumbs' => ['Home' => route('home')],
+                  'current' => 'Profile']);
               }
               else{
                   $user->username = $new_username;
                   $user->save();
-                  return view('pages.profile.edit_profile', ['user' => $user, 'successUsername' => 'Username changed successfully']);
+                  return view('pages.profile.edit_profile', ['user' => $user, 'successUsername' => 'Username changed successfully',         'breadcrumbs' => ['Home' => route('home')],
+                  'current' => 'Profile']);
               }
           }
       } else {
@@ -124,7 +127,8 @@ class ProfileController extends Controller{
         $user->save();
   
   
-        return view('pages.profile.edit_profile', ['user' => $user, 'successName' => 'Name changed successfully']);
+        return view('pages.profile.edit_profile', ['user' => $user, 'successName' => 'Name changed successfully',         'breadcrumbs' => ['Home' => route('home')],
+        'current' => 'Profile']);
       }else{
           return response()->json(['message' => 'User not authenticated']);
       }
@@ -136,15 +140,18 @@ class ProfileController extends Controller{
         $new_password = $request->input('new_password');
         $new_password_confirmation = $request->input('new_password_confirmation');
         if(strlen($new_password) < 10){
-          return view('pages.profile.edit_profile', ['user' => $user, 'errorPassword' => 'Password must be longer than 10 characters']);
+          return view('pages.profile.edit_profile', ['user' => $user, 'errorPassword' => 'Password must be longer than 10 characters',        'breadcrumbs' => ['Home' => route('home')],
+          'current' => 'Profile']);
         }
         else if($new_password !== $new_password_confirmation){
-          return view('pages.profile.edit_profile', ['user' => $user, 'errorPassword' => 'Passwords do not match']);
+          return view('pages.profile.edit_profile', ['user' => $user, 'errorPassword' => 'Passwords do not match',         'breadcrumbs' => ['Home' => route('home')],
+          'current' => 'Profile']);
         }
         else{
           $user->password = Hash::make($new_password);
           $user->save();
-          return view('pages.profile.edit_profile', ['user' => $user, 'successPassword' => 'Password changed successfully']);
+          return view('pages.profile.edit_profile', ['user' => $user, 'successPassword' => 'Password changed successfully',         'breadcrumbs' => ['Home' => route('home')],
+          'current' => 'Profile']);
         }
       }
     }
@@ -154,7 +161,8 @@ class ProfileController extends Controller{
         $user = User::find(Auth::id());
         $password = request()->input('password');
         if(!Hash::check($password, $user->password)){
-          return view('pages.profile.edit_profile', ['user' => $user, 'errorRemove' => 'Incorrect password']);
+          return view('pages.profile.edit_profile', ['user' => $user, 'errorRemove' => 'Incorrect password',         'breadcrumbs' => ['Home' => route('home')],
+          'current' => 'Profile']);
         }
         else{
           $user->delete();
@@ -180,17 +188,18 @@ class ProfileController extends Controller{
             Storage::disk('public')->delete($filename);
           }
   
-          $path = $file->storeAs('images', $filename, 'public');
-  
+          $destinationPath = public_path('images');
+          $file->move($destinationPath, $filename);
+
           $existingImage = Image::where('id_user', $user_id)->first();
   
           if ($existingImage) {
-            $existingImage->filepath = 'storage/images/' . $filename;
+            $existingImage->filepath = 'images/' . $filename;
             $existingImage->save();
           } else {
             $newImage = new Image;
             $newImage->id_user = $user_id;
-            $newImage->filepath = 'storage/images/' . $filename;
+            $newImage->filepath = 'images/' . $filename;
             $newImage->save();
           }
         

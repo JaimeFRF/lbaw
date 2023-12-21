@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const detailedOrderModalElement = document.getElementById('detailedOrderModal');
     const detailedOrderModal = new bootstrap.Modal(detailedOrderModalElement);
     const detailedOrderForm = document.getElementById('detailedOrderForm');
-    const orderRows = document.querySelectorAll('.order-row');
+    const orderRows = document.querySelectorAll('.order-row:not(#delete)');
     // const editOrderButtons = document.querySelectorAll('.edit-btn'); 
     // const editOrderForm = document.getElementById('editOrderForm');
     // const editOrderModalElement = document.getElementById('editOrderModal'); 
@@ -16,39 +16,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     orderRows.forEach(row => {
         row.addEventListener('click', function() {
-            const orderId = this.getAttribute('data-order-id');
-            const customerName = this.cells[1].innerText;
-            const orderAmountWithCurrency = this.cells[2].innerText; // e.g., "123€"
-            const orderAmount = orderAmountWithCurrency.replace(/[^\d.-]/g, '');
-            const deliveryDate = this.cells[4].innerText;
-            const orderStatus = this.cells[5].innerText;
-            fetch(`/admin-get-order-address-info/${orderId}`, {
-                method: 'GET',
-                headers: {'X-CSRF-TOKEN': token}
-            }).then(response => {
-                if (response.ok && response.status === 200) {
-                    return response.json();
-            } else {
-                throw new Error('Something went wrong');
+            var isButton = event.target.tagName.toLowerCase() === 'button';
+            var isSpan = event.target.tagName.toLowerCase() === 'span';
+            if (!isButton && !isSpan) {
+                const orderId = this.getAttribute('data-order-id');
+                const customerName = this.cells[1].innerText;
+                const orderAmountWithCurrency = this.cells[2].innerText; // e.g., "123€"
+                const orderAmount = orderAmountWithCurrency.replace(/[^\d.-]/g, '');
+                const deliveryDate = this.cells[4].innerText;
+                const orderStatus = this.cells[5].innerText;
+                fetch(`/admin-get-order-address-info/${orderId}`, {
+                    method: 'GET',
+                    headers: {'X-CSRF-TOKEN': token}
+                }).then(response => {
+                    if (response.ok && response.status === 200) {
+                        return response.json();
+                } else {
+                    throw new Error('Something went wrong');
+                }
+                })
+                .then(data => {
+                        const orderAddress = data.location.address;
+                        const orderCity = data.location.city;
+                        const orderCountry = data.location.country;
+                        const orderPostalCode = data.location.postal_code;
+                        document.getElementById('detailedOrderId').value = orderId;
+                        document.getElementById('detailedCustomerName').value = customerName;
+                        document.getElementById('detailedOrderAmount').value = orderAmount;
+                        document.getElementById('detailedOrderDeliveryDate').value = deliveryDate;
+                        document.getElementById('detailedOrderStatus').value = orderStatus;
+                        document.getElementById('detailedOrderAddress').value = orderAddress;
+                        document.getElementById('detailedOrderCity').value = orderCity;
+                        document.getElementById('detailedOrderCountry').value = orderCountry;
+                        document.getElementById('detailedOrderPostalCode').value = orderPostalCode;
+                        detailedOrderModal.show();
+                })
+                .catch(error => console.error('There has been a problem with your fetch operation:', error));
             }
-            })
-            .then(data => {
-                    const orderAddress = data.location.address;
-                    const orderCity = data.location.city;
-                    const orderCountry = data.location.country;
-                    const orderPostalCode = data.location.postal_code;
-                    document.getElementById('detailedOrderId').value = orderId;
-                    document.getElementById('detailedCustomerName').value = customerName;
-                    document.getElementById('detailedOrderAmount').value = orderAmount;
-                    document.getElementById('detailedOrderDeliveryDate').value = deliveryDate;
-                    document.getElementById('detailedOrderStatus').value = orderStatus;
-                    document.getElementById('detailedOrderAddress').value = orderAddress;
-                    document.getElementById('detailedOrderCity').value = orderCity;
-                    document.getElementById('detailedOrderCountry').value = orderCountry;
-                    document.getElementById('detailedOrderPostalCode').value = orderPostalCode;
-                    detailedOrderModal.show();
-            })
-            .catch(error => console.error('There has been a problem with your fetch operation:', error));
         });
     });
     
@@ -90,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 cancelButtonText: 'No, keep it',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch('/admin-delete-order/' + orderId, {
+                    fetch('/purchase/delete/' + orderId, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',

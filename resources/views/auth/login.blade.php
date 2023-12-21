@@ -5,6 +5,8 @@
     <link href="{{ url('css/contextual_help.css') }}" rel="stylesheet">
 @endsection
 
+@section('title', 'Antiquus - Login')
+
 @section('content')
     <section class="d-flex justify-content-center m-5" id="content">
         <div class="card w-50 d-flex flex-column align-items-center">

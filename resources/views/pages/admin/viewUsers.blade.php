@@ -6,6 +6,8 @@
 
 @endsection
 
+@section('title', 'Antiquus Backoffice - Users List')
+
 @section('content')
 
 <div class="d-flex align-items-center">

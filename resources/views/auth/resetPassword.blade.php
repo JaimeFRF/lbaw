@@ -4,6 +4,8 @@
 <link href="{{ url('css/login_register.css') }}" rel="stylesheet">
 @endsection
 
+@section('title', 'Antiquus - Reset Password')
+
 @section('content')
 
     <section class="d-flex justify-content-center m-5" id="content">

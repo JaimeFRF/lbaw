@@ -10,6 +10,7 @@
     <script src="{{ url('js/shop.js') }}" defer></script>
 @endsection
 
+@section('title', 'Antiquus - Shop')
 
 @section('content')
 

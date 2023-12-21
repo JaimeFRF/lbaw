@@ -4,7 +4,7 @@
 <link href="{{ url('css/cart.css') }}" rel="stylesheet">
 @endsection
 
-@section('title', 'Cart')
+@section('title', 'Antiquus - My Cart')
 
 @section('content')
 @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Antiquus - Register')
+
 @section('content')
 <section class="d-flex justify-content-center m-5">
   <div class="card w-50 d-flex flex-column align-items-center">

@@ -1,5 +1,8 @@
 @extends('layouts.adminApp')
 
+@section('title', 'Antiquus Backoffice - User Details')
+
+
 @section('content')
     @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
     <div class="container mt-5">

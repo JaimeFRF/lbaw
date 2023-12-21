@@ -4,6 +4,8 @@
 <link href="{{ url('css/admin.css') }}" rel="stylesheet">
 @endsection
 
+@section('title', 'Antiquus Backoffice - Orders List')
+
 @section('content')
 
 <div class="d-flex align-items-center">

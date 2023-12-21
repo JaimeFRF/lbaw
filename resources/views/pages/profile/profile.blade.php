@@ -90,6 +90,8 @@
 <link href="{{ url('css/edit_profile.css') }}" rel="stylesheet">
 @endsection
 
+@section('title', 'Antiquus - Shop')
+
 @section('content')
 @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
 

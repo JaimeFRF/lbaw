@@ -22,7 +22,6 @@ use App\Models\Image;
 
 class CartController extends Controller
 {
-
     public function show(string $id): View
     {        
         $cart = Cart::findOrFail($id);

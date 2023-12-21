@@ -130,7 +130,7 @@ class AdminController extends Controller
     public function deleteUser($id, Request $request)
     {
       $user = User::find($id);
-      
+      Log::info('entrei aqui');
       $auth_admin = Auth::guard('admin')->user();
       $this->authorize('delete', $auth_admin);
 
@@ -172,6 +172,14 @@ class AdminController extends Controller
         'username' => 'required|string|max:255|unique:users,username,' . $id,
         'name' => 'nullable|string|max:255',
     ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Validation failed',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
 
     $user->fill($request->only(['name', 'email', 'username']));
     $user->phone = $request->phone;

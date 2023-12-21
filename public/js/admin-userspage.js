@@ -80,14 +80,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     updateButton.addEventListener('click', function(event) {
-        
         event.preventDefault();
-
+    
         const userId = document.getElementById('editUserId').value;
-        console.log(userId)
         const formData = new FormData(editUserForm);
         formData.append('id_user', userId);
-
+    
         fetch(`/admin-update-user/${userId}`, {
             method: 'POST',
             body: formData,
@@ -98,29 +96,38 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => {
             if (response.ok && response.status === 200) {
                 return response.json();
-        } else {
-            throw new Error('Something went wrong');
-        }
-    })
-    .then(data => {
-        const row = document.querySelector(`tr[data-user-id="${userId}"]`);
-        row.cells[1].innerText = data.updatedUserData.name;  
-        row.cells[2].innerText = data.updatedUserData.username;  
-        row.cells[3].innerText = data.updatedUserData.email;  
-        row.cells[4].innerText = data.updatedUserData.phone; 
-
-        editUserModal.hide();
-
-        Swal.fire({
-            icon: 'success',
-            title: 'User Updated',
-            text: 'The user has been updated successfully!',
+            } else if (response.status === 422) {
+                return response.json().then(data => {
+                    throw new Error(data.errors.username[0]);
+                });
+            } else {
+                throw new Error('Something went wrong');
+            }
+        })
+        .then(data => {
+            const row = document.querySelector(`tr[data-user-id="${userId}"]`);
+            row.cells[1].innerText = data.updatedUserData.name;  
+            row.cells[2].innerText = data.updatedUserData.username;  
+            row.cells[3].innerText = data.updatedUserData.email;  
+            row.cells[4].innerText = data.updatedUserData.phone; 
+    
+            editUserModal.hide();
+    
+            Swal.fire({
+                icon: 'success',
+                title: 'User Updated',
+                text: 'The user has been updated successfully!',
+            });
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Update Failed',
+                text: 'There is a user already with the username you want to use. Please try again.',
+            });
         });
-    })
-    .catch(error => {
-        console.error('There has been a problem with your fetch operation:', error);
     });
-});
+
 
 document.getElementById('userSearchInput').addEventListener('input', function() {
     let searchQuery = this.value;

@@ -69,5 +69,27 @@
   max-width: 200px;
   max-height: 200px;
   display: none;
-  margin-bottom: 20px; /* Adjust the space below the image */
+  margin-bottom: 20px; 
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.thin-text {
+  font-weight: 300; 
+}
+
+.user-info-card, .card {
+  border: 2px solid black; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); 
+  border-radius: 10px; 
+  overflow: hidden; 
+  transition: box-shadow 0.3s; 
+  margin-bottom: 20px; 
+
+}
+
+.user-info-card:hover , .card:hover{
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); 
 }

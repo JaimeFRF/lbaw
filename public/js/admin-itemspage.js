@@ -20,18 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
     editItemModalElement.addEventListener('hidden.bs.modal', function () {
         editItemForm.reset();
     });
-
-    // document.querySelectorAll('.edit-btn').forEach(function(button) {
-    //     button.addEventListener('click', function() {
-    //         var item = JSON.parse(this.getAttribute('data-item')); 
-    
-    //         document.getElementById('editItemId').value = item.id;
-    //         document.getElementById('editProductName').value = item.name;
-    //         document.getElementById('editSize').value = item.size;
-    //         document.getElementById('editUnitPrice').value = item.price;
-    //         document.getElementById('editStock').value = item.stock;
-    //     });
-    // });
     
     deleteItemButtons.forEach(button => {
         button.addEventListener('click', function (event) {
@@ -93,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('editItemId').value = itemId;
             document.getElementById('editProductName').value = itemName;
             document.getElementById('Editcategory').value = itemCategory;
-            // document.getElementById('subCategoryEdit').value = itemSubCategory;
+                // document.getElementById('subCategoryEdit').value = itemSubCategory;
             document.getElementById('editSize').value = itemSize;
             document.getElementById('editUnitPrice').value = itemPrice;
             document.getElementById('editStock').value = itemStock;

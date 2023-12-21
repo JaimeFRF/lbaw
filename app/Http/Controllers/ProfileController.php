@@ -172,7 +172,7 @@ class ProfileController extends Controller{
   
         if ($request->hasFile('imageInput')) {
           $file = $request->file('imageInput');
-          $extension = $photo->getClientOriginalExtension();
+          $extension = $file->getClientOriginalExtension();
                 
           $filename = uniqid() . '.' . $extension;
   

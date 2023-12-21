@@ -9,7 +9,11 @@
 
         protected $table = 'review';
 
-        protected $fillable = ['id', 'description', 'rating', 'upvotes', 'downvotes', 'id_user', 'id_item'];
+        protected $casts = [
+            'rating' => 'float',
+        ];
+
+        protected $fillable = ['id', 'description', 'rating', 'id_user', 'id_item'];
 
         public function user(){
             return $this->belongsTo(User::class, 'id_user');

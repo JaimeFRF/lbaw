@@ -4,7 +4,13 @@
 <link href="{{ url('css/edit_profile.css') }}" rel="stylesheet">
 @endsection
 
+@section('scripts')
+  <script src="{{ asset('js/edit-profile.js') }}" defer></script>
+@endsection
+
 @section('content')
+  @include('partials.common.breadcrumbs', ['breadcrumbs' => $breadcrumbs , 'current' => $current ])
+
   <section id="edit-profile">
     <script src="{{ asset('js/edit_profile.js') }}" defer></script>
     <article class="update-form">
@@ -89,15 +95,4 @@
       @endif    
     </article>
 
-    <script>
-      function confirmDelete() {
-        var confirmation = confirm("Are you sure you want to delete your profile?");
-        if (confirmation) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    </script>
-  </section>  
 @endsection

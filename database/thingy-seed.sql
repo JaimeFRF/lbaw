@@ -4,17 +4,22 @@ SET search_path TO lbaw2366;
 
 ----------- types
 
-CREATE TYPE ShirtType as ENUM('Collarless', 'Regular', 'Short sleeve');
+CREATE TYPE ShirtType as ENUM('Collarless', 'Regular', 'Short Sleeve');
 
-CREATE TYPE TshirtType as ENUM ('Regular', 'Long sleeve', 'Football');
+CREATE TYPE TshirtType as ENUM ('Regular', 'Long Sleeve', 'Football');
 
 CREATE TYPE JacketType as ENUM ('Regular', 'Baseball', 'Bomber');
 
+CREATE TYPE JeansType as ENUM ('Regular', 'Skinny', 'Baggy');
+
+CREATE TYPE SneakersType as ENUM ('Leather', 'Casual', 'Sports');
+
 CREATE TYPE PaymentMethod as ENUM ('Transfer', 'Paypal');
 
-CREATE TYPE PurchaseStatus as ENUM ('Processing', 'Packed', 'Sent', 'Delivered');
+CREATE TYPE PurchaseStatus as ENUM ('Paid', 'Packed', 'Sent', 'Delivered');
 
-CREATE TYPE NotificationType as ENUM ('SALE', 'RESTOCK','ORDER_UPDATE');
+
+CREATE TYPE NotificationType as ENUM ('SALE', 'RESTOCK','ORDER_UPDATE', 'PRICE_CHANGE');
 
 ------------ tables
 
@@ -35,6 +40,15 @@ CREATE TABLE cart(
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY
 );
 
+CREATE TABLE location(
+    id SERIAL PRIMARY KEY,
+    address TEXT NOT NULL,
+    city TEXT NOT NULL,
+    country TEXT NOT NULL,
+    postal_code TEXT NOT NULL,
+    description TEXT
+);
+
 CREATE TABLE users(
     id SERIAL PRIMARY KEY,
     name TEXT,
@@ -44,7 +58,8 @@ CREATE TABLE users(
     phone VARCHAR(20), 
     is_banned boolean NOT NULL DEFAULT FALSE,
     remember_token TEXT DEFAULT NULL,
-    id_cart INTEGER REFERENCES cart(id)
+    id_cart INTEGER REFERENCES cart(id),
+    id_location INTEGER REFERENCES location(id)
 );
 
 CREATE TABLE admin(
@@ -68,15 +83,6 @@ CREATE TABLE wishlist(
     PRIMARY KEY(id_user, id_item)
 );
 
-CREATE TABLE location(
-    id SERIAL PRIMARY KEY,
-    address TEXT NOT NULL,
-    city TEXT NOT NULL,
-    country TEXT NOT NULL,
-    postal_code TEXT NOT NULL,
-    description TEXT
-);
-
 CREATE TABLE purchase(
     id SERIAL PRIMARY KEY,
     price FLOAT NOT NULL CONSTRAINT price_positive CHECK (price > 0.0),
@@ -84,7 +90,7 @@ CREATE TABLE purchase(
     delivery_date DATE NOT NULL CONSTRAINT delivery_date_check CHECK (delivery_date >= purchase_date),
     purchase_status PurchaseStatus NOT NULL,
     payment_method PaymentMethod NOT NULL,
-    id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+    id_user INTEGER REFERENCES users(id) ON DELETE SET NULL,
     id_location INTEGER NOT NULL REFERENCES location(id),
     id_cart INTEGER NOT NULL REFERENCES cart(id)
 );
@@ -93,15 +99,13 @@ CREATE TABLE review(
     id SERIAL PRIMARY KEY,
     description TEXT NOT NULL CONSTRAINT description_length CHECK (length(description) <= 200),
     rating FLOAT NOT NULL CONSTRAINT rating_positive CHECK (rating >= 0.0 AND rating <= 5.0),
-    up_votes INTEGER DEFAULT 0,
-    down_votes INTEGER DEFAULT 0,
     id_user INTEGER REFERENCES users(id) ON DELETE SET NULL,
     id_item INTEGER NOT NULL REFERENCES item(id)
 );
 
 CREATE TABLE notification(
     id SERIAL PRIMARY KEY,
-    description TEXT NOT NULL,
+    description TEXT NOT NULL, 
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
     notification_type NotificationType NOT NULL,
     id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
@@ -134,16 +138,16 @@ CREATE TABLE jacket(
     size TEXT NOT NULL
 );
 
-CREATE TABLE sneaker(
+CREATE TABLE sneakers(
     id_item INTEGER PRIMARY KEY REFERENCES item(id) ON DELETE CASCADE,
-    shoe_size INTEGER NOT NULL CONSTRAINT shoe_size_check CHECK (shoe_size >= 0)
+    sneakers_type SneakersType NOT NULL,
+    size INTEGER NOT NULL CONSTRAINT size_check CHECK (size >= 0)
 );
 
 CREATE TABLE jeans(
     id_item INTEGER PRIMARY KEY REFERENCES item(id) ON DELETE CASCADE,
-    waist_size INTEGER NOT NULL CONSTRAINT waist_size_check CHECK (waist_size > 0),
-    inseam_size INTEGER NOT NULL CONSTRAINT inseam_size_check CHECK (inseam_size > 0),
-    rise_size INTEGER NOT NULL CONSTRAINT rise_size_check CHECK (rise_size > 0)
+    jeans_type JeansType NOT NULL,
+    size TEXT NOT NULL
 );
 
 -----------------------------------------
@@ -198,31 +202,31 @@ CREATE INDEX search_idx ON item USING GIN (tsvectors);
 
 -- TRIGGER 1: Updates the stock of an item when a purchase is made.
 
-CREATE OR REPLACE FUNCTION update_item_stock()
-RETURNS TRIGGER AS $BODY$
-DECLARE
-    item_record RECORD; 
-BEGIN
-    FOR item_record IN (
-        SELECT item.id, cart_item.quantity
-        FROM cart_item
-        JOIN item ON cart_item.id_item = item.id
-        WHERE cart_item.id_cart = NEW.id_cart
-    ) LOOP
-        UPDATE item
-        SET stock = stock - item_record.quantity
-        WHERE id = item_record.id;
-    END LOOP;
+-- CREATE OR REPLACE FUNCTION update_item_stock()
+-- RETURNS TRIGGER AS $BODY$
+-- DECLARE
+--     item_record RECORD; 
+-- BEGIN
+--     FOR item_record IN (
+--         SELECT item.id, cart_item.quantity
+--         FROM cart_item
+--         JOIN item ON cart_item.id_item = item.id
+--         WHERE cart_item.id_cart = NEW.id_cart
+--     ) LOOP
+--         UPDATE item
+--         SET stock = stock - item_record.quantity
+--         WHERE id = item_record.id;
+--     END LOOP;
 
-    RETURN NEW;
-END;
-$BODY$
-LANGUAGE plpgsql;
+--     RETURN NEW;
+-- END;
+-- $BODY$
+-- LANGUAGE plpgsql;
 
-CREATE TRIGGER update_item_stock
-AFTER INSERT ON purchase
-FOR EACH ROW
-EXECUTE FUNCTION update_item_stock();
+-- CREATE TRIGGER update_item_stock
+-- AFTER INSERT ON purchase
+-- FOR EACH ROW
+-- EXECUTE FUNCTION update_item_stock();
 
 -- TRIGGER 2: Updates the review count and average rating for an item whenever a new review is added or an existing review is modified
 
@@ -278,7 +282,6 @@ CREATE TRIGGER wishlist_sale_notification
 CREATE OR REPLACE FUNCTION notify_wishlist_stock()
 RETURNS TRIGGER AS $BODY$
 BEGIN
-    -- Check if the 'stock' column was updated and the new stock is greater than 0
     IF OLD.stock = 0 AND NEW.stock > 0 THEN
         INSERT INTO notification (description, notification_type, id_user, id_item)
         SELECT 
@@ -347,26 +350,24 @@ CREATE TRIGGER purchase_status_change_notification
 
 -- TRIGGER 6: Change users to a new empty cart whenever they make a purchase
 
-CREATE OR REPLACE FUNCTION create_new_cart_for_user()
-RETURNS TRIGGER AS $$
-DECLARE
-    new_cart_id INTEGER;
-BEGIN
-    -- Create a new empty cart for the user and capture the new ID
-    INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
+-- CREATE OR REPLACE FUNCTION create_new_cart_for_user()
+-- RETURNS TRIGGER AS $$
+-- DECLARE
+--     new_cart_id INTEGER;
+-- BEGIN
+--     INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
 
-    -- Update the user's record with the new cart ID
-    UPDATE users SET id_cart = new_cart_id WHERE id = NEW.id_user;
+--     UPDATE users SET id_cart = new_cart_id WHERE id = NEW.id_user;
 
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER user_made_purchase
-AFTER INSERT ON purchase
-FOR EACH ROW
-WHEN (NEW.id_user IS NOT NULL)
-EXECUTE FUNCTION create_new_cart_for_user();
+-- CREATE TRIGGER user_made_purchase
+-- AFTER INSERT ON purchase
+-- FOR EACH ROW
+-- WHEN (NEW.id_user IS NOT NULL)
+-- EXECUTE FUNCTION create_new_cart_for_user();
 
 -- TRIGGER 7: Creating cart for new user
 
@@ -375,10 +376,8 @@ RETURNS TRIGGER AS $$
 DECLARE
     new_cart_id INTEGER;
 BEGIN
-    -- Create a new empty cart for the user and capture the new ID
     INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
 
-    -- Update the user's record with the new cart ID
     UPDATE users SET id_cart = new_cart_id WHERE id = NEW.id;
 
     RETURN NEW;
@@ -391,30 +390,85 @@ FOR EACH ROW
 WHEN (NEW.id IS NOT NULL)
 EXECUTE FUNCTION create_new_cart_for_new_user();
 
+-- TRIGGER 8: Notify users when a product in cart changes price
+
+CREATE OR REPLACE FUNCTION notify_cart_item_price_change()
+RETURNS TRIGGER AS $BODY$
+BEGIN
+    IF NEW.price != OLD.price THEN
+        INSERT INTO notification (description, notification_type, id_user, id_item)
+        SELECT
+            'Item in your cart ("' || OLD.name || '") changed price to ' || NEW.price || '.',
+            'PRICE_CHANGE',
+            u.id,
+            NEW.id
+        FROM cart_item AS ci
+        JOIN users AS u ON ci.id_cart = u.id_cart
+        WHERE ci.id_item = NEW.id;
+    END IF;
+    RETURN NEW;
+END;
+$BODY$ LANGUAGE plpgsql;
+
+CREATE TRIGGER cart_item_price_change_notification
+AFTER UPDATE ON item
+FOR EACH ROW
+EXECUTE FUNCTION notify_cart_item_price_change();
+
+CREATE OR REPLACE FUNCTION combined_purchase_trigger()
+RETURNS TRIGGER AS $$
+DECLARE
+    item_record RECORD;
+    new_cart_id INTEGER;
+BEGIN
+    IF NEW.id_user IS NOT NULL THEN
+        INSERT INTO cart DEFAULT VALUES RETURNING id INTO new_cart_id;
+        UPDATE users SET id_cart = new_cart_id WHERE id = NEW.id_user;
+    END IF;
+
+    FOR item_record IN (
+        SELECT item.id, cart_item.quantity
+        FROM cart_item
+        JOIN item ON cart_item.id_item = item.id
+        WHERE cart_item.id_cart = NEW.id_cart
+    ) LOOP
+        UPDATE item
+        SET stock = stock - item_record.quantity
+        WHERE id = item_record.id;
+    END LOOP;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER combined_purchase_trigger
+AFTER INSERT ON purchase
+FOR EACH ROW
+EXECUTE FUNCTION combined_purchase_trigger();
 
 
---- CART
 
--- INSERT INTO cart DEFAULT VALUES; 
--- INSERT INTO cart DEFAULT VALUES;
--- INSERT INTO cart DEFAULT VALUES;
--- INSERT INTO cart DEFAULT VALUES;
--- INSERT INTO cart DEFAULT VALUES;
--- INSERT INTO cart DEFAULT VALUES;
--- INSERT INTO cart DEFAULT VALUES;
--- INSERT INTO cart DEFAULT VALUES;
--- INSERT INTO cart DEFAULT VALUES;
--- INSERT INTO cart DEFAULT VALUES; 
--- INSERT INTO cart DEFAULT VALUES; 
--- INSERT INTO cart DEFAULT VALUES; 
--- INSERT INTO cart DEFAULT VALUES; 
--- INSERT INTO cart DEFAULT VALUES; 
--- INSERT INTO cart DEFAULT VALUES; 
--- INSERT INTO cart DEFAULT VALUES; 
--- INSERT INTO cart DEFAULT VALUES; 
--- INSERT INTO cart DEFAULT VALUES; 
--- INSERT INTO cart DEFAULT VALUES; 
--- INSERT INTO cart DEFAULT VALUES; 
+-- TRIGGER 9: Remove item from all carts when its stock is 0
+
+CREATE OR REPLACE FUNCTION remove_items_from_carts()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.stock = 0 THEN
+        DELETE FROM cart_item
+        WHERE id_item = NEW.id
+        AND id_cart NOT IN (SELECT id_cart FROM purchase);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER remove_from_carts_on_stock_zero
+AFTER UPDATE OF stock ON item
+FOR EACH ROW
+WHEN (OLD.stock != NEW.stock)
+EXECUTE FUNCTION remove_items_from_carts();
+
+
 
 --- LOCATION
 
@@ -442,30 +496,41 @@ INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('
 INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Classic Flannel Shirt', 45.00, 15, 'Red', '70s', 'Cotton', 'Red flannel shirt with classic look.');
 INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage High-waist Jeans', 65.00, 20, 'Blue', '80s', 'Denim', 'High-waisted jeans with a vintage style.');
 INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Retro Sneakers', 50.00, 40, 'Multi', '90s', 'Canvas', 'Colorful sneakers with a retro look.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage leather Jacket', 109.99, 0, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Leather Jacket', 109.99, 0, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Striped Polo Shirt', 34.99, 15, 'White, Blue', '2000s', 'Cotton', 'Polo shirt with a classic striped pattern.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Hooded Zip-up Jacket', 69.99, 18, 'Gray', '90s', 'Polyester', 'Comfortable hooded jacket with a zip-up front.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Corduroy Pants', 42.00, 22, 'Green', '2000s', 'Corduroy', 'Brown corduroy pants with a vintage touch.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Brushed Leather Shoes', 59.99, 35, 'Black', '2010s', 'Leather', 'Classic leathered shoes with details.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Casual Button-up Shirt', 29.99, 28, 'Navy', '80s', 'Cotton', 'Versatile button-up shirt for a casual look.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Casual Regular T-Shirt', 9.99, 50, 'Gray', '2000s', 'Cotton', 'Comfortable regular fit T-shirt in gray.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Athletic Running Shoes', 39.99, 35, 'Gray', '2010s', 'Mesh', 'Performance-oriented running shoes in gray.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Bomber Jacket', 89.99, 12, 'White, Purple, Black', '80s', 'Satin', 'Vintage bomber jacket with 3 colors. ');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('High-Top Canvas Sneakers', 44.00, 30, 'White', '2010s', 'Canvas', 'White high-top sneakers for a trendy look.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Long Sleeve Graphic Tee', 24.99, 35, 'Black', '2010s', 'Cotton', 'Stylish long sleeve T-shirt with a graphic design in black.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Football Jersey', 99.99, 1, 'Red', '2000s', 'Polyester', 'Footbal jersey from the 2008/09 season in red');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Classic Baseball Jacket', 74.99, 15, 'Olive', '80s', 'Wool', 'Stylish olive green bomber jacket.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Cargo Pants', 47.00, 20, 'Olive', '2000s', 'Cotton', 'Comfortable khaki cargo pants.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Suede Ankle Boots', 79.99, 25, 'Tan', '90s', 'Suede', 'Fashionable tan suede ankle boots.');
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Football Jersey', 89.99, 3, 'White', '90s', 'Polyester', 'White footbal jersey from the 1996/97 season');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Hip-Hop Group Shirt', 14.99, 15, 'Yellow', '90s', 'Cotton', 'Yellow T-shirt in honor of an old-school hip-hop group');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Distressed Band Tour T-Shirt', 14.99, 25, 'Black', '70s', 'Cotton', 'Black T-shirt from a rock band tour');
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Beach Shirt', 19.99, 25, 'Green', '2010s', 'Cotton', 'Green T-shirt adequate for sunsets in the beach.');
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('High-Waist Flared Jeans', 35.00, 18, 'Light Blue', '2010s', 'Denim', 'Light blue high-waisted flared jeans, a staple from the 2010s era.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Cargo Shorts', 29.99, 20, 'Blue', '80s', 'Denim', 'Channel the 1980s with these acid-washed skinny jeans for a bold vintage look.');
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Designed Old School Jacket', 89.99, 10, 'Olive', '2000s', 'Corduroy', 'Olive green corduroy bomber jacket, a timeless piece from the 2000s.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Leather Aviator Jacket', 129.99, 8, 'Dark Brown', '80s', 'Leather', 'Dark brown leather aviator jacket, capturing the spirit of vintage aviation.');
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Canvas Low-Top Sneakers', 45.00, 25, 'White', '2010s', 'Canvas', 'Cream-colored canvas low-top sneakers, reminiscent of the 2010s fashion era.');
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Old School Basketball Shoes', 59.00, 15, 'White', '90s', 'Leather', 'Shoes worn by basketball players in the 2000s that turned into famous streetwear.');
 
 
-/* INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Vintage Rock Band TShirt', 35.00, 30, 'Black', '80s', 'Cotton', 'Black TShirt with vintage rock band print.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('70s Denim Jacket', 95.00, 5, 'Blue', '70s', 'Denim', 'Blue denim jacket with 70s styling.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Retro Striped Shirt', 40.00, 25, 'Green', '80s', 'Cotton', 'Green striped shirt with a retro feel.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Classic Blue Jeans', 60.00, 20, 'Blue', '90s', 'Denim', 'Classic blue jeans with a relaxed fit.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Leather Sneakers', 80.00, 15, 'White', '70s', 'Leather', 'White leather sneakers with vintage design.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Baseball TShirt', 30.00, 35, 'White', '90s', 'Cotton', 'White baseball TShirt with vintage logo.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( '80s Style Denim Jacket', 89.99, 8, 'Blue', '80s', 'Denim', 'Denim jacket with 80s style accents.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro Western Shirt', 55.00, 18, 'Red', '70s', 'Cotton', 'Red western shirt with retro detailing.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Skinny Jeans', 70.00, 12, 'Black', '80s', 'Denim', 'Black skinny jeans with a vintage cut.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Classic Canvas Sneakers', 65.00, 30, 'Black', '90s', 'Canvas', 'Black classic canvas sneakers.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Band TShirt', 35.00, 28, 'Grey', '70s', 'Cotton', 'Grey TShirt with vintage band graphic.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro Leather Jacket', 120.00, 6, 'Black', '80s', 'Leather', 'Black leather jacket with retro styling.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Classic Plaid Shirt', 50.00, 22, 'Blue', '90s', 'Cotton', 'Blue plaid shirt with classic fit.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Straight-Leg Jeans', 75.00, 15, 'Blue', '70s', 'Denim', 'Straight-leg jeans with a vintage feel.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro High-Top Sneakers', 85.00, 10, 'Red', '80s', 'Canvas', 'Red high-top sneakers with retro flair.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Logo TShirt', 30.00, 40, 'Blue', '90s', 'Cotton', 'Blue TShirt with vintage brand logo.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( '70s Corduroy Jacket', 110.00, 4, 'Brown', '70s', 'Corduroy', 'Brown corduroy jacket from the 70s.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Retro Short Sleeve Shirt', 45.00, 20, 'Yellow', '80s', 'Cotton', 'Yellow short sleeve shirt with retro print.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Vintage Bootcut Jeans', 68.00, 13, 'Blue', '70s', 'Denim', 'Blue bootcut jeans with vintage styling.');
-INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ( 'Classic Leather Sneakers', 90.00, 18, 'White', '90s', 'Leather', 'Classic white leather sneakers.');
-*/
+
+
 
 --- USER
 
@@ -511,45 +576,118 @@ INSERT INTO wishlist (id_user,id_item) VALUES (5,5);
 --- IMAGE
 
 INSERT INTO image (id_item, filepath) VALUES (1, 'images/retro_graphic_tshirt_1.png');
-INSERT INTO image (id_item, filepath) VALUES (1, 'images/retro_graphic_tshirt_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (2, 'images/vintage_denim_jacket_1.png');
 INSERT INTO image (id_item, filepath) VALUES (2, 'images/vintage_denim_jacket_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (3, 'images/classic_flannel_shirt_1.png');
-INSERT INTO image (id_item, filepath) VALUES (3, 'images/classic_flannel_shirt_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (4, 'images/vintage_highwaist_jeans_1.png');
-INSERT INTO image (id_item, filepath) VALUES (4, 'images/vintage_highwaist_jeans_2.png');
 
 INSERT INTO image (id_item, filepath) VALUES (5, 'images/retro_sneakers_1.png');
-INSERT INTO image (id_item, filepath) VALUES (5, 'images/retro_sneakers_2.png');
 
-INSERT INTO image (id_user, filepath) VALUES (1, 'images/profile_user_1.png');
-INSERT INTO image (id_user, filepath) VALUES (2, 'images/profile_user_2.png');
-INSERT INTO image (id_user, filepath) VALUES (3, 'images/profile_user_3.png');
-INSERT INTO image (id_user, filepath) VALUES (4, 'images/profile_user_4.png');
-INSERT INTO image (id_user, filepath) VALUES (5, 'images/profile_user_5.png');
+INSERT INTO image (id_item, filepath) VALUES (7, 'images/striped_polo_shirt_1.png');
+INSERT INTO image (id_item, filepath) VALUES (7, 'images/striped_polo_shirt_2.png');
+
+INSERT INTO image (id_item, filepath) VALUES (8, 'images/hooded_zipup_jacket_1.png');
+INSERT INTO image (id_item, filepath) VALUES (8, 'images/hooded_zipup_jacket_2.png');
+
+INSERT INTO image (id_item, filepath) VALUES (9, 'images/vintage_corduroy_pants.png');
+
+INSERT INTO image (id_item, filepath) VALUES (10, 'images/brushed_leather_shoes_1.png');
+INSERT INTO image (id_item, filepath) VALUES (10, 'images/brushed_leather_shoes_2.png');
+
+INSERT INTO image (id_item, filepath) VALUES (11, 'images/casual_button_shirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (12, 'images/casual_regular_tshirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (13, 'images/athletic_running_shoes.png');
+
+INSERT INTO image (id_item, filepath) VALUES (14, 'images/graphic_bomber_jacket.png');
+
+INSERT INTO image (id_item, filepath) VALUES (15, 'images/hightop_canvas_sneakers.png');
+
+INSERT INTO image (id_item, filepath) VALUES (16, 'images/long_sleeve_graphic_tshirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (17, 'images/football_jersey.png');
+
+INSERT INTO image (id_item, filepath) VALUES (18, 'images/classic_baseball_jacket.png');
+
+INSERT INTO image (id_item, filepath) VALUES (19, 'images/cargo_pants.png');
+
+INSERT INTO image (id_item, filepath) VALUES (20, 'images/suede_anke_boots.png');
+
+INSERT INTO image (id_item, filepath) VALUES (21, 'images/white_football_jersey.png');
+
+INSERT INTO image (id_item, filepath) VALUES (22, 'images/hh_group_shirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (23, 'images/rock_band_tshirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (24, 'images/beach_shirt.png');
+
+INSERT INTO image (id_item, filepath) VALUES (25, 'images/flared_jeans.png');
+
+INSERT INTO image (id_item, filepath) VALUES (26, 'images/cargo_shorts.png');
+
+INSERT INTO image (id_item, filepath) VALUES (27, 'images/designer_vintage_jacket.png');
+
+INSERT INTO image (id_item, filepath) VALUES (28, 'images/leather_aviator_jacket.png');
+
+INSERT INTO image (id_item, filepath) VALUES (29, 'images/canvas_low_top.png');
+
+INSERT INTO image (id_item, filepath) VALUES (30, 'images/basketball_shoes.png');
+
+
+INSERT INTO image (id_user, filepath) VALUES (1, 'storage/images/profile_user_1.png');
 
 --- SHIRT
 
 INSERT INTO shirt (id_item, shirt_type, size) VALUES (3, 'Regular', 'M');
+INSERT INTO shirt (id_item, shirt_type, size) VALUES (7, 'Short Sleeve', 'S');
+INSERT INTO shirt (id_item, shirt_type, size) VALUES (11, 'Regular', 'XL');
+INSERT INTO shirt (id_item, shirt_type, size) VALUES (24, 'Short Sleeve', 'M');
 
 --- TSHIRT
 
 INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (1, 'Regular', 'L');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (12, 'Regular', 'XL');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (16, 'Long Sleeve', 'M');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (17, 'Football', 'S');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (21, 'Football', 'L');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (22, 'Regular', 'M');
+INSERT INTO tshirt (id_item, tshirt_type, size) VALUES (23, 'Regular', 'XL');
 
 --- JACKET
 
 INSERT INTO jacket (id_item, jacket_type, size) VALUES (2, 'Bomber', 'S');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (6, 'Regular', 'M');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (8, 'Regular', 'L');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (14, 'Bomber', 'XL');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (18, 'Baseball', 'M');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (27, 'Regular', 'M');
+INSERT INTO jacket (id_item, jacket_type, size) VALUES (28, 'Regular', 'L');
+
 
 --- JEANS
 
-INSERT INTO jeans (id_item, waist_size, inseam_size, rise_size) VALUES (4, 32, 30, 10);
+INSERT INTO jeans (id_item, jeans_type, size) VALUES (4, 'Regular', 'S');
+INSERT INTO jeans (id_item, jeans_type, size) VALUES (9, 'Regular', 'M');
+INSERT INTO jeans (id_item, jeans_type, size) VALUES (19, 'Baggy', 'M');
+INSERT INTO jeans (id_item, jeans_type, size) VALUES (25, 'Regular', 'M');
+INSERT INTO jeans (id_item, jeans_type, size) VALUES (26, 'Skinny', 'S');
 
---- SNEAKER
+--- sneakers
 
-INSERT INTO sneaker (id_item, shoe_size) VALUES (5, 38);
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (5, 'Casual', '38');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (10, 'Leather', '41');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (13, 'Sports', '43');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (15, 'Casual', '36');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (20, 'Casual', '45');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (29, 'Casual', '45');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (30, 'Sports', '45');
+
+
+
 
 --- CART_ITEM
 
@@ -565,6 +703,16 @@ INSERT INTO cart_item (id_cart, id_item) VALUES (8, 1);
 INSERT INTO cart_item (id_cart, id_item) VALUES (9, 4);
 INSERT INTO cart_item (id_cart, id_item) VALUES (10, 5);
 
+--testing
+
+INSERT INTO item (name, price, stock, color, era, fabric, description) VALUES ('Test', 1, 1, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
+INSERT INTO sneakers (id_item, sneakers_type, size) VALUES (7, 'Casual', '39');
+INSERT INTO cart_item (id_cart, id_item) VALUES (11, 7);
+INSERT INTO cart_item (id_cart, id_item) VALUES (12, 7);
+-- INSERT INTO purchase (price, purchase_date, delivery_date, purchase_status, payment_method, id_user, id_location, id_cart)
+-- VALUES ( 1, '2023-10-10', '2023-10-15', 'Paid', 'Transfer', 1, 1, 12);
+
+
 --- REVIEW
 
 INSERT INTO review (description,rating,id_user,id_item) values ('This is a masterpiece',5,1,1);
@@ -577,9 +725,9 @@ INSERT INTO review (description,rating,id_user,id_item) values ('This is a maste
 --- PURCHASE
 
 INSERT INTO purchase (price, purchase_date, delivery_date, purchase_status, payment_method, id_user, id_location, id_cart)
-VALUES ( 109.98, '2023-10-10', '2023-10-15', 'Processing', 'Transfer', 1, 1, 1);
+VALUES ( 109.98, '2023-10-10', '2023-10-15', 'Paid', 'Transfer', 1, 1, 1);
 INSERT INTO purchase (price, purchase_date, delivery_date, purchase_status, payment_method, id_user, id_location, id_cart)
-VALUES (45.00 , '2023-10-08', '2023-10-20', 'Processing', 'Paypal', 2,2, 2);
+VALUES (45.00 , '2023-10-08', '2023-10-20', 'Paid', 'Paypal', 2,2, 2);
 
 /* testing notification triggers */
 

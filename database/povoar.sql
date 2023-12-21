@@ -45,7 +45,7 @@ insert into location (id, address, city, country, postal_code) values (15, '0591
 INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (1, 'Retro Graphic TShirt', 29.99, 25, 'White', '90s', 'Cotton', 'White TShirt with retro graphic design.');
 INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (2, 'Vintage Denim Jacket', 79.99, 10, 'Blue', '80s', 'Denim', 'A stylish vintage denim jacket.');
 INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (3, 'Classic Flannel Shirt', 45.00, 15, 'Red', '70s', 'Cotton', 'Red flannel shirt with classic look.');
-INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (4, 'Vintage High-waist Jeans', 65.00, 20, 'Blue', '80s', 'Denim', 'High-waisted jeans with a vintage style.');
+INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (4, 'Vintage High-waist Jeans', 45.00, 20, 'Blue', '80s', 'Denim', 'High-waisted jeans with a vintage style.');
 INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (5, 'Retro Sneakers', 50.00, 40, 'Multi', '90s', 'Canvas', 'Colorful sneakers with a retro look.');
 INSERT INTO item (id, name, price, stock, color, era, fabric, description) VALUES (6, 'Vintage leather Jacket', 109.99, 0, 'White', '70s', 'Denim', 'A stylish leather denim jacket.');
 
@@ -129,9 +129,9 @@ INSERT INTO jacket (id_item, jacket_type, size) VALUES (2, 'Bomber', 'S');
 
 INSERT INTO jeans (id_item, waist_size, inseam_size, rise_size) VALUES (4, 32, 30, 10);
 
---- SNEAKER
+--- sneakers
 
-INSERT INTO sneaker (id_item, shoe_size) VALUES (5, 38);
+INSERT INTO sneakers (id_item, shoe_size) VALUES (5, 38);
 
 --- CART_ITEM
 
@@ -171,3 +171,4 @@ UPDATE purchase SET purchase_status = 'Packed' WHERE id = 1;
 UPDATE purchase SET purchase_status = 'Delivered' WHERE id = 1;
 UPDATE purchase SET purchase_status = 'Packed' WHERE id = 2;
 UPDATE purchase SET purchase_status = 'Sent' WHERE id = 2;
+

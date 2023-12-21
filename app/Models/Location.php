@@ -14,13 +14,11 @@
         public function purchases(){
             return $this->hasMany(Purchase::class, 'id_location');
         }
-
-
-        /*
+                
         public function users(){
             return $this->hasMany(User::class, 'id_location');
         }
-        */
+        
 
     }
 

@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function() {
             body: formData,
             headers: {'X-CSRF-TOKEN': token}
         }) .then(response => {
-            if (response.ok && response.status === 200) {
+            if (response.ok || response.status === 200) {
                 return response.json();
             } else {
                 throw new Error('Something went wrong');

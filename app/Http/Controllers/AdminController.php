@@ -157,22 +157,18 @@ class AdminController extends Controller
     }
 
     public function updateUser(Request $request, $id)
-    {
+{
     $user = User::findOrFail($id);
-
     $auth_admin = Auth::guard('admin')->user();
     $this->authorize('update', $auth_admin);
 
-    if (!$user) {
-        return response()->json(['message' => 'User not found'], 404);
-    }
-
-    $request->validate([
+    $validationRules = [
         'email' => 'required|email|unique:users,email,' . $id,
         'username' => 'required|string|max:255|unique:users,username,' . $id,
         'name' => 'nullable|string|max:255',
-    ]);
+    ];
 
+    $validator = Validator::make($request->all(), $validationRules);
     if ($validator->fails()) {
         return response()->json([
             'message' => 'Validation failed',
@@ -180,9 +176,10 @@ class AdminController extends Controller
         ], 422);
     }
 
-
     $user->fill($request->only(['name', 'email', 'username']));
-    $user->phone = $request->phone;
+    if ($request->has('phone')) {
+        $user->phone = $request->phone;
+    }
     $user->save();
 
     return response()->json([

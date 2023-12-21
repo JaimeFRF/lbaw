@@ -173,6 +173,14 @@ class AdminController extends Controller
         'name' => 'nullable|string|max:255',
     ]);
 
+    if ($validator->fails()) {
+        return response()->json([
+            'message' => 'Validation failed',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+
     $user->fill($request->only(['name', 'email', 'username']));
     $user->phone = $request->phone;
     $user->save();

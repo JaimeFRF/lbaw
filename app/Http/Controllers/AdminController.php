@@ -130,7 +130,7 @@ class AdminController extends Controller
     public function deleteUser($id, Request $request)
     {
       $user = User::find($id);
-      
+      Log::info('entrei aqui');
       $auth_admin = Auth::guard('admin')->user();
       $this->authorize('delete', $auth_admin);
 

@@ -153,7 +153,8 @@ if(Auth::check()){
     .catch(error => console.error('Error:', error));
 
     const notificationType = notificationData.notification.notification_type;
-
+    console.log(notificationType);
+    console.log(notificationData);
     const newNotificationElement = document.createElement('a');
     newNotificationElement.classList.add('dropdown-item', 'notifi-item');
     newNotificationElement.href = '#'; 
@@ -162,6 +163,7 @@ if(Auth::check()){
       newNotificationElement.innerHTML = `
           <a class="dropdown-item notifi-item" id="notification-${notificationData.notification.id}" href="#">
           <button class="btn btn-outline-danger btn-sm" type="button" style="max-height: 30px; position: absolute; left:90%" onclick="removeNotification(${notificationData.notification.id})"><i class="fa fa-times"></i></button>  
+          <img  src="{{ asset('images/item.png') }}"alt="img">
           <div class="text">
             <h4>${notificationData.item.name}</h4>
             <p>${notificationData.notification.description}</p>
@@ -172,6 +174,8 @@ if(Auth::check()){
       newNotificationElement.innerHTML = `
           <a class="dropdown-item notifi-item" id="notification-${notificationData.notification.id}" href="#">
           <button class="btn btn-outline-danger btn-sm" type="button" style="max-height: 30px; position: absolute; left:90%" onclick="removeNotification(${notificationData.notification.id})"><i class="fa fa-times"></i></button>  
+          <img  src="{{ asset('images/item.png') }}"alt="img">
+
           <div class="text">
             <h4>${notificationData.item.name}</h4>
             <p>${notificationData.notification.description}</p>
@@ -182,8 +186,10 @@ if(Auth::check()){
       newNotificationElement.innerHTML = `
         <a class="dropdown-item notifi-item" id="notification-${notificationData.notification.id}" href="#">
           <button class="btn btn-outline-danger btn-sm" type="button" style="max-height: 30px; position: absolute; left:90%" onclick="removeNotification(${notificationData.notification.id})"><i class="fa fa-times"></i></button>  
+          <img  src="{{ asset('images/shop.jpg') }}"alt="img">
+  
           <div class="text">
-            <h4>${notificationData.item.name}</h4>
+            <h4>Purchase (${notificationData.notification.id_purchase}) State Changed</h4>
             <p>${notificationData.notification.description}</p>
           </div>
         </a>
@@ -192,6 +198,8 @@ if(Auth::check()){
       newNotificationElement.innerHTML = `
             <a class="dropdown-item notifi-item" id="notification-${notificationData.notification.id}" href="#">
             <button class="btn btn-outline-danger btn-sm" type="button" style="max-height: 30px; position: absolute; left:90%" onclick="removeNotification(${notificationData.notification.id})"><i class="fa fa-times"></i></button>  
+            <img  src="{{ asset('images/item.png') }}"alt="img">
+
             <div class="text">
               <h4>${notificationData.item.name}</h4>
               <p>${notificationData.notification.description}</p>

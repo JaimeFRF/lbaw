@@ -108,7 +108,7 @@ CREATE TABLE notification(
     description TEXT NOT NULL, 
     date TIMESTAMP WITH TIME ZONE DEFAULT now() NOT NULL, 
     notification_type NotificationType NOT NULL,
-    id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE SET NULL,
+    id_user INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     id_item INTEGER  REFERENCES item(id) ON DELETE SET NULL,
     id_purchase INTEGER REFERENCES purchase(id) ON DELETE SET NULL
 );
@@ -638,7 +638,7 @@ INSERT INTO image (id_item, filepath) VALUES (29, 'images/canvas_low_top.png');
 INSERT INTO image (id_item, filepath) VALUES (30, 'images/basketball_shoes.png');
 
 
-INSERT INTO image (id_user, filepath) VALUES (1, 'storage/images/profile_user_1.png');
+INSERT INTO image (id_user, filepath) VALUES (1, 'images/profile_user_1.png');
 
 --- SHIRT
 

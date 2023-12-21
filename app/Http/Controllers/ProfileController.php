@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
@@ -18,8 +19,6 @@ use App\Models\Cart;
 use App\Models\Purchase;
 
 
-
-
 class ProfileController extends Controller{
 
     /**
@@ -27,19 +26,17 @@ class ProfileController extends Controller{
    * @param id Id of the User whose profile will be edited
    */
     public function show(){
-      
       $user = User::find(Auth::id());
       $this->authorize('show', $user);
 
       $image = Image::where('id_user', $user->id)->first();
 
-      if ($image && $image->filepath) {
-          $profile_picture = $image->filepath;
-          Log::info($profile_picture);
-        } else {
-          $profile_picture = 'images/default-person.png';
-      }  
-
+      if ($image && File::exists(public_path($image->filepath))) {
+        $profile_picture = $image->filepath;
+        Log::info($profile_picture);
+      } else {
+        $profile_picture = 'images/default-person.png';
+      }
 
       $wishlist = Wishlist::where('id_user', $user->id)->get();
 

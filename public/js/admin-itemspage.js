@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const addItemModal = new bootstrap.Modal(addItemModalElement); 
     const editItemForm = document.getElementById('editItemForm');
     const addItemForm = document.getElementById('addItemForm');
-    const manualCloseModalButton = document.getElementById('manualCloseModalButton');
     const categorySelect = document.getElementById('category');
     const categorySelectEdit = document.getElementById('Editcategory');
     const subCategorySelect = document.getElementById('subCategory');

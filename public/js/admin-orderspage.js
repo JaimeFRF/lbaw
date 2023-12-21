@@ -60,14 +60,20 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'POST',
             body: formData,
             headers: {'X-CSRF-TOKEN': token}
+        }) .then(response => {
+            if (response.ok && response.status === 200) {
+                return response.json();
+            } else {
+                throw new Error('Something went wrong');
+            }
         })
         .then(data => {
-            if (data.status == 200) {
-            Swal.fire('Order updated', `Order ${data.id} has been updated successfully.`, 'success');
-            detailedOrderModal.hide();
-        } else {
-            console.log('Update failed: ' + data.message);
-        }})
+                Swal.fire('Order updated', `Order ${data.id} has been updated successfully.`, 'success')
+                .then(() => {
+                    detailedOrderModal.hide();
+                    window.location.reload();
+                });
+        })
         .catch(error => console.error('There has been a problem with your fetch operation:', error));
     });
 

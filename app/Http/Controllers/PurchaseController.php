@@ -187,7 +187,7 @@ class PurchaseController extends Controller
             $notificationController->sendOrderNotification($userId, $orderId, $status);
     
     
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'id' => $orderId], 200);
         } else {
             return response()->json(['success' => false, 'message' => 'Order not found'], 404);
         }
